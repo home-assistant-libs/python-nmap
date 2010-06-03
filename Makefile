@@ -1,5 +1,5 @@
 # python-nmap
-# v0.1.0
+# v0.1.2
 VERSION=`python setup.py --version`
 ARCHIVE=`python setup.py --fullname`
 
@@ -21,3 +21,6 @@ license:
 
 register:
 	@python setup.py register
+
+doc:
+	@pydoc -w nmap/nmap.py

@@ -2,7 +2,7 @@
 # -*- coding: latin-1 -*-
 
 """
-example.py - 2010.03.06
+example.py - 2010.06.03
 
 Author : Alexandre Norman - norman@xael.org
 Licence : GPL v3 or any later version
@@ -68,4 +68,12 @@ for host in nm.all_hosts():
         for port in lport:
             print 'port : %s\tstate : %s' % (port, nm[host][proto][port]['state'])
 
+
+
+print '----------------------------------------------------'
+# If you want to do a pingsweep on network 192.168.1.0/24:
+nm.scan(hosts='192.168.1.0/24', arguments='-n -sP -PE -PA21,23,80,3389')
+hosts_list = [(x, nm[x]['status']['state']) for x in nm.all_hosts()]
+for host, status in hosts_list:
+    print '{0}:{1}'.format(host, status)
 

@@ -2,7 +2,7 @@
 # -*- coding: latin-1 -*-
 
 """
-nmap.py - v0.1.0 - 2010.03.06
+nmap.py - v0.1.2 - 2010.06.03
 
 Author : Alexandre Norman - norman@xael.org
 Licence : GPL v3 or any later version
@@ -51,11 +51,21 @@ False
 {'state': u'open', 'reason': u'syn-ack', 'name': u'ssh'}
 >>> nm['127.0.0.1']['tcp'][22]['state']
 u'open'
+>>> nm.scanstats()['uphosts']
+u'1'
+>>> nm.scanstats()['downhosts']
+u'0'
+>>> nm.scanstats()['totalhosts']
+u'1'
+>>> nm.scanstats().has_key('timestr')
+True
+>>> nm.scanstats().has_key('elapsed')
+True
 """
 
 
 __author__ = 'Alexandre Norman (norman@xael.org)'
-__version__ = '0.1.1'
+__version__ = '0.1.2'
 
 
 import os
@@ -183,6 +193,7 @@ class PortScanner():
         #  </host>
 
 
+
         scan_result = {}
         
         dom = xml.dom.minidom.parseString(self._nmap_last_output)
@@ -190,7 +201,12 @@ class PortScanner():
         # nmap command line
         scan_result['nmap'] = {
             'command_line': dom.getElementsByTagName('nmaprun')[0].getAttributeNode('args').value,
-            'scaninfo': {}
+            'scaninfo': {},
+            'scanstats':{'timestr':dom.getElementsByTagName("finished")[0].getAttributeNode('timestr').value,
+                         'elapsed':dom.getElementsByTagName("finished")[0].getAttributeNode('elapsed').value,
+                         'uphosts':dom.getElementsByTagName("hosts")[0].getAttributeNode('up').value,
+                         'downhosts':dom.getElementsByTagName("hosts")[0].getAttributeNode('down').value,
+                         'totalhosts':dom.getElementsByTagName("hosts")[0].getAttributeNode('total').value}
             }
         # info about scan
         for dsci in dom.getElementsByTagName('scaninfo'):
@@ -243,6 +259,7 @@ class PortScanner():
 
                     scan_result['scan'][host][proto][port]['script'][script_id] = script_out
 
+
         self._scan_result = scan_result # store for later use
         return
 
@@ -277,6 +294,14 @@ class PortScanner():
         """
         return self._scan_result['nmap']['scaninfo']
         
+
+    def scanstats(self):
+        """
+        returns scanstats structure
+        {'uphosts': u'3', 'timestr': u'Thu Jun  3 21:45:07 2010', 'downhosts': u'253', 'totalhosts': u'256', 'elapsed': u'5.79'}
+        """
+        return self._scan_result['nmap']['scanstats']        
+
 
     def has_host(self, host):
         """

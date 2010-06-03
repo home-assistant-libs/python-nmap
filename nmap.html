@@ -6,10 +6,10 @@
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
 <tr bgcolor="#7799ee">
 <td valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>nmap</strong></big></big> (version 0.1.0)</font></td
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>nmap</strong></big></big> (version 0.1.2)</font></td
 ><td align=right valign=bottom
-><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/xael/ESPACE_KM/python/python-nmap/nmap.py">/home/xael/ESPACE_KM/python/python-nmap/nmap.py</a></font></td></tr></table>
-    <p><tt>nmap.py&nbsp;-&nbsp;v0.1.0&nbsp;-&nbsp;2010.03.06<br>
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/xael/ESPACE_KM/python/python-nmap/nmap/nmap.py">/home/xael/ESPACE_KM/python/python-nmap/nmap/nmap.py</a></font></td></tr></table>
+    <p><tt>nmap.py&nbsp;-&nbsp;v0.1.2&nbsp;-&nbsp;2010.06.03<br>
 &nbsp;<br>
 Author&nbsp;:&nbsp;Alexandre&nbsp;Norman&nbsp;-&nbsp;norman@xael.org<br>
 Licence&nbsp;:&nbsp;GPL&nbsp;v3&nbsp;or&nbsp;any&nbsp;later&nbsp;version<br>
@@ -57,7 +57,17 @@ False<br>
 &gt;&gt;&gt;&nbsp;nm['127.0.0.1'].tcp(22)<br>
 {'state':&nbsp;u'open',&nbsp;'reason':&nbsp;u'syn-ack',&nbsp;'name':&nbsp;u'ssh'}<br>
 &gt;&gt;&gt;&nbsp;nm['127.0.0.1']['tcp'][22]['state']<br>
-u'open'</tt></p>
+u'open'<br>
+&gt;&gt;&gt;&nbsp;nm.scanstats()['uphosts']<br>
+u'1'<br>
+&gt;&gt;&gt;&nbsp;nm.scanstats()['downhosts']<br>
+u'0'<br>
+&gt;&gt;&gt;&nbsp;nm.scanstats()['totalhosts']<br>
+u'1'<br>
+&gt;&gt;&gt;&nbsp;nm.scanstats().has_key('timestr')<br>
+True<br>
+&gt;&gt;&gt;&nbsp;nm.scanstats().has_key('elapsed')<br>
+True</tt></p>
 <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#aa55cc">
@@ -107,7 +117,7 @@ u'open'</tt></p>
 <dl><dt><a name="PortScanner-__getitem__"><strong>__getitem__</strong></a>(self, host)</dt><dd><tt>returns&nbsp;a&nbsp;host&nbsp;detail</tt></dd></dl>
 
 <dl><dt><a name="PortScanner-__init__"><strong>__init__</strong></a>(self)</dt><dd><tt>Initialize&nbsp;the&nbsp;module<br>
-detect&nbsp;nmap&nbsp;on&nbsp;the&nbsp;system&nbsp;and&nbsp;nmap&nbsp;version<br>
+detects&nbsp;nmap&nbsp;on&nbsp;the&nbsp;system&nbsp;and&nbsp;nmap&nbsp;version<br>
 may&nbsp;raise&nbsp;<a href="#PortScannerError">PortScannerError</a>&nbsp;exception&nbsp;if&nbsp;nmap&nbsp;is&nbsp;not&nbsp;found&nbsp;in&nbsp;the&nbsp;path</tt></dd></dl>
 
 <dl><dt><a name="PortScanner-all_hosts"><strong>all_hosts</strong></a>(self)</dt><dd><tt>returns&nbsp;a&nbsp;sorted&nbsp;list&nbsp;of&nbsp;all&nbsp;hosts</tt></dd></dl>
@@ -132,6 +142,9 @@ arguments&nbsp;=&nbsp;string&nbsp;of&nbsp;arguments&nbsp;for&nbsp;nmap&nbsp;'-sU
 
 <dl><dt><a name="PortScanner-scaninfo"><strong>scaninfo</strong></a>(self)</dt><dd><tt>returns&nbsp;scaninfo&nbsp;structure<br>
 {u'tcp':&nbsp;{'services':&nbsp;u'22',&nbsp;'method':&nbsp;u'connect'}}</tt></dd></dl>
+
+<dl><dt><a name="PortScanner-scanstats"><strong>scanstats</strong></a>(self)</dt><dd><tt>returns&nbsp;scanstats&nbsp;structure<br>
+{'uphosts':&nbsp;u'3',&nbsp;'timestr':&nbsp;u'Thu&nbsp;Jun&nbsp;&nbsp;3&nbsp;21:45:07&nbsp;2010',&nbsp;'downhosts':&nbsp;u'253',&nbsp;'totalhosts':&nbsp;u'256',&nbsp;'elapsed':&nbsp;u'5.79'}</tt></dd></dl>
 
 </td></tr></table> <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -161,7 +174,7 @@ Data descriptors defined here:<br>
 </dl>
 <hr>
 Data and other attributes inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
-<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object at 0x821cdc0&gt;<dd><tt>T.<a href="#PortScannerError-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#PortScannerError-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
 
 <hr>
 Methods inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
@@ -320,9 +333,9 @@ In&nbsp;either&nbsp;case,&nbsp;this&nbsp;is&nbsp;followed&nbsp;by:&nbsp;for&nbsp
 Data and other attributes inherited from <a href="__builtin__.html#dict">__builtin__.dict</a>:<br>
 <dl><dt><strong>__hash__</strong> = None</dl>
 
-<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object at 0x8223100&gt;<dd><tt>T.<a href="#PortScannerHostDict-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#PortScannerHostDict-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
 
-<dl><dt><strong>fromkeys</strong> = &lt;built-in method fromkeys of type object at 0x99e31c4&gt;<dd><tt><a href="__builtin__.html#dict">dict</a>.<a href="#PortScannerHostDict-fromkeys">fromkeys</a>(S[,v])&nbsp;-&gt;&nbsp;New&nbsp;<a href="__builtin__.html#dict">dict</a>&nbsp;with&nbsp;keys&nbsp;from&nbsp;S&nbsp;and&nbsp;values&nbsp;equal&nbsp;to&nbsp;v.<br>
+<dl><dt><strong>fromkeys</strong> = &lt;built-in method fromkeys of type object&gt;<dd><tt><a href="__builtin__.html#dict">dict</a>.<a href="#PortScannerHostDict-fromkeys">fromkeys</a>(S[,v])&nbsp;-&gt;&nbsp;New&nbsp;<a href="__builtin__.html#dict">dict</a>&nbsp;with&nbsp;keys&nbsp;from&nbsp;S&nbsp;and&nbsp;values&nbsp;equal&nbsp;to&nbsp;v.<br>
 v&nbsp;defaults&nbsp;to&nbsp;None.</tt></dl>
 
 </td></tr></table></td></tr></table><p>
@@ -333,7 +346,7 @@ v&nbsp;defaults&nbsp;to&nbsp;None.</tt></dl>
     
 <tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><strong>__author__</strong> = 'Alexandre Norman (norman@xael.org)'<br>
-<strong>__version__</strong> = '0.1.0'</td></tr></table><p>
+<strong>__version__</strong> = '0.1.2'</td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#7799ee">
 <td colspan=3 valign=bottom>&nbsp;<br>
