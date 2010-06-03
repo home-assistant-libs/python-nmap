@@ -1,5 +1,5 @@
 # python-nmap
-# v0.1.2
+# v0.1.3
 VERSION=`python setup.py --version`
 ARCHIVE=`python setup.py --fullname`
 

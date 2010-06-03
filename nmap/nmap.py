@@ -2,7 +2,7 @@
 # -*- coding: latin-1 -*-
 
 """
-nmap.py - v0.1.2 - 2010.06.03
+nmap.py - v0.1.3 - 2010.06.03
 
 Author : Alexandre Norman - norman@xael.org
 Licence : GPL v3 or any later version
@@ -65,7 +65,7 @@ True
 
 
 __author__ = 'Alexandre Norman (norman@xael.org)'
-__version__ = '0.1.2'
+__version__ = '0.1.3'
 
 
 import os
@@ -78,7 +78,7 @@ import shlex
 
 ############################################################################
 
-class PortScanner():
+class PortScanner(object):
     """
     PortScanner allows to use nmap from python
     """
