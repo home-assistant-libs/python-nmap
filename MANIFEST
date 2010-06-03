@@ -1,0 +1,7 @@
+CHANGELOG
+README.txt
+gpl-3.0.txt
+setup.py
+nmap/__init__.py
+nmap/example.py
+nmap/nmap.py
