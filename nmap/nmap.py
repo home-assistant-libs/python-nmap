@@ -76,6 +76,14 @@ import sys
 import xml.dom.minidom
 import shlex
 
+
+
+try:
+    from multiprocessing import Process
+except ImportError:
+    # For pre 2.6 releases
+    from threading import Thread as Process
+
 ############################################################################
 
 class PortScanner(object):
@@ -95,6 +103,8 @@ class PortScanner(object):
         self._nmap_subversion_number = 0    # nmap subversion number
         self._nmap_last_output = ''  # last full ascii nmap output
         is_nmap_found = False       # true if we have found nmap
+
+        self.__process = None
 
         # regex used to detect nmap
         regex = re.compile('Nmap version [0-9]*\.[0-9]* \( http://nmap\.org \)')
@@ -124,6 +134,14 @@ class PortScanner(object):
         return
 
 
+    def __del__(self):
+        """
+        Cleanup when deleted
+        """
+        if self.__process is not None and self.__process.is_alive():
+            self.__process.terminate()
+        return
+
 
     def get_nmap_last_output(self):
         """
@@ -131,8 +149,6 @@ class PortScanner(object):
         this may be used for debugging purpose
         """
         return self._nmap_last_output
-
-
 
 
 
@@ -144,6 +160,13 @@ class PortScanner(object):
         return (self._nmap_version_number, self._nmap_subversion_number)
 
 
+
+    def listscan(self, hosts='127.0.0.1'):
+        """
+        do not scan but interpret target hosts and return a list a hosts
+        """
+        self.scan(hosts, arguments='-sL')
+        return self.all_hosts()
 
 
 
@@ -261,7 +284,44 @@ class PortScanner(object):
 
 
         self._scan_result = scan_result # store for later use
+        return scan_result
+
+
+
+
+    def scan_with_callback(self, hosts='127.0.0.1', ports=None, arguments='-sV', callback=None):
+        """
+        Scan given hosts in a separate process and return host by host result using callback function
+
+        PortScannerError exception from standard nmap is catched and you won't know about it
+
+        hosts = string for hosts as nmap use it 'scanme.nmap.org' or '198.116.0-255.1-127' or '216.163.128.20/20'
+        ports = string for ports as nmap use it '22,53,110,143-4564'
+        arguments = string of arguments for nmap '-sU -sX -sC'
+        callback = callback function which takes (host, scan_data) as arguments
+        """
+
+        def scan_progressive(hosts, ports, arguments, callback):
+            for host in self.listscan(hosts):
+                try:
+                    scan_data = self.scan(host, ports, arguments)
+                except PortScannerError:
+                    pass
+                if callback is not None and callable(callback):
+                    callback(host, scan_data)                
+            return
+
+        self.__process = Process(
+            target=scan_progressive,
+            args=(hosts, ports, arguments, callback)
+            )
+        self.__process.daemon = True
+        self.__process.start()
+        
         return
+
+
+
 
     
     def __getitem__(self, host):

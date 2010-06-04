@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2010/06/04
+ - adding PortScanner.listscan
+ - PortScanner.scan now returns scan_result
+ - adding PortScanner.scan_with_callback
+
 2010/06/03
  - Import on google code
    svn checkout https://python-nmap.googlecode.com/svn/trunk/ python-nmap --username  XXXXX
