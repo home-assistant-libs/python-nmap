@@ -2,7 +2,7 @@
 # -*- coding: latin-1 -*-
 
 """
-nmap.py - v0.1.3 - 2010.06.03
+nmap.py - v0.1.3 - 2010.06.04
 
 Author : Alexandre Norman - norman@xael.org
 Licence : GPL v3 or any later version
@@ -131,15 +131,6 @@ class PortScanner(object):
         if is_nmap_found == False:
             raise PortScannerError('nmap program was not found in path')
 
-        return
-
-
-    def __del__(self):
-        """
-        Cleanup when deleted
-        """
-        if self.__process is not None and self.__process.is_alive():
-            self.__process.terminate()
         return
 
 
@@ -287,42 +278,6 @@ class PortScanner(object):
         return scan_result
 
 
-
-
-    def scan_with_callback(self, hosts='127.0.0.1', ports=None, arguments='-sV', callback=None):
-        """
-        Scan given hosts in a separate process and return host by host result using callback function
-
-        PortScannerError exception from standard nmap is catched and you won't know about it
-
-        hosts = string for hosts as nmap use it 'scanme.nmap.org' or '198.116.0-255.1-127' or '216.163.128.20/20'
-        ports = string for ports as nmap use it '22,53,110,143-4564'
-        arguments = string of arguments for nmap '-sU -sX -sC'
-        callback = callback function which takes (host, scan_data) as arguments
-        """
-
-        def scan_progressive(hosts, ports, arguments, callback):
-            for host in self.listscan(hosts):
-                try:
-                    scan_data = self.scan(host, ports, arguments)
-                except PortScannerError:
-                    pass
-                if callback is not None and callable(callback):
-                    callback(host, scan_data)                
-            return
-
-        self.__process = Process(
-            target=scan_progressive,
-            args=(hosts, ports, arguments, callback)
-            )
-        self.__process.daemon = True
-        self.__process.start()
-        
-        return
-
-
-
-
     
     def __getitem__(self, host):
         """
@@ -335,6 +290,8 @@ class PortScanner(object):
         """
         returns a sorted list of all hosts
         """
+        if not self._scan_result.has_key('scan'):
+            return []
         listh = self._scan_result['scan'].keys()
         listh.sort()
         return listh
@@ -374,6 +331,69 @@ class PortScanner(object):
 
 
 
+
+############################################################################
+
+
+class PortScannerAsync(object):
+    """
+    PortScannerAsync allows to use nmap from python asynchronously
+    for each host scanned, callback is called with scan result for the host
+    """
+
+    def __init__(self):
+        """
+        Initialize the module
+        detects nmap on the system and nmap version
+        may raise PortScannerError exception if nmap is not found in the path
+        """
+        self._process = None
+        self._nm = PortScanner()
+        return
+
+
+    def __del__(self):
+        """
+        Cleanup when deleted
+        """
+        if self._process is not None and self._process.is_alive():
+            self._process.terminate()
+        return
+
+
+    def scan(self, hosts='127.0.0.1', ports=None, arguments='-sV', callback=None):
+        """
+        Scan given hosts in a separate process and return host by host result using callback function
+
+        PortScannerError exception from standard nmap is catched and you won't know about it
+
+        hosts = string for hosts as nmap use it 'scanme.nmap.org' or '198.116.0-255.1-127' or '216.163.128.20/20'
+        ports = string for ports as nmap use it '22,53,110,143-4564'
+        arguments = string of arguments for nmap '-sU -sX -sC'
+        callback = callback function which takes (host, scan_data) as arguments
+        """
+        def scan_progressive(hosts, ports, arguments, callback):
+            for host in self._nm.listscan(hosts):
+                try:
+                    scan_data = self._nm.scan(host, ports, arguments)
+                except PortScannerError:
+                    pass
+                if callback is not None and callable(callback):
+                    callback(host, scan_data)
+            return
+
+        self.__process = Process(
+            target=scan_progressive,
+            args=(hosts, ports, arguments, callback)
+            )
+        self.__process.daemon = True
+        self.__process.start()
+        
+        return
+
+
+
+    
 
 ############################################################################
     

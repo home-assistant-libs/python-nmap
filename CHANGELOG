@@ -4,7 +4,7 @@ Changelog
 2010/06/04
  - adding PortScanner.listscan
  - PortScanner.scan now returns scan_result
- - adding PortScanner.scan_with_callback
+ - adding class PortScannerAsync
 
 2010/06/03
  - Import on google code
