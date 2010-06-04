@@ -26,7 +26,7 @@ Test strings :
 ^^^^^^^^^^^^
 >>> import nmap
 >>> nm = nmap.PortScanner()
->>> nm.scan('127.0.0.1', '22-443')
+>>> r=nm.scan('127.0.0.1', '22-443')
 >>> nm.command_line()
 u'nmap -oX - -p 22-443 -sV 127.0.0.1'
 >>> nm.scaninfo()
@@ -61,6 +61,10 @@ u'1'
 True
 >>> nm.scanstats().has_key('elapsed')
 True
+>>> nm.listscan('192.168.1.0/30')
+[u'192.168.1.0', u'192.168.1.1', u'192.168.1.2', u'192.168.1.3']
+>>> nm.listscan('localhost/30')
+[u'127.0.0.0', u'127.0.0.1', u'127.0.0.2', u'127.0.0.3']
 """
 
 
@@ -372,7 +376,8 @@ class PortScannerAsync(object):
         arguments = string of arguments for nmap '-sU -sX -sC'
         callback = callback function which takes (host, scan_data) as arguments
         """
-        def scan_progressive(hosts, ports, arguments, callback):
+
+        def scan_progressive(self, hosts, ports, arguments, callback):
             for host in self._nm.listscan(hosts):
                 try:
                     scan_data = self._nm.scan(host, ports, arguments)
@@ -382,16 +387,41 @@ class PortScannerAsync(object):
                     callback(host, scan_data)
             return
 
-        self.__process = Process(
+        self._process = Process(
             target=scan_progressive,
-            args=(hosts, ports, arguments, callback)
+            args=(self, hosts, ports, arguments, callback)
             )
-        self.__process.daemon = True
-        self.__process.start()
-        
+        self._process.daemon = True
+        self._process.start()
         return
 
 
+    def stop(self):
+        """
+        Stop the current scan process
+        """
+        if self._process is not None:
+            self._process.terminate()
+        return
+
+
+    def wait(self, timeout=None):
+        """
+        Wait for the current scan process to finish, or timeout
+        """
+        self._process.join(timeout)
+        return
+
+    
+
+    def still_scanning(self):
+        """
+        Return True if a scan is currently running, False otherwise
+        """
+        try:
+            return self._process.is_alive()
+        except:
+            return False
 
     
 

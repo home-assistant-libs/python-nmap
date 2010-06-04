@@ -35,6 +35,11 @@ except:
     print "Unexpected error:", sys.exc_info()[0]
     sys.exit(0)
 
+
+
+
+
+
 nm.scan('127.0.0.1', '22-443')      # scan host 127.0.0.1, ports from 22 to 443
 nm.command_line()                   # get command line used for the scan : nmap -oX - -p 22-443 127.0.0.1
 nm.scaninfo()                       # get nmap scan informations {'tcp': {'services': '22-443', 'method': 'connect'}}
@@ -76,4 +81,27 @@ nm.scan(hosts='192.168.1.0/24', arguments='-n -sP -PE -PA21,23,80,3389')
 hosts_list = [(x, nm[x]['status']['state']) for x in nm.all_hosts()]
 for host, status in hosts_list:
     print '{0}:{1}'.format(host, status)
+
+
+
+
+
+
+
+print '----------------------------------------------------'
+# Asynchronous usage of PortScannerAsync
+
+
+nma = nmap.PortScannerAsync()
+
+def callback_result(host, scan_result):
+    print '------------------'
+    print host, scan_result
+
+nma.scan(hosts='192.168.1.0/30', arguments='-sP', callback=callback_result)
+
+while nma.still_scanning():
+    print("Waiting ...")
+    nma.wait(2)   # you can do whatever you want...
+
 
