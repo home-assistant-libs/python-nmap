@@ -32,26 +32,26 @@ Typical usage looks like::
 
     # a more usefull example :
     for host in nm.all_hosts():
-        print '----------------------------------------------------'
-        print 'Host : %s (%s)' % (host, nm[host].hostname())
-        print 'State : %s' % nm[host].state()
+        print('----------------------------------------------------')
+        print('Host : %s (%s)' % (host, nm[host].hostname()))
+        print('State : %s' % nm[host].state())
 
         for proto in nm[host].all_protocols():
-            print '----------'
-            print 'Protocol : %s' % proto
+            print('----------')
+            print('Protocol : %s' % proto)
 
             lport = nm[host][proto].keys()
             lport.sort()
             for port in lport:
-                print 'port : %s\tstate : %s' % (port, nm[host][proto][port]['state'])
+                print('port : %s\tstate : %s' % (port, nm[host][proto][port]['state']))
 
 
-    print '----------------------------------------------------'
+    print('----------------------------------------------------')
     # If you want to do a pingsweep on network 192.168.1.0/24:
     nm.scan(hosts='192.168.1.0/24', arguments='-n -sP -PE -PA21,23,80,3389')
     hosts_list = [(x, nm[x]['status']['state']) for x in nm.all_hosts()]
     for host, status in hosts_list:
-        print '{0}:{1}'.format(host, status)
+        print('{0}:{1}'.format(host, status))
 
 
 Homepage

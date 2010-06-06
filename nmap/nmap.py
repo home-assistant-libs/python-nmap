@@ -2,9 +2,10 @@
 # -*- coding: latin-1 -*-
 
 """
-nmap.py - v0.1.3 - 2010.06.04
+nmap.py - v0.1.3 - 2010.06.07
 
 Author : Alexandre Norman - norman@xael.org
+Contributor: Steve 'Ashcrow' Milner - steve@gnulinux.net
 Licence : GPL v3 or any later version
 
 
@@ -57,9 +58,9 @@ u'1'
 u'0'
 >>> nm.scanstats()['totalhosts']
 u'1'
->>> nm.scanstats().has_key('timestr')
+>>> 'timestr' in nm.scanstats().keys()
 True
->>> nm.scanstats().has_key('elapsed')
+>>> 'elapsed' in nm.scanstats().keys()
 True
 >>> nm.listscan('192.168.1.0/30')
 [u'192.168.1.0', u'192.168.1.1', u'192.168.1.2', u'192.168.1.3']
@@ -111,8 +112,7 @@ class PortScanner(object):
         self.__process = None
 
         # regex used to detect nmap
-        regex = re.compile('Nmap version [0-9]*\.[0-9]* \( http://nmap\.org \)')
-
+        regex = re.compile('Nmap version [0-9]*\.[0-9]*[^ ]* \( http://nmap\.org \)')
         # launch 'nmap -V', we wait after 'Nmap version 5.0 ( http://nmap.org )'
         p = subprocess.Popen(['nmap', '-V'], bufsize=10000, stdout=subprocess.PIPE)
         self._nmap_last_output = p.communicate()[0] # store stdout
@@ -261,7 +261,7 @@ class PortScanner(object):
                 for dname in dport.getElementsByTagName('service'):
                     name = dname.getAttributeNode('name').value
                 # store everything
-                if not scan_result['scan'][host].has_key(proto):
+                if not proto in scan_result['scan'][host].keys():
                     scan_result['scan'][host][proto] = {}
                 scan_result['scan'][host][proto][port] = {'state': state,
                                                   'reason': reason,
@@ -272,7 +272,7 @@ class PortScanner(object):
                 for dscript in dport.getElementsByTagName('script'):
                     script_id = dscript.getAttributeNode('id').value
                     script_out = dscript.getAttributeNode('output').value
-                    if not scan_result['scan'][host][proto][port].has_key('script'):
+                    if not 'script' in scan_result['scan'][host][proto][port].keys():
                         scan_result['scan'][host][proto][port]['script'] = {}
 
                     scan_result['scan'][host][proto][port]['script'][script_id] = script_out
@@ -294,7 +294,7 @@ class PortScanner(object):
         """
         returns a sorted list of all hosts
         """
-        if not self._scan_result.has_key('scan'):
+        if not 'scan' in self._scan_result.keys():
             return []
         listh = self._scan_result['scan'].keys()
         listh.sort()
@@ -328,7 +328,7 @@ class PortScanner(object):
         """
         returns True if host has result, False otherwise
         """
-        if self._scan_result['scan'].has_key(host):
+        if host in self._scan_result['scan'].keys():
             return True
 
         return False
@@ -463,7 +463,7 @@ class PortScannerHostDict(dict):
         """
         returns list of tcp ports
         """
-        if self.has_key('tcp'):
+        if 'tcp' in self.keys():
             ltcp = self['tcp'].keys()
             ltcp.sort()
             return ltcp
@@ -474,8 +474,8 @@ class PortScannerHostDict(dict):
         """
         returns True if tcp port has info, False otherwise
         """
-        if (self.has_key('tcp')
-            and self['tcp'].has_key(port)):
+        if ('tcp' in self.keys()
+            and port in self['tcp'].keys()):
             return True
         return False
 
@@ -491,7 +491,7 @@ class PortScannerHostDict(dict):
         """
         returns list of udp ports
         """
-        if self.has_key('udp'):
+        if 'udp' in self.keys():
             ludp = self['udp'].keys()
             ludp.sort()
             return ludp
@@ -502,8 +502,8 @@ class PortScannerHostDict(dict):
         """
         returns True if udp port has info, False otherwise
         """
-        if (self.has_key('udp')
-            and self['udp'].has_key(port)):
+        if ('udp' in self.keys()
+            and 'port' in self['udp'].keys()):
             return True
         return False
 
@@ -519,7 +519,7 @@ class PortScannerHostDict(dict):
         """
         returns list of ip ports
         """
-        if self.has_key('ip'):
+        if 'ip' in self.keys():
             lip = self['ip'].keys()
             lip.sort()
             return lip
@@ -530,8 +530,8 @@ class PortScannerHostDict(dict):
         """
         returns True if ip port has info, False otherwise
         """
-        if (self.has_key('ip')
-            and self['ip'].has_key(port)):
+        if ('ip' in self.keys()
+            and port in self['ip'].keys()):
             return True
         return False
 
@@ -547,7 +547,7 @@ class PortScannerHostDict(dict):
         """
         returns list of sctp ports
         """
-        if self.has_key('sctp'):
+        if 'sctp' in self.keys():
             lsctp = self['sctp'].keys()
             lsctp.sort()
             return lsctp
@@ -558,8 +558,8 @@ class PortScannerHostDict(dict):
         """
         returns True if sctp port has info, False otherwise
         """
-        if (self.has_key('sctp')
-            and self['sctp'].has_key(port)):
+        if ('sctp' in self.keys()
+            and port in self['sctp'].keys()):
             return True
         return False
 
