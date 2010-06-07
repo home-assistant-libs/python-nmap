@@ -54,6 +54,18 @@ Typical usage looks like::
         print('{0}:{1}'.format(host, status))
 
 
+   print '----------------------------------------------------'
+   # Asynchronous usage of PortScannerAsync
+   nma = nmap.PortScannerAsync()
+   def callback_result(host, scan_result):
+       print '------------------'
+       print host, scan_result
+   nma.scan(hosts='192.168.1.0/30', arguments='-sP', callback=callback_result)
+   while nma.still_scanning():
+       print("Waiting ...")
+       nma.wait(2)   # you can do whatever you want but I choose to wait after the end of the scan
+
+
 Homepage
 ========
 
