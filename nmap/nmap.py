@@ -78,6 +78,7 @@ import re
 import string
 import subprocess
 import sys
+import types
 import xml.dom.minidom
 import shlex
 
@@ -160,6 +161,8 @@ class PortScanner(object):
         """
         do not scan but interpret target hosts and return a list a hosts
         """
+        assert type(hosts) in types.StringTypes, 'Wrong type for [hosts], should be a string [was {0}]'.format(type(hosts))
+        
         self.scan(hosts, arguments='-sL')
         return self.all_hosts()
 
@@ -175,6 +178,9 @@ class PortScanner(object):
         ports = string for ports as nmap use it '22,53,110,143-4564'
         arguments = string of arguments for nmap '-sU -sX -sC'
         """
+        assert type(hosts) in types.StringTypes, 'Wrong type for [hosts], should be a string [was {0}]'.format(type(hosts))
+        assert type(ports) in types.StringTypes+(types.NoneType,), 'Wrong type for [ports], should be a string [was {0}]'.format(type(ports))
+        assert type(arguments) in types.StringTypes, 'Wrong type for [arguments], should be a string [was {0}]'.format(type(arguments))
 
         f_args = shlex.split(arguments)
         
@@ -189,7 +195,15 @@ class PortScanner(object):
 
         # If there was something on stderr, there was a problem so abort...
         if len(nmap_err) > 0:
-            raise PortScannerError(nmap_err)
+            regex_warning = re.compile('^Warning: .*')
+            for line in nmap_err.split('\n'):
+                if len(line) > 0:
+                    rgw = regex_warning.search(line)
+                    if rgw is not None:
+                        sys.stderr.write(line+'\n')
+                        pass
+                    else:
+                        raise PortScannerError(nmap_err)
 
 
         # nmap xml output looks like :
@@ -287,6 +301,7 @@ class PortScanner(object):
         """
         returns a host detail
         """
+        assert type(host) in types.StringTypes, 'Wrong type for [host], should be a string [was {0}]'.format(type(host))
         return self._scan_result['scan'][host]
 
 
@@ -328,6 +343,8 @@ class PortScanner(object):
         """
         returns True if host has result, False otherwise
         """
+        assert type(host) is types.StringTypes, 'Wrong type for [host], should be a string [was {0}]'.format(type(host))
+
         if host in self._scan_result['scan'].keys():
             return True
 
@@ -377,6 +394,11 @@ class PortScannerAsync(object):
         callback = callback function which takes (host, scan_data) as arguments
         """
 
+        assert type(hosts) in types.StringTypes, 'Wrong type for [hosts], should be a string [was {0}]'.format(type(hosts))
+        assert type(ports) in types.StringTypes+(types.NoneType,), 'Wrong type for [ports], should be a string [was {0}]'.format(type(ports))
+        assert type(arguments) in types.StringTypes, 'Wrong type for [arguments], should be a string [was {0}]'.format(type(arguments))
+        assert type(callback) in (types.FunctionType, types.NoneType), 'Wrong type for [callback], should be a function or None [was {0}]'.format(type(callback))
+        
         def scan_progressive(self, hosts, ports, arguments, callback):
             for host in self._nm.listscan(hosts):
                 try:
@@ -409,6 +431,9 @@ class PortScannerAsync(object):
         """
         Wait for the current scan process to finish, or timeout
         """
+
+        assert type(timeout) in (types.IntType, types.NoneType), 'Wrong type for [timeout], should be an int or None [was {0}]'.format(type(timeout))
+
         self._process.join(timeout)
         return
 
@@ -474,6 +499,8 @@ class PortScannerHostDict(dict):
         """
         returns True if tcp port has info, False otherwise
         """
+        assert type(port) is types.IntType, 'Wrong type for [port], should be an int [was {0}]'.format(type(port))
+        
         if ('tcp' in self.keys()
             and port in self['tcp'].keys()):
             return True
@@ -484,6 +511,7 @@ class PortScannerHostDict(dict):
         """
         returns info for tpc port
         """
+        assert type(port) is types.IntType, 'Wrong type for [port], should be an int [was {0}]'.format(type(port))
         return self['tcp'][port]
 
 
@@ -502,6 +530,8 @@ class PortScannerHostDict(dict):
         """
         returns True if udp port has info, False otherwise
         """
+        assert type(port) is types.IntType, 'Wrong type for [port], should be an int [was {0}]'.format(type(port))
+
         if ('udp' in self.keys()
             and 'port' in self['udp'].keys()):
             return True
@@ -512,6 +542,8 @@ class PortScannerHostDict(dict):
         """
         returns info for udp port
         """
+        assert type(port) is types.IntType, 'Wrong type for [port], should be an int [was {0}]'.format(type(port))
+
         return self['udp'][port]
 
 
@@ -530,6 +562,8 @@ class PortScannerHostDict(dict):
         """
         returns True if ip port has info, False otherwise
         """
+        assert type(port) is types.IntType, 'Wrong type for [port], should be an int [was {0}]'.format(type(port))
+
         if ('ip' in self.keys()
             and port in self['ip'].keys()):
             return True
@@ -540,6 +574,8 @@ class PortScannerHostDict(dict):
         """
         returns info for ip port
         """
+        assert type(port) is types.IntType, 'Wrong type for [port], should be an int [was {0}]'.format(type(port))
+
         return self['ip'][port]
 
 
@@ -558,6 +594,8 @@ class PortScannerHostDict(dict):
         """
         returns True if sctp port has info, False otherwise
         """
+        assert type(port) is types.IntType, 'Wrong type for [port], should be an int [was {0}]'.format(type(port))
+
         if ('sctp' in self.keys()
             and port in self['sctp'].keys()):
             return True
@@ -568,6 +606,8 @@ class PortScannerHostDict(dict):
         """
         returns info for sctp port
         """
+        assert type(port) is types.IntType, 'Wrong type for [port], should be an int [was {0}]'.format(type(port))
+
         return self['sctp'][port]
 
 
