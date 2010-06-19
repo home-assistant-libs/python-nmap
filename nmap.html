@@ -6,12 +6,13 @@
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
 <tr bgcolor="#7799ee">
 <td valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>nmap</strong></big></big> (version 0.1.3)</font></td
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>nmap</strong></big></big> (version 0.1.4)</font></td
 ><td align=right valign=bottom
 ><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/xael/ESPACE_KM/python/python-nmap/nmap/nmap.py">/home/xael/ESPACE_KM/python/python-nmap/nmap/nmap.py</a></font></td></tr></table>
-    <p><tt>nmap.py&nbsp;-&nbsp;v0.1.3&nbsp;-&nbsp;2010.06.04<br>
+    <p><tt>nmap.py&nbsp;-&nbsp;v0.1.4&nbsp;-&nbsp;2010.06.20<br>
 &nbsp;<br>
 Author&nbsp;:&nbsp;Alexandre&nbsp;Norman&nbsp;-&nbsp;norman@xael.org<br>
+Contributor:&nbsp;Steve&nbsp;'Ashcrow'&nbsp;Milner&nbsp;-&nbsp;steve@gnulinux.net<br>
 Licence&nbsp;:&nbsp;GPL&nbsp;v3&nbsp;or&nbsp;any&nbsp;later&nbsp;version<br>
 &nbsp;<br>
 &nbsp;<br>
@@ -64,9 +65,9 @@ u'1'<br>
 u'0'<br>
 &gt;&gt;&gt;&nbsp;nm.scanstats()['totalhosts']<br>
 u'1'<br>
-&gt;&gt;&gt;&nbsp;nm.scanstats().has_key('timestr')<br>
+&gt;&gt;&gt;&nbsp;'timestr'&nbsp;in&nbsp;nm.scanstats().keys()<br>
 True<br>
-&gt;&gt;&gt;&nbsp;nm.scanstats().has_key('elapsed')<br>
+&gt;&gt;&gt;&nbsp;'elapsed'&nbsp;in&nbsp;nm.scanstats().keys()<br>
 True<br>
 &gt;&gt;&gt;&nbsp;nm.listscan('192.168.1.0/30')<br>
 [u'192.168.1.0',&nbsp;u'192.168.1.1',&nbsp;u'192.168.1.2',&nbsp;u'192.168.1.3']<br>
@@ -85,7 +86,8 @@ True<br>
 <a href="string.html">string</a><br>
 </td><td width="25%" valign=top><a href="subprocess.html">subprocess</a><br>
 <a href="sys.html">sys</a><br>
-</td><td width="25%" valign=top><a href="xml.html">xml</a><br>
+</td><td width="25%" valign=top><a href="types.html">types</a><br>
+<a href="xml.html">xml</a><br>
 </td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ee77aa">
@@ -406,7 +408,7 @@ v&nbsp;defaults&nbsp;to&nbsp;None.</tt></dl>
     
 <tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><strong>__author__</strong> = 'Alexandre Norman (norman@xael.org)'<br>
-<strong>__version__</strong> = '0.1.3'</td></tr></table><p>
+<strong>__version__</strong> = '0.1.4'</td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#7799ee">
 <td colspan=3 valign=bottom>&nbsp;<br>

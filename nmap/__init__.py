@@ -1,7 +1,7 @@
 # -*- coding: latin-1 -*-
 
 """
-nmap.py - v0.1.3 - 2010.06.07
+nmap.py - v0.1.4 - 2010.06.20
 
 Author : Alexandre Norman - norman@xael.org
 Contributor: Steve 'Ashcrow' Milner - steve@gnulinux.net
@@ -55,6 +55,6 @@ u'open'
 
 
 __author__ = 'Alexandre Norman (norman@xael.org)'
-__version__ = '0.1.3'
+__version__ = '0.1.4'
 
 from nmap import *

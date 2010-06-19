@@ -13,7 +13,7 @@ nmap = Extension('nmap',
 
 setup (
     name = 'python-nmap',
-    version = '0.1.3',
+    version = '0.1.4',
     author = 'Alexandre Norman',
     author_email = 'norman@xael.org',
     license ='gpl-3.0.txt',
