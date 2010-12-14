@@ -1,7 +1,7 @@
 # -*- coding: latin-1 -*-
 
 """
-nmap.py - v0.1.4 - 2010.06.20
+nmap.py - v0.2.0 - 2010.12.14
 
 Author : Alexandre Norman - norman@xael.org
 Contributor: Steve 'Ashcrow' Milner - steve@gnulinux.net
@@ -28,17 +28,17 @@ Test strings :
 >>> nm = nmap.PortScanner()
 >>> nm.scan('127.0.0.1', '22-443')
 >>> nm.command_line()
-u'nmap -oX - -p 22-443 -sV 127.0.0.1'
+'nmap -oX - -p 22-443 -sV 127.0.0.1'
 >>> nm.scaninfo()
-{u'tcp': {'services': u'22-443', 'method': u'connect'}}
+{'tcp': {'services': '22-443', 'method': 'connect'}}
 >>> nm.all_hosts()
-[u'127.0.0.1']
+['127.0.0.1']
 >>> nm['127.0.0.1'].hostname()
-u'localhost'
+'localhost'
 >>> nm['127.0.0.1'].state()
-u'up'
+'up'
 >>> nm['127.0.0.1'].all_protocols()
-[u'tcp']
+['tcp']
 >>> nm['127.0.0.1']['tcp'].keys()
 [80, 25, 443, 22, 111]
 >>> nm['127.0.0.1'].has_tcp(22)
@@ -46,15 +46,15 @@ True
 >>> nm['127.0.0.1'].has_tcp(23)
 False
 >>> nm['127.0.0.1']['tcp'][22]
-{'state': u'open', 'reason': u'syn-ack', 'name': u'ssh'}
+{'state': 'open', 'reason': 'syn-ack', 'name': 'ssh'}
 >>> nm['127.0.0.1'].tcp(22)
-{'state': u'open', 'reason': u'syn-ack', 'name': u'ssh'}
+{'state': 'open', 'reason': 'syn-ack', 'name': 'ssh'}
 >>> nm['127.0.0.1']['tcp'][22]['state']
-u'open'
+'open'
 """
 
 
 __author__ = 'Alexandre Norman (norman@xael.org)'
-__version__ = '0.1.4'
+__version__ = '0.2.0'
 
 from nmap import *

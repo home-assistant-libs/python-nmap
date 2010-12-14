@@ -2,7 +2,7 @@
 # -*- coding: latin-1 -*-
 
 """
-example.py - 2010.06.07
+example.py - 2010.12.14
 
 Author : Alexandre Norman - norman@xael.org
 Contributor: Steve 'Ashcrow' Milner - steve@gnulinux.net
