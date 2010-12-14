@@ -48,7 +48,7 @@ nm.all_hosts()                      # get all hosts that were scanned
 nm['127.0.0.1'].hostname()          # get hostname for host 127.0.0.1
 nm['127.0.0.1'].state()             # get state of host 127.0.0.1 (up|down|unknown|skipped) 
 nm['127.0.0.1'].all_protocols()     # get all scanned protocols ['tcp', 'udp'] in (ip|tcp|udp|sctp)
-nm['127.0.0.1']['tcp'].keys()       # get all ports for tcp protocol
+list(nm['127.0.0.1']['tcp'].keys()) # get all ports for tcp protocol
 nm['127.0.0.1'].all_tcp()           # get all ports for tcp protocol (sorted version)
 nm['127.0.0.1'].all_udp()           # get all ports for udp protocol (sorted version)
 nm['127.0.0.1'].all_ip()            # get all ports for ip protocol (sorted version)
@@ -69,7 +69,7 @@ for host in nm.all_hosts():
         print('----------')
         print('Protocol : %s' % proto)
 
-        lport = nm[host][proto].keys()
+        lport = list(nm[host][proto].keys())
         lport.sort()
         for port in lport:
             print('port : %s\tstate : %s' % (port, nm[host][proto][port]['state']))
@@ -89,15 +89,15 @@ for host, status in hosts_list:
 
 
 
-print '----------------------------------------------------'
+print('----------------------------------------------------')
 # Asynchronous usage of PortScannerAsync
 
 
 nma = nmap.PortScannerAsync()
 
 def callback_result(host, scan_result):
-    print '------------------'
-    print host, scan_result
+    print('------------------')
+    print(host, scan_result)
 
 nma.scan(hosts='192.168.1.0/30', arguments='-sP', callback=callback_result)
 
