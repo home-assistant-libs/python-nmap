@@ -4,8 +4,9 @@
 """
 nmap.py - v0.2.0 - 2010.12.14
 
-Author : Alexandre Norman - norman@xael.org
-Contributor: Steve 'Ashcrow' Milner - steve@gnulinux.net
+Author : Alexandre Norman - norman at xael.org
+Contributor: Steve 'Ashcrow' Milner - steve at gnulinux.net
+             Brian Bustin - brian at bustin.us
 Licence : GPL v3 or any later version
 
 
