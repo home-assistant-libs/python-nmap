@@ -1,6 +1,15 @@
 Changelog
 =========
 
+2010/12/15
+ - corrected bug in __init__.py about scope problem
+ - try to find nmap executable in known directories
+ - raise AssertionError when trying to call command_line, scaninfo, scanstats, has_host before scanning
+
+2010/12/14
+Make python-nmap works with Python 3.x
+Contribution from Brian Bustin <brian at bustin.us>
+
 2010/06/07
 Patches from Steve 'Ashcrow' Milner <steve at gnulinux.net>
  - remove shebang from __init__.py as it is not a runnable script
