@@ -10,7 +10,7 @@ test:
 install:
 	@python3 setup.py install
 
-archive:
+archive: doc
 	@python3 setup.py sdist
 	@echo Archive is create and named dist/$(ARCHIVE).tar.gz
 	@echo -n md5sum is :
