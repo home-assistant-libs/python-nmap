@@ -1,10 +1,11 @@
 # -*- coding: latin-1 -*-
 
 """
-nmap.py - v0.2.0 - 2010.12.14
+nmap.py - v0.2.1 - 2010.12.15
 
 Author : Alexandre Norman - norman@xael.org
-Contributor: Steve 'Ashcrow' Milner - steve@gnulinux.net
+Contributors: Steve 'Ashcrow' Milner - steve@gnulinux.net
+              Brian Bustin - brian at bustin.us
 Licence : GPL v3 or any later version
 
 

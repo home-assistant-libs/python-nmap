@@ -2,11 +2,11 @@
 # -*- coding: latin-1 -*-
 
 """
-nmap.py - v0.2.0 - 2010.12.14
+nmap.py - v0.2.1 - 2010.12.15
 
 Author : Alexandre Norman - norman at xael.org
-Contributor: Steve 'Ashcrow' Milner - steve at gnulinux.net
-             Brian Bustin - brian at bustin.us
+Contributors: Steve 'Ashcrow' Milner - steve at gnulinux.net
+              Brian Bustin - brian at bustin.us
 Licence : GPL v3 or any later version
 
 
@@ -98,13 +98,16 @@ class PortScanner(object):
     PortScanner allows to use nmap from python
     """
     
-    def __init__(self):
+    def __init__(self, nmap_search_path=('nmap','/usr/bin/nmap','/usr/local/bin/nmap','/sw/bin/nmap','/opt/local/bin/nmap') ):
         """
         Initialize the module
         detects nmap on the system and nmap version
         may raise PortScannerError exception if nmap is not found in the path
+
+        nmap_search_path = tupple of string where to search for nmap executable. Change this if you want to use a specific version of nmap.
         """
 
+        self._nmap_path = ''                # nmap path
         self._scan_result = {}
         self._nmap_version_number = 0       # nmap version number
         self._nmap_subversion_number = 0    # nmap subversion number
@@ -116,7 +119,20 @@ class PortScanner(object):
         # regex used to detect nmap
         regex = re.compile('Nmap version [0-9]*\.[0-9]*[^ ]* \( http://nmap\.org \)')
         # launch 'nmap -V', we wait after 'Nmap version 5.0 ( http://nmap.org )'
-        p = subprocess.Popen(['nmap', '-V'], bufsize=10000, stdout=subprocess.PIPE)
+        # This is for Mac OSX. When idle3 is launched from the finder, PATH is not set so nmap was not found
+        for nmap_path in nmap_search_path:
+            try:
+                p = subprocess.Popen([nmap_path, '-V'], bufsize=10000, stdout=subprocess.PIPE)
+            except OSError:
+                pass
+            else:
+                self._nmap_path = nmap_path # save path 
+                break
+        else:
+            raise PortScannerError('nmap program was not found in path. PATH is : {0}'.format(os.getenv('PATH')))            
+
+
+            
         self._nmap_last_output = bytes.decode(p.communicate()[0]) # store stdout
         for line in self._nmap_last_output.split('\n'):
             if regex.match(line) is not None:
@@ -186,7 +202,7 @@ class PortScanner(object):
         f_args = shlex.split(arguments)
         
         # Launch scan
-        args = ['nmap', '-oX', '-', hosts] + ['-p', ports]*(ports!=None) + f_args
+        args = [self._nmap_path, '-oX', '-', hosts] + ['-p', ports]*(ports!=None) + f_args
 
         p = subprocess.Popen(args, bufsize=100000, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
@@ -320,7 +336,12 @@ class PortScanner(object):
     def command_line(self):
         """
         returns command line used for the scan
+
+        may raise AssertionError exception if called before scanning
         """
+        assert 'nmap' in self._scan_result, 'Do a scan before trying to get result !'
+        assert 'command_line' in self._scan_result['nmap'], 'Do a scan before trying to get result !'
+
         return self._scan_result['nmap']['command_line']
 
 
@@ -328,15 +349,25 @@ class PortScanner(object):
         """
         returns scaninfo structure
         {'tcp': {'services': '22', 'method': 'connect'}}
-        """
-        return self._scan_result['nmap']['scaninfo']
-        
 
+        may raise AssertionError exception if called before scanning
+        """
+        assert 'nmap' in self._scan_result, 'Do a scan before trying to get result !'
+        assert 'scaninfo' in self._scan_result['nmap'], 'Do a scan before trying to get result !'
+
+        return self._scan_result['nmap']['scaninfo']
+            
+        
     def scanstats(self):
         """
         returns scanstats structure
         {'uphosts': '3', 'timestr': 'Thu Jun  3 21:45:07 2010', 'downhosts': '253', 'totalhosts': '256', 'elapsed': '5.79'}
+
+        may raise AssertionError exception if called before scanning
         """
+        assert 'nmap' in self._scan_result, 'Do a scan before trying to get result !'
+        assert 'scanstats' in self._scan_result['nmap'], 'Do a scan before trying to get result !'
+
         return self._scan_result['nmap']['scanstats']        
 
 
@@ -345,6 +376,7 @@ class PortScanner(object):
         returns True if host has result, False otherwise
         """
         assert type(host) is str, 'Wrong type for [host], should be a string [was {0}]'.format(type(host))
+        assert 'scan' in self._scan_result, 'Do a scan before trying to get result !'
 
         if host in list(self._scan_result['scan'].keys()):
             return True
