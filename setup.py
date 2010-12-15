@@ -13,7 +13,7 @@ nmap = Extension('nmap',
 
 setup (
     name = 'python-nmap',
-    version = '0.1.4',
+    version = '0.2.1',
     author = 'Alexandre Norman',
     author_email = 'norman@xael.org',
     license ='gpl-3.0.txt',
@@ -37,6 +37,6 @@ setup (
         ],
     packages=['nmap'],
     url = 'http://xael.org/norman/python/python-nmap/',
-    description = 'This is a python class to use nmap and access scan results from python',
+    description = 'This is a python class to use nmap and access scan results from python3',
     long_description=open('README.txt').read() + "\n" + open('CHANGELOG').read(),
 )
