@@ -54,8 +54,4 @@ False
 'open'
 """
 
-
-__author__ = 'Alexandre Norman (norman@xael.org)'
-__version__ = '0.2.0'
-
 from .nmap import *
