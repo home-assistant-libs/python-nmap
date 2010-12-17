@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: latin-1 -*-
 
 """
@@ -27,6 +27,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 Test strings :
 ^^^^^^^^^^^^
 >>> import nmap
+>>> if __get_last_online_version() != __version__:
+...     raise ValueError('Current version is {0} - Last published version is {1}'.format(__version__, __get_last_online_version()))
 >>> nm = nmap.PortScanner()
 >>> try:
 ...     nm.scan(arguments='-wrongargs')
@@ -75,7 +77,7 @@ True
 
 
 __author__ = 'Alexandre Norman (norman@xael.org)'
-__version__ = '0.2.2'
+__version__ = '0.2.3'
 __last_modification__ = '2010.12.17'
 
 
@@ -665,6 +667,22 @@ class PortScannerError(Exception):
 
     def __str__(self):
         return repr(self.value)
+
+
+############################################################################
+
+def __get_last_online_version():
+    """
+    Gets last python-nmap published version
+    WARNING : it does an http connection to http://xael.org/norman/python/python-nmap/python-nmap_CURRENT_VERSION.txt
+
+    returns a string '0.2.3'
+    """
+    import http.client
+    conn = http.client.HTTPConnection("xael.org")
+    conn.request("GET", "/norman/python/python-nmap/python-nmap_CURRENT_VERSION.txt")
+    online_version = bytes.decode(conn.getresponse().read()).strip()
+    return online_version
 
 
 ############################################################################

@@ -1,6 +1,9 @@
 Changelog
 =========
 
+2010/12/17 (v0.2.3)
+ - adding __get_last_online_version to check if current version is the last published
+
 2010/12/17 (v0.2.2)
  - bug in handling nmap_error output (returned value was bin, string was expected)
  - removed test strings form __init__.py file.
