@@ -2,7 +2,7 @@
 # -*- coding: latin-1 -*-
 
 """
-nmap.py - v0.2.1 - 2010.12.15
+nmap.py - version and date, see below
 
 Author : Alexandre Norman - norman at xael.org
 Contributors: Steve 'Ashcrow' Milner - steve at gnulinux.net
@@ -28,6 +28,10 @@ Test strings :
 ^^^^^^^^^^^^
 >>> import nmap
 >>> nm = nmap.PortScanner()
+>>> try:
+...     nm.scan(arguments='-wrongargs')
+... except nmap.PortScannerError:
+...     pass
 >>> r=nm.scan('127.0.0.1', '22-443')
 >>> nm.command_line()
 'nmap -oX - -p 22-443 -sV 127.0.0.1'
@@ -71,7 +75,8 @@ True
 
 
 __author__ = 'Alexandre Norman (norman@xael.org)'
-__version__ = '0.2.1'
+__version__ = '0.2.2'
+__last_modification__ = '2010.12.17'
 
 
 import os
@@ -209,6 +214,8 @@ class PortScanner(object):
         # wait until finished
         # get output
         (self._nmap_last_output, nmap_err) = p.communicate()
+        self._nmap_last_output = bytes.decode(self._nmap_last_output)
+        nmap_err = bytes.decode(nmap_err)
 
         # If there was something on stderr, there was a problem so abort...
         if len(nmap_err) > 0:

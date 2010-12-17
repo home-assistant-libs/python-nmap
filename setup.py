@@ -4,6 +4,8 @@ from distutils.core import setup, Extension
 nmap = Extension('nmap',
                  sources = ['nmap/nmap.py', 'nmap/__init__.py', 'nmap/example.py'])
 
+from nmap import *
+
 # Install : python setup.py install
 # Register : python setup.py register
 
@@ -13,7 +15,7 @@ nmap = Extension('nmap',
 
 setup (
     name = 'python-nmap',
-    version = '0.2.1',
+    version = nmap.__version__,
     author = 'Alexandre Norman',
     author_email = 'norman@xael.org',
     license ='gpl-3.0.txt',
@@ -31,7 +33,7 @@ setup (
         "License :: OSI Approved :: GNU General Public License (GPL)",
         "Operating System :: OS Independent",
         "Topic :: System :: Monitoring",
-        "Topic :: System :: Networking",
+                                    "Topic :: System :: Networking",
         "Topic :: System :: Networking :: Firewalls",
         "Topic :: System :: Networking :: Monitoring",
         ],
@@ -39,4 +41,4 @@ setup (
     url = 'http://xael.org/norman/python/python-nmap/',
     description = 'This is a python class to use nmap and access scan results from python3',
     long_description=open('README.txt').read() + "\n" + open('CHANGELOG').read(),
-)
+    )

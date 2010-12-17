@@ -1,5 +1,5 @@
-# python-nmap
-# v0.2.1
+# python-nmap Makefile
+
 VERSION=`python setup.py --version`
 ARCHIVE=`python setup.py --fullname`
 
@@ -24,3 +24,11 @@ register:
 
 doc:
 	@pydoc3 -w nmap/nmap.py
+
+web:
+	@cp dist/$(ARCHIVE).tar.gz web/
+	@md5sum web/$(ARCHIVE).tar.gz > LAST_MD5
+	@emacsclient -a /usr/bin/emacs22 LAST_MD5 web/index.gtm
+	@rm LAST_MD5
+
+.PHONY: web

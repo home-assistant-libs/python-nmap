@@ -6,10 +6,10 @@
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
 <tr bgcolor="#7799ee">
 <td valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>nmap</strong></big></big> (version 0.2.1)</font></td
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>nmap</strong></big></big> (version 0.2.2)</font></td
 ><td align=right valign=bottom
 ><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/xael/ESPACE_KM/python/python-nmap/nmap/nmap.py">/home/xael/ESPACE_KM/python/python-nmap/nmap/nmap.py</a></font></td></tr></table>
-    <p><tt>nmap.py&nbsp;-&nbsp;v0.2.1&nbsp;-&nbsp;2010.12.15<br>
+    <p><tt>nmap.py&nbsp;-&nbsp;version&nbsp;and&nbsp;date,&nbsp;see&nbsp;below<br>
 &nbsp;<br>
 Author&nbsp;:&nbsp;Alexandre&nbsp;Norman&nbsp;-&nbsp;norman&nbsp;at&nbsp;xael.org<br>
 Contributors:&nbsp;Steve&nbsp;'Ashcrow'&nbsp;Milner&nbsp;-&nbsp;steve&nbsp;at&nbsp;gnulinux.net<br>
@@ -35,6 +35,10 @@ Test&nbsp;strings&nbsp;:<br>
 ^^^^^^^^^^^^<br>
 &gt;&gt;&gt;&nbsp;import&nbsp;nmap<br>
 &gt;&gt;&gt;&nbsp;nm&nbsp;=&nbsp;nmap.<a href="#PortScanner">PortScanner</a>()<br>
+&gt;&gt;&gt;&nbsp;try:<br>
+...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nm.scan(arguments='-wrongargs')<br>
+...&nbsp;except&nbsp;nmap.<a href="#PortScannerError">PortScannerError</a>:<br>
+...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
 &gt;&gt;&gt;&nbsp;r=nm.scan('127.0.0.1',&nbsp;'22-443')<br>
 &gt;&gt;&gt;&nbsp;nm.command_line()<br>
 'nmap&nbsp;-oX&nbsp;-&nbsp;-p&nbsp;22-443&nbsp;-sV&nbsp;127.0.0.1'<br>
@@ -409,7 +413,8 @@ v&nbsp;defaults&nbsp;to&nbsp;None.</tt></dl>
     
 <tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><strong>__author__</strong> = 'Alexandre Norman (norman@xael.org)'<br>
-<strong>__version__</strong> = '0.2.1'</td></tr></table><p>
+<strong>__last_modification__</strong> = '2010.12.17'<br>
+<strong>__version__</strong> = '0.2.2'</td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#7799ee">
 <td colspan=3 valign=bottom>&nbsp;<br>
