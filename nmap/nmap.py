@@ -78,7 +78,7 @@ True
 
 __author__ = 'Alexandre Norman (norman@xael.org)'
 __version__ = '0.2.3'
-__last_modification__ = '2010.12.17'
+__last_modification__ = '2011.01.31'
 
 
 import os
