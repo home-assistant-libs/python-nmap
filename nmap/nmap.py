@@ -202,7 +202,10 @@ class PortScanner(object):
         ports = string for ports as nmap use it '22,53,110,143-4564'
         arguments = string of arguments for nmap '-sU -sX -sC'
         """
-        assert type(hosts) is str, 'Wrong type for [hosts], should be a string [was {0}]'.format(type(hosts))
+        if sys.version_info[0]==2:
+            assert type(hosts) in (str, unicode), 'Wrong type for [hosts], should be a string [was {0}]'.format(type(hosts))
+        else:
+            assert type(hosts) is str, 'Wrong type for [hosts], should be a string [was {0}]'.format(type(hosts))
         assert type(ports) in (str, type(None)), 'Wrong type for [ports], should be a string [was {0}]'.format(type(ports))
         assert type(arguments) is str, 'Wrong type for [arguments], should be a string [was {0}]'.format(type(arguments))
 
@@ -327,7 +330,10 @@ class PortScanner(object):
         """
         returns a host detail
         """
-        assert type(host) is str, 'Wrong type for [host], should be a string [was {0}]'.format(type(host))
+        if sys.version_info[0]==2:
+            assert type(host) in (str, unicode), 'Wrong type for [host], should be a string [was {0}]'.format(type(host))
+        else:
+            assert type(host) is str, 'Wrong type for [host], should be a string [was {0}]'.format(type(host))
         return self._scan_result['scan'][host]
 
 
