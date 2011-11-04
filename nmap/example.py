@@ -48,15 +48,17 @@ nm.all_hosts()                      # get all hosts that were scanned
 nm['127.0.0.1'].hostname()          # get hostname for host 127.0.0.1
 nm['127.0.0.1'].state()             # get state of host 127.0.0.1 (up|down|unknown|skipped) 
 nm['127.0.0.1'].all_protocols()     # get all scanned protocols ['tcp', 'udp'] in (ip|tcp|udp|sctp)
-list(nm['127.0.0.1']['tcp'].keys()) # get all ports for tcp protocol
+if ('tcp' in nm['127.0.0.1']):
+    list(nm['127.0.0.1']['tcp'].keys()) # get all ports for tcp protocol
+
 nm['127.0.0.1'].all_tcp()           # get all ports for tcp protocol (sorted version)
 nm['127.0.0.1'].all_udp()           # get all ports for udp protocol (sorted version)
 nm['127.0.0.1'].all_ip()            # get all ports for ip protocol (sorted version)
 nm['127.0.0.1'].all_sctp()          # get all ports for sctp protocol (sorted version)
-nm['127.0.0.1'].has_tcp(22)         # is there any information for port 22/tcp on host 127.0.0.1
-nm['127.0.0.1']['tcp'][22]          # get infos about port 22 in tcp on host 127.0.0.1
-nm['127.0.0.1'].tcp(22)             # get infos about port 22 in tcp on host 127.0.0.1
-nm['127.0.0.1']['tcp'][22]['state'] # get state of port 22/tcp on host 127.0.0.1 (open
+if nm['127.0.0.1'].has_tcp(22):     # is there any information for port 22/tcp on host 127.0.0.1
+    nm['127.0.0.1']['tcp'][22]          # get infos about port 22 in tcp on host 127.0.0.1
+    nm['127.0.0.1'].tcp(22)             # get infos about port 22 in tcp on host 127.0.0.1
+    nm['127.0.0.1']['tcp'][22]['state'] # get state of port 22/tcp on host 127.0.0.1 (open
 
 
 # a more usefull example :

@@ -1,5 +1,7 @@
 Changelog
 =========
+2011/11/04
+ - bug in example.py : if no tcp port was open between 22-443
 
 2010/12/17 (v0.2.3)
  - adding __get_last_online_version to check if current version is the last published
