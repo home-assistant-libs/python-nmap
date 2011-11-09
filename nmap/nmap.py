@@ -73,12 +73,17 @@ True
 ['192.168.1.0', '192.168.1.1', '192.168.1.2', '192.168.1.3']
 >>> nm.listscan('localhost/30')
 ['127.0.0.0', '127.0.0.1', '127.0.0.2', '127.0.0.3']
+>>> r=nm.scan('127.0.0.1', arguments='-O')
+>>> nm['127.0.0.1']['osclass']
+[{'vendor': u'Linux', 'osfamily': u'Linux', 'type': u'general purpose', 'osgen': u'2.6.X', 'accuracy': u'98'}, {'vendor': u'Netgear', 'osfamily': u'embedded', 'type': u'WAP', 'osgen': '', 'accuracy': ''}, {'vendor': u'Gemtek', 'osfamily': u'embedded', 'type': u'WAP', 'osgen': '', 'accuracy': ''}, {'vendor': u'Siemens', 'osfamily': u'embedded', 'type': u'WAP', 'osgen': '', 'accuracy': ''}, {'vendor': u'Linux', 'osfamily': u'Linux', 'type': u'general purpose', 'osgen': u'2.4.X', 'accuracy': u'90'}, {'vendor': u'Linksys', 'osfamily': u'embedded', 'type': u'WAP', 'osgen': '', 'accuracy': ''}, {'vendor': u'Linux', 'osfamily': u'Linux', 'type': u'WAP', 'osgen': u'2.4.X', 'accuracy': u'90'}, {'vendor': u'Nokia', 'osfamily': u'Linux', 'type': u'general purpose', 'osgen': u'2.6.X', 'accuracy': u'89'}]
+>>> nm['127.0.0.1']['fingerprint']
+'OS:SCAN(V=5.50%D=11/9%OT=22%CT=1%CU=37937%PV=N%DS=0%DC=L%G=Y%TM=4EBAE79D%P=\\nOS:i686-pc-linux-gnu)SEQ(SP=103%GCD=1%ISR=10D%TI=Z%CI=Z%II=I%TS=8)OPS(O1=M4\\nOS:00CST11NW6%O2=M400CST11NW6%O3=M400CNNT11NW6%O4=M400CST11NW6%O5=M400CST11\\nOS:NW6%O6=M400CST11)WIN(W1=8000%W2=8000%W3=8000%W4=8000%W5=8000%W6=8000)ECN\\nOS:(R=Y%DF=Y%T=40%W=8018%O=M400CNNSNW6%CC=Y%Q=)T1(R=Y%DF=Y%T=40%S=O%A=S+%F=\\nOS:AS%RD=0%Q=)T2(R=N)T3(R=Y%DF=Y%T=40%W=8000%S=O%A=S+%F=AS%O=M400CST11NW6%R\\nOS:D=0%Q=)T4(R=Y%DF=Y%T=40%W=0%S=A%A=Z%F=R%O=%RD=0%Q=)T5(R=Y%DF=Y%T=40%W=0%\\nOS:S=Z%A=S+%F=AR%O=%RD=0%Q=)T6(R=Y%DF=Y%T=40%W=0%S=A%A=Z%F=R%O=%RD=0%Q=)T7(\\nOS:R=Y%DF=Y%T=40%W=0%S=Z%A=S+%F=AR%O=%RD=0%Q=)U1(R=Y%DF=N%T=40%IPL=164%UN=0\\nOS:%RIPL=G%RID=G%RIPCK=G%RUCK=G%RUD=G)IE(R=Y%DFI=N%T=40%CD=S)\\n'
 """
 
 
 __author__ = 'Alexandre Norman (norman@xael.org)'
-__version__ = '0.2.3'
-__last_modification__ = '2011.01.31'
+__version__ = '0.2.4'
+__last_modification__ = '2011.11.09'
 
 
 import os
@@ -209,10 +214,11 @@ class PortScanner(object):
         assert type(ports) in (str, type(None)), 'Wrong type for [ports], should be a string [was {0}]'.format(type(ports))
         assert type(arguments) is str, 'Wrong type for [arguments], should be a string [was {0}]'.format(type(arguments))
 
+        h_args = shlex.split(hosts)
         f_args = shlex.split(arguments)
         
         # Launch scan
-        args = [self._nmap_path, '-oX', '-', hosts] + ['-p', ports]*(ports!=None) + f_args
+        args = [self._nmap_path, '-oX', '-'] + h_args + ['-p', ports]*(ports!=None) + f_args
 
         p = subprocess.Popen(args, bufsize=100000, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
@@ -319,6 +325,70 @@ class PortScanner(object):
                         scan_result['scan'][host][proto][port]['script'] = {}
 
                     scan_result['scan'][host][proto][port]['script'][script_id] = script_out
+
+            for dport in dhost.getElementsByTagName('osclass'):
+                # <osclass type="general purpose" vendor="Linux" osfamily="Linux" osgen="2.6.X" accuracy="98"/>
+                ostype = ''
+                vendor = ''
+                osfamily = ''
+                osgen = ''
+                accuracy = ''
+                try:
+                    ostype = dport.getAttributeNode('type').value
+                    vendor = dport.getAttributeNode('vendor').value
+                    osfamily = dport.getAttributeNode('osfamily').value
+                    osgen = dport.getAttributeNode('osgen').value
+                    accuracy = dport.getAttributeNode('accuracy').value
+                except AttributeError:
+                    pass
+                if not 'osclass' in list(scan_result['scan'][host].keys()):
+                    scan_result['scan'][host]['osclass'] = []
+
+                scan_result['scan'][host]['osclass'].append(
+                    {
+                        'type': ostype,
+                        'vendor': vendor,
+                        'osfamily': osfamily,
+                        'osgen': osgen,
+                        'accuracy': accuracy
+                        }
+                    )
+                    
+
+
+            for dport in dhost.getElementsByTagName('osmatch'):
+                # <osmatch name="Linux 2.6.31" accuracy="98" line="30043"/>
+                name = ''
+                accuracy = ''
+                line = ''
+                try:
+                    name = dport.getAttributeNode('name').value
+                    accuracy = dport.getAttributeNode('accuracy').value
+                    line = dport.getAttributeNode('line').value
+                except AttributeError:
+                    pass
+                if not 'osmatch' in list(scan_result['scan'][host].keys()):
+                    scan_result['scan'][host]['osmatch'] = []
+
+                scan_result['scan'][host]['osmatch'].append(
+                    {
+                        'name': name,
+                        'accuracy': accuracy,
+                        'line': line,
+                        }
+                    )
+
+
+            for dport in dhost.getElementsByTagName('osfingerprint'):
+                # <osfingerprint fingerprint="OS:SCAN(V=5.50%D=11/[...]S)&#xa;"/>
+                fingerprint = ''
+                try:
+                    fingerprint = dport.getAttributeNode('fingerprint').value
+                except AttributeError:
+                    pass
+
+                scan_result['scan'][host]['fingerprint'] = fingerprint
+
 
 
         self._scan_result = scan_result # store for later use
