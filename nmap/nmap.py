@@ -82,8 +82,8 @@ True
 
 
 __author__ = 'Alexandre Norman (norman@xael.org)'
-__version__ = '0.2.4'
-__last_modification__ = '2011.11.09'
+__version__ = '0.2.5'
+__last_modification__ = '2012.11.23'
 
 
 import os
@@ -129,7 +129,7 @@ class PortScanner(object):
         self.__process = None
 
         # regex used to detect nmap
-        regex = re.compile('Nmap version [0-9]*\.[0-9]*[^ ]* \( http://nmap\.org \)')
+        regex = re.compile('Nmap version [0-9]*\.[0-9]*[^ ]* \( http://.* \)')
         # launch 'nmap -V', we wait after 'Nmap version 5.0 ( http://nmap.org )'
         # This is for Mac OSX. When idle3 is launched from the finder, PATH is not set so nmap was not found
         for nmap_path in nmap_search_path:
