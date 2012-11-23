@@ -1,0 +1,13 @@
+syntax: glob
+dist/
+web/
+*~
+*.pyc
+*.elc
+*.aux
+*.toc
+*.log
+Thumbs.db
+#*#
+*\#
+
