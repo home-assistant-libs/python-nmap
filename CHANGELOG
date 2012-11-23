@@ -1,5 +1,10 @@
 Changelog
 =========
+
+2012/11/23 (v0.2.5)
+ - corrected : Issue 2: "map.nmap.PortScannerError: 'nmap program was not found in path'" on CentOS
+ - corrected : Issue 3: nmap.scan() short-circuits prematurely
+
 2011/11/09 (v0.2.4)
  - implemented a request from Santhosh Edukulla <santhosh.edukulla@gmail.com> :
    parse OS scanning output
