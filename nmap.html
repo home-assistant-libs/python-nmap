@@ -6,7 +6,7 @@
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
 <tr bgcolor="#7799ee">
 <td valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>nmap</strong></big></big> (version 0.2.3)</font></td
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>nmap</strong></big></big> (version 0.2.4)</font></td
 ><td align=right valign=bottom
 ><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/xael/ESPACE_KM/python/python-nmap/nmap/nmap.py">/home/xael/ESPACE_KM/python/python-nmap/nmap/nmap.py</a></font></td></tr></table>
     <p><tt>nmap.py&nbsp;-&nbsp;version&nbsp;and&nbsp;date,&nbsp;see&nbsp;below<br>
@@ -79,7 +79,12 @@ True<br>
 &gt;&gt;&gt;&nbsp;nm.listscan('192.168.1.0/30')<br>
 ['192.168.1.0',&nbsp;'192.168.1.1',&nbsp;'192.168.1.2',&nbsp;'192.168.1.3']<br>
 &gt;&gt;&gt;&nbsp;nm.listscan('localhost/30')<br>
-['127.0.0.0',&nbsp;'127.0.0.1',&nbsp;'127.0.0.2',&nbsp;'127.0.0.3']</tt></p>
+['127.0.0.0',&nbsp;'127.0.0.1',&nbsp;'127.0.0.2',&nbsp;'127.0.0.3']<br>
+&gt;&gt;&gt;&nbsp;r=nm.scan('127.0.0.1',&nbsp;arguments='-O')<br>
+&gt;&gt;&gt;&nbsp;nm['127.0.0.1']['osclass']<br>
+[{'vendor':&nbsp;u'Linux',&nbsp;'osfamily':&nbsp;u'Linux',&nbsp;'type':&nbsp;u'general&nbsp;purpose',&nbsp;'osgen':&nbsp;u'2.6.X',&nbsp;'accuracy':&nbsp;u'98'},&nbsp;{'vendor':&nbsp;u'Netgear',&nbsp;'osfamily':&nbsp;u'embedded',&nbsp;'type':&nbsp;u'WAP',&nbsp;'osgen':&nbsp;'',&nbsp;'accuracy':&nbsp;''},&nbsp;{'vendor':&nbsp;u'Gemtek',&nbsp;'osfamily':&nbsp;u'embedded',&nbsp;'type':&nbsp;u'WAP',&nbsp;'osgen':&nbsp;'',&nbsp;'accuracy':&nbsp;''},&nbsp;{'vendor':&nbsp;u'Siemens',&nbsp;'osfamily':&nbsp;u'embedded',&nbsp;'type':&nbsp;u'WAP',&nbsp;'osgen':&nbsp;'',&nbsp;'accuracy':&nbsp;''},&nbsp;{'vendor':&nbsp;u'Linux',&nbsp;'osfamily':&nbsp;u'Linux',&nbsp;'type':&nbsp;u'general&nbsp;purpose',&nbsp;'osgen':&nbsp;u'2.4.X',&nbsp;'accuracy':&nbsp;u'90'},&nbsp;{'vendor':&nbsp;u'Linksys',&nbsp;'osfamily':&nbsp;u'embedded',&nbsp;'type':&nbsp;u'WAP',&nbsp;'osgen':&nbsp;'',&nbsp;'accuracy':&nbsp;''},&nbsp;{'vendor':&nbsp;u'Linux',&nbsp;'osfamily':&nbsp;u'Linux',&nbsp;'type':&nbsp;u'WAP',&nbsp;'osgen':&nbsp;u'2.4.X',&nbsp;'accuracy':&nbsp;u'90'},&nbsp;{'vendor':&nbsp;u'Nokia',&nbsp;'osfamily':&nbsp;u'Linux',&nbsp;'type':&nbsp;u'general&nbsp;purpose',&nbsp;'osgen':&nbsp;u'2.6.X',&nbsp;'accuracy':&nbsp;u'89'}]<br>
+&gt;&gt;&gt;&nbsp;nm['127.0.0.1']['fingerprint']<br>
+'OS:SCAN(V=5.50%D=11/9%OT=22%CT=1%CU=37937%PV=N%DS=0%DC=L%G=Y%TM=4EBAE79D%P=\nOS:i686-pc-linux-gnu)SEQ(SP=103%GCD=1%ISR=10D%TI=Z%CI=Z%II=I%TS=8)OPS(O1=M4\nOS:00CST11NW6%O2=M400CST11NW6%O3=M400CNNT11NW6%O4=M400CST11NW6%O5=M400CST11\nOS:NW6%O6=M400CST11)WIN(W1=8000%W2=8000%W3=8000%W4=8000%W5=8000%W6=8000)ECN\nOS:(R=Y%DF=Y%T=40%W=8018%O=M400CNNSNW6%CC=Y%Q=)T1(R=Y%DF=Y%T=40%S=O%A=S+%F=\nOS:AS%RD=0%Q=)T2(R=N)T3(R=Y%DF=Y%T=40%W=8000%S=O%A=S+%F=AS%O=M400CST11NW6%R\nOS:D=0%Q=)T4(R=Y%DF=Y%T=40%W=0%S=A%A=Z%F=R%O=%RD=0%Q=)T5(R=Y%DF=Y%T=40%W=0%\nOS:S=Z%A=S+%F=AR%O=%RD=0%Q=)T6(R=Y%DF=Y%T=40%W=0%S=A%A=Z%F=R%O=%RD=0%Q=)T7(\nOS:R=Y%DF=Y%T=40%W=0%S=Z%A=S+%F=AR%O=%RD=0%Q=)U1(R=Y%DF=N%T=40%IPL=164%UN=0\nOS:%RIPL=G%RID=G%RIPCK=G%RUCK=G%RUD=G)IE(R=Y%DFI=N%T=40%CD=S)\n'</tt></p>
 <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#aa55cc">
@@ -377,6 +382,9 @@ Methods inherited from <a href="builtins.html#dict">builtins.dict</a>:<br>
 
 <dl><dt><a name="PortScannerHostDict-copy"><strong>copy</strong></a>(...)</dt><dd><tt>D.<a href="#PortScannerHostDict-copy">copy</a>()&nbsp;-&gt;&nbsp;a&nbsp;shallow&nbsp;copy&nbsp;of&nbsp;D</tt></dd></dl>
 
+<dl><dt><a name="PortScannerHostDict-fromkeys"><strong>fromkeys</strong></a>(...)</dt><dd><tt><a href="builtins.html#dict">dict</a>.<a href="#PortScannerHostDict-fromkeys">fromkeys</a>(S[,v])&nbsp;-&gt;&nbsp;New&nbsp;<a href="builtins.html#dict">dict</a>&nbsp;with&nbsp;keys&nbsp;from&nbsp;S&nbsp;and&nbsp;values&nbsp;equal&nbsp;to&nbsp;v.<br>
+v&nbsp;defaults&nbsp;to&nbsp;None.</tt></dd></dl>
+
 <dl><dt><a name="PortScannerHostDict-get"><strong>get</strong></a>(...)</dt><dd><tt>D.<a href="#PortScannerHostDict-get">get</a>(k[,d])&nbsp;-&gt;&nbsp;D[k]&nbsp;if&nbsp;k&nbsp;in&nbsp;D,&nbsp;else&nbsp;d.&nbsp;&nbsp;d&nbsp;defaults&nbsp;to&nbsp;None.</tt></dd></dl>
 
 <dl><dt><a name="PortScannerHostDict-items"><strong>items</strong></a>(...)</dt><dd><tt>D.<a href="#PortScannerHostDict-items">items</a>()&nbsp;-&gt;&nbsp;a&nbsp;set-like&nbsp;<a href="builtins.html#object">object</a>&nbsp;providing&nbsp;a&nbsp;view&nbsp;on&nbsp;D's&nbsp;items</tt></dd></dl>
@@ -391,9 +399,9 @@ If&nbsp;key&nbsp;is&nbsp;not&nbsp;found,&nbsp;d&nbsp;is&nbsp;returned&nbsp;if&nb
 
 <dl><dt><a name="PortScannerHostDict-setdefault"><strong>setdefault</strong></a>(...)</dt><dd><tt>D.<a href="#PortScannerHostDict-setdefault">setdefault</a>(k[,d])&nbsp;-&gt;&nbsp;D.<a href="#PortScannerHostDict-get">get</a>(k,d),&nbsp;also&nbsp;set&nbsp;D[k]=d&nbsp;if&nbsp;k&nbsp;not&nbsp;in&nbsp;D</tt></dd></dl>
 
-<dl><dt><a name="PortScannerHostDict-update"><strong>update</strong></a>(...)</dt><dd><tt>D.<a href="#PortScannerHostDict-update">update</a>(E,&nbsp;**F)&nbsp;-&gt;&nbsp;None.&nbsp;&nbsp;Update&nbsp;D&nbsp;from&nbsp;<a href="builtins.html#dict">dict</a>/iterable&nbsp;E&nbsp;and&nbsp;F.<br>
-If&nbsp;E&nbsp;has&nbsp;a&nbsp;.<a href="#PortScannerHostDict-keys">keys</a>()&nbsp;method,&nbsp;does:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;k&nbsp;in&nbsp;E:&nbsp;D[k]&nbsp;=&nbsp;E[k]<br>
-If&nbsp;E&nbsp;lacks&nbsp;.<a href="#PortScannerHostDict-keys">keys</a>()&nbsp;method,&nbsp;does:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(k,&nbsp;v)&nbsp;in&nbsp;E:&nbsp;D[k]&nbsp;=&nbsp;v<br>
+<dl><dt><a name="PortScannerHostDict-update"><strong>update</strong></a>(...)</dt><dd><tt>D.<a href="#PortScannerHostDict-update">update</a>([E,&nbsp;]**F)&nbsp;-&gt;&nbsp;None.&nbsp;&nbsp;Update&nbsp;D&nbsp;from&nbsp;<a href="builtins.html#dict">dict</a>/iterable&nbsp;E&nbsp;and&nbsp;F.<br>
+If&nbsp;E&nbsp;present&nbsp;and&nbsp;has&nbsp;a&nbsp;.<a href="#PortScannerHostDict-keys">keys</a>()&nbsp;method,&nbsp;does:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;k&nbsp;in&nbsp;E:&nbsp;D[k]&nbsp;=&nbsp;E[k]<br>
+If&nbsp;E&nbsp;present&nbsp;and&nbsp;lacks&nbsp;.<a href="#PortScannerHostDict-keys">keys</a>()&nbsp;method,&nbsp;does:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(k,&nbsp;v)&nbsp;in&nbsp;E:&nbsp;D[k]&nbsp;=&nbsp;v<br>
 In&nbsp;either&nbsp;case,&nbsp;this&nbsp;is&nbsp;followed&nbsp;by:&nbsp;for&nbsp;k&nbsp;in&nbsp;F:&nbsp;D[k]&nbsp;=&nbsp;F[k]</tt></dd></dl>
 
 <dl><dt><a name="PortScannerHostDict-values"><strong>values</strong></a>(...)</dt><dd><tt>D.<a href="#PortScannerHostDict-values">values</a>()&nbsp;-&gt;&nbsp;an&nbsp;<a href="builtins.html#object">object</a>&nbsp;providing&nbsp;a&nbsp;view&nbsp;on&nbsp;D's&nbsp;values</tt></dd></dl>
@@ -404,9 +412,6 @@ Data and other attributes inherited from <a href="builtins.html#dict">builtins.d
 
 <dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#PortScannerHostDict-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="builtins.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
 
-<dl><dt><strong>fromkeys</strong> = &lt;built-in method fromkeys of type object&gt;<dd><tt><a href="builtins.html#dict">dict</a>.<a href="#PortScannerHostDict-fromkeys">fromkeys</a>(S[,v])&nbsp;-&gt;&nbsp;New&nbsp;<a href="builtins.html#dict">dict</a>&nbsp;with&nbsp;keys&nbsp;from&nbsp;S&nbsp;and&nbsp;values&nbsp;equal&nbsp;to&nbsp;v.<br>
-v&nbsp;defaults&nbsp;to&nbsp;None.</tt></dl>
-
 </td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#55aa55">
@@ -414,9 +419,7 @@ v&nbsp;defaults&nbsp;to&nbsp;None.</tt></dl>
 <font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
     
 <tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><strong>__author__</strong> = 'Alexandre Norman (norman@xael.org)'<br>
-<strong>__last_modification__</strong> = '2010.12.17'<br>
-<strong>__version__</strong> = '0.2.3'</td></tr></table><p>
+<td width="100%"><strong>__last_modification__</strong> = '2011.11.09'</td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#7799ee">
 <td colspan=3 valign=bottom>&nbsp;<br>
