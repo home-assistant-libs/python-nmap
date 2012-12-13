@@ -7,6 +7,8 @@ nmap.py - version and date, see below
 Author : Alexandre Norman - norman at xael.org
 Contributors: Steve 'Ashcrow' Milner - steve at gnulinux.net
               Brian Bustin - brian at bustin.us
+              old.schepperhand
+              Johan Lundberg 
 Licence : GPL v3 or any later version
 
 
