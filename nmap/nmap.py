@@ -281,7 +281,10 @@ class PortScanner(object):
         try:
             dom = xml.dom.minidom.parseString(self._nmap_last_output)
         except xml.parsers.expat.ExpatError:
-            raise PortScannerError(nmap_err)
+            if len(nmap_err)>0:
+                raise PortScannerError(nmap_err)
+            else:
+                raise PortScannerError(self._nmap_last_output)
 
         # nmap command line
         scan_result['nmap'] = {
