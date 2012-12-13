@@ -84,7 +84,7 @@ True
 
 
 __author__ = 'Alexandre Norman (norman@xael.org)'
-__version__ = '0.2.5'
+__version__ = '0.2.6'
 __last_modification__ = '2012.12.13'
 
 
