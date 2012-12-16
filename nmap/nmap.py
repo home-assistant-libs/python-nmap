@@ -86,7 +86,7 @@ True
 
 
 __author__ = 'Alexandre Norman (norman@xael.org)'
-__version__ = '0.2.6'
+__version__ = '0.2.7'
 __last_modification__ = '2012.12.13'
 
 
@@ -314,12 +314,25 @@ class PortScanner(object):
         scan_result['scan'] = {}
         
         for dhost in  dom.getElementsByTagName('host'):
-            # host ip
-            host = dhost.getElementsByTagName('address')[0].getAttributeNode('addr').value
+            # host ip, mac and other addresses
+            host = None
+            address_block = {}
+            for address in dhost.getElementsByTagName('address'):
+                addtype = address.getAttributeNode('addrtype').value
+                address_block[addtype] = address.getAttributeNode('addr').value
+                if addtype == 'ipv4':
+                    host = address_block[addtype]
+
+            if host is None:
+                host = dhost.getElementsByTagName('address')[0].getAttributeNode('addr').value
+                
             hostname = ''
             for dhostname in dhost.getElementsByTagName('hostname'):
                 hostname = dhostname.getAttributeNode('name').value
             scan_result['scan'][host] = PortScannerHostDict({'hostname': hostname})
+
+            scan_result['scan'][host]['addresses'] = address_block
+
             for dstatus in dhost.getElementsByTagName('status'):
                 # status : up...
                 scan_result['scan'][host]['status'] = {'state': dstatus.getAttributeNode('state').value,
