@@ -45,6 +45,10 @@ Typical usage looks like::
             for port in lport:
                 print('port : %s\tstate : %s' % (port, nm[host][proto][port]['state']))
 
+    print('----------------------------------------------------')
+    # print result as CSV
+    print(nm.csv())
+
 
     print('----------------------------------------------------')
     # If you want to do a pingsweep on network 192.168.1.0/24:
