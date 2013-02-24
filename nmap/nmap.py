@@ -50,7 +50,7 @@ True
 >>> nm['127.0.0.1'].state()
 'up'
 >>> nm['127.0.0.1'].all_protocols()
-['tcp']
+['addresses', 'tcp']
 >>> nm['127.0.0.1']['tcp'].keys()
 dict_keys([139, 111, 80, 53, 22, 25, 443])
 >>> nm['127.0.0.1'].has_tcp(22)
@@ -58,9 +58,9 @@ True
 >>> nm['127.0.0.1'].has_tcp(23)
 False
 >>> nm['127.0.0.1']['tcp'][22]
-{'state': 'open', 'reason': 'syn-ack', 'name': 'ssh'}
+{'product': 'OpenSSH', 'name': 'ssh', 'extrainfo': 'protocol 2.0', 'reason': 'syn-ack', 'state': 'open', 'version': '5.9p1 Debian 5ubuntu1', 'conf': '10'}
 >>> nm['127.0.0.1'].tcp(22)
-{'state': 'open', 'reason': 'syn-ack', 'name': 'ssh'}
+{'product': 'OpenSSH', 'name': 'ssh', 'extrainfo': 'protocol 2.0', 'reason': 'syn-ack', 'state': 'open', 'version': '5.9p1 Debian 5ubuntu1', 'conf': '10'}
 >>> nm['127.0.0.1']['tcp'][22]['state']
 'open'
 >>> nm.scanstats()['uphosts']
@@ -79,9 +79,12 @@ True
 ['127.0.0.0', '127.0.0.1', '127.0.0.2', '127.0.0.3']
 >>> r=nm.scan('127.0.0.1', arguments='-O')
 >>> nm['127.0.0.1']['osclass']
-[{'vendor': 'Linux', 'osfamily': 'Linux', 'type': 'general purpose', 'osgen': '2.6.X', 'accuracy': '96'}, {'vendor': 'AXIS', 'osfamily': 'Linux', 'type': 'webcam', 'osgen': '2.6.X', 'accuracy': '91'}, {'vendor': 'Crestron', 'osfamily': '2-Series', 'type': 'specialized', 'osgen': '', 'accuracy': ''}, {'vendor': 'Gemtek', 'osfamily': 'embedded', 'type': 'WAP', 'osgen': '', 'accuracy': ''}, {'vendor': 'Siemens', 'osfamily': 'embedded', 'type': 'WAP', 'osgen': '', 'accuracy': ''}, {'vendor': 'Linux', 'osfamily': 'Linux', 'type': 'general purpose', 'osgen': '2.4.X', 'accuracy': '88'}, {'vendor': 'Check Point', 'osfamily': 'embedded', 'type': 'firewall', 'osgen': '', 'accuracy': ''}, {'vendor': 'Check Point', 'osfamily': 'Linux', 'type': 'firewall', 'osgen': '2.4.X', 'accuracy': '88'}, {'vendor': 'Linux', 'osfamily': 'Linux', 'type': 'WAP', 'osgen': '2.4.X', 'accuracy': '88'}, {'vendor': 'Linux', 'osfamily': 'Linux', 'type': 'general purpose', 'osgen': '', 'accuracy': ''}, {'vendor': 'Linux', 'osfamily': 'Linux', 'type': 'WAP', 'osgen': '2.6.X', 'accuracy': '87'}, {'vendor': 'Vodavi', 'osfamily': 'embedded', 'type': 'PBX', 'osgen': '', 'accuracy': ''}, {'vendor': 'Lexmark', 'osfamily': 'embedded', 'type': 'printer', 'osgen': '', 'accuracy': ''}]
+[{'vendor': 'Linux', 'osfamily': 'Linux', 'type': 'general purpose', 'osgen': '2.6.X', 'accuracy': '96'}, {'vendor': 'AXIS', 'osfamily': 'Linux', 'type': 'webcam', 'osgen': '2.6.X', 'accuracy': '91'}, {'vendor': 'Crestron', 'osfamily': '2-Series', 'type': 'specialized', 'osgen': '', 'accuracy': ''}, {'vendor': 'Gemtek', 'osfamily': 'embedded', 'type': 'WAP', 'osgen': '', 'accuracy': ''}, {'vendor': 'Siemens', 'osfamily': 'embedded', 'type': 'WAP', 'osgen': '', 'accuracy': ''}, {'vendor': 'Linux', 'osfamily': 'Linux', 'type': 'general purpose', 'osgen': '2.4.X', 'accuracy': '88'}, {'vendor': 'Linux', 'osfamily': 'Linux', 'type': 'WAP', 'osgen': '2.6.X', 'accuracy': '88'}, {'vendor': 'Check Point', 'osfamily': 'embedded', 'type': 'firewall', 'osgen': '', 'accuracy': ''}, {'vendor': 'Check Point', 'osfamily': 'Linux', 'type': 'firewall', 'osgen': '2.4.X', 'accuracy': '88'}, {'vendor': 'Linux', 'osfamily': 'Linux', 'type': 'WAP', 'osgen': '2.4.X', 'accuracy': '88'}, {'vendor': 'Linux', 'osfamily': 'Linux', 'type': 'general purpose', 'osgen': '', 'accuracy': ''}, {'vendor': 'Vodavi', 'osfamily': 'embedded', 'type': 'PBX', 'osgen': '', 'accuracy': ''}, {'vendor': 'Lexmark', 'osfamily': 'embedded', 'type': 'printer', 'osgen': '', 'accuracy': ''}]
 >>> nm['127.0.0.1']['fingerprint']
-'OS:SCAN(V=5.21%D=11/23%OT=22%CT=1%CU=33028%PV=N%DS=0%DC=L%G=Y%TM=50AFE898%P\\nOS:=x86_64-unknown-linux-gnu)SEQ(SP=105%GCD=1%ISR=107%TI=Z%CI=Z%II=I%TS=8)O\\nOS:PS(O1=M400CST11NW6%O2=M400CST11NW6%O3=M400CNNT11NW6%O4=M400CST11NW6%O5=M\\nOS:400CST11NW6%O6=M400CST11)WIN(W1=8000%W2=8000%W3=8000%W4=8000%W5=8000%W6=\\nOS:8000)ECN(R=Y%DF=Y%T=40%W=8018%O=M400CNNSNW6%CC=Y%Q=)T1(R=Y%DF=Y%T=40%S=O\\nOS:%A=S+%F=AS%RD=0%Q=)T2(R=N)T3(R=N)T4(R=Y%DF=Y%T=40%W=0%S=A%A=Z%F=R%O=%RD=\\nOS:0%Q=)T5(R=Y%DF=Y%T=40%W=0%S=Z%A=S+%F=AR%O=%RD=0%Q=)T6(R=Y%DF=Y%T=40%W=0%\\nOS:S=A%A=Z%F=R%O=%RD=0%Q=)T7(R=Y%DF=Y%T=40%W=0%S=Z%A=S+%F=AR%O=%RD=0%Q=)U1(\\nOS:R=Y%DF=N%T=40%IPL=164%UN=0%RIPL=G%RID=G%RIPCK=G%RUCK=G%RUD=G)IE(R=Y%DFI=\\nOS:N%T=40%CD=S)\\n'
+'OS:SCAN(V=5.21%D=2/24%OT=22%CT=1%CU=42516%PV=N%DS=0%DC=L%G=Y%TM=512A8382%P=\\nOS:x86_64-unknown-linux-gnu)SEQ(SP=106%GCD=1%ISR=10A%TI=Z%CI=Z%II=I%TS=8)OP\\nOS:S(O1=M400CST11NW6%O2=M400CST11NW6%O3=M400CNNT11NW6%O4=M400CST11NW6%O5=M4\\nOS:00CST11NW6%O6=M400CST11)WIN(W1=8000%W2=8000%W3=8000%W4=8000%W5=8000%W6=8\\nOS:000)ECN(R=Y%DF=Y%T=40%W=8018%O=M400CNNSNW6%CC=Y%Q=)T1(R=Y%DF=Y%T=40%S=O%\\nOS:A=S+%F=AS%RD=0%Q=)T2(R=N)T3(R=N)T4(R=Y%DF=Y%T=40%W=0%S=A%A=Z%F=R%O=%RD=0\\nOS:%Q=)T5(R=Y%DF=Y%T=40%W=0%S=Z%A=S+%F=AR%O=%RD=0%Q=)T6(R=Y%DF=Y%T=40%W=0%S\\nOS:=A%A=Z%F=R%O=%RD=0%Q=)T7(R=Y%DF=Y%T=40%W=0%S=Z%A=S+%F=AR%O=%RD=0%Q=)U1(R\\nOS:=Y%DF=N%T=40%IPL=164%UN=0%RIPL=G%RID=G%RIPCK=G%RUCK=G%RUD=G)IE(R=Y%DFI=N\\nOS:%T=40%CD=S)\\n'
+>>> nm.csv()
+'host;protocol;port;name;state;product;extrainfo;reason;version;conf\\r\\n127.0.0.1;tcp;22;ssh;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;25;smtp;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;53;domain;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;80;http;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;111;rpcbind;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;139;netbios-ssn;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;443;https;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;445;microsoft-ds;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;631;ipp;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;2049;nfs;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;3306;mysql;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;5222;unknown;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;5269;unknown;open;;;syn-ack;;3\\r\\n'
+
 """
 
 
@@ -90,15 +93,17 @@ __version__ = '0.2.7'
 __last_modification__ = '2012.12.13'
 
 
+import collections
+import csv
+import io
 import os
 import re
+import shlex
 import string
 import subprocess
 import sys
 import types
 import xml.dom.minidom
-import shlex
-import collections
 
 
 try:
@@ -526,7 +531,59 @@ class PortScanner(object):
         return False
 
 
+    def csv(self):
+        """
+        returns CSV output as text
 
+        Example :
+        host;protocol;port;name;state;product;extrainfo;reason;version;conf
+        127.0.0.1;tcp;22;ssh;open;OpenSSH;protocol 2.0;syn-ack;5.9p1 Debian 5ubuntu1;10
+        127.0.0.1;tcp;23;telnet;closed;;;conn-refused;;3
+        127.0.0.1;tcp;24;priv-mail;closed;;;conn-refused;;3
+        """
+        assert 'scan' in self._scan_result, 'Do a scan before trying to get result !'
+
+        if sys.version_info < (3,0):
+            fd = io.BytesIO()
+        else:
+            fd = io.StringIO()
+            
+        csv_ouput = csv.writer(fd, delimiter=';')
+        csv_header = [
+            'host',
+            'protocol',
+            'port',
+            'name',
+            'state',
+            'product',
+            'extrainfo',
+            'reason',
+            'version',
+            'conf'
+            ]
+
+        csv_ouput.writerow(csv_header)
+
+        for host in self.all_hosts():
+            for proto in self[host].all_protocols():
+                if proto not in ['tcp', 'udp']:
+                    continue
+                lport = list(self[host][proto].keys())
+                lport.sort()
+                for port in lport:
+                    csv_row = [
+                        host, proto, port, 
+                        self[host][proto][port]['name'],
+                        self[host][proto][port]['state'],
+                        self[host][proto][port]['product'],
+                        self[host][proto][port]['extrainfo'],
+                        self[host][proto][port]['reason'],
+                        self[host][proto][port]['version'],
+                        self[host][proto][port]['conf']
+                        ]
+                    csv_ouput.writerow(csv_row)
+
+        return fd.getvalue()
 
 ############################################################################
 
