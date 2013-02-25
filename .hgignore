@@ -1,6 +1,7 @@
 syntax: glob
 dist/
 web/
+docs/_build
 *~
 *.pyc
 *.elc
