@@ -1,11 +1,26 @@
 # -*- coding: latin-1 -*-
 
 """
-__init__.py - 2010.12.17
+python-nmap - 2010.12.17
 
-Author : Alexandre Norman - norman@xael.org
-Contributors: Steve 'Ashcrow' Milner - steve@gnulinux.net
-              Brian Bustin - brian at bustin.us
+python-nmap is a python library which helps in using nmap port scanner.
+It allows to easilly manipulate nmap scan results and will be a perfect
+tool for systems administrators who want to automatize scanning task
+and reports. It also supports nmap script outputs.
+
+
+Author :
+
+* Alexandre Norman - norman@xael.org
+
+Contributors:
+
+* Steve 'Ashcrow' Milner - steve@gnulinux.net
+* Brian Bustin - brian at bustin.us
+* old.schepperhand
+* Johan Lundberg
+* Thomas D. maaaaz 
+
 Licence : GPL v3 or any later version
 
 
@@ -24,3 +39,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 from .nmap import *
+from .nmap import __author__
+from .nmap import __version__
+from .nmap import __last_modification__

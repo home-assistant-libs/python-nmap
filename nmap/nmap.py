@@ -4,11 +4,18 @@
 """
 nmap.py - version and date, see below
 
-Author : Alexandre Norman - norman at xael.org
-Contributors: Steve 'Ashcrow' Milner - steve at gnulinux.net
-              Brian Bustin - brian at bustin.us
-              old.schepperhand
-              Johan Lundberg 
+Author :
+
+* Alexandre Norman - norman at xael.org
+
+Contributors:
+
+* Steve 'Ashcrow' Milner - steve at gnulinux.net
+* Brian Bustin - brian at bustin.us
+* old.schepperhand
+* Johan Lundberg
+* Thomas D. maaaaz 
+ 
 Licence : GPL v3 or any later version
 
 
@@ -38,7 +45,8 @@ Test strings :
 ...     pass
 >>> 'error' in nm.scan('yahoo.fs', arguments='-sP')['nmap']['scaninfo']
 True
->>> r=nm.scan('127.0.0.1', '22-443')
+>>> r=nm.scan('127.0.0.1', '22-25')
+>>> r=nm.analyse_nmap_xml_scan(open('nmap_output.xml').read())
 >>> nm.command_line()
 'nmap -oX - -p 22-443 -sV 127.0.0.1'
 >>> nm.scaninfo()
@@ -78,10 +86,11 @@ True
 >>> nm.listscan('localhost/30')
 ['127.0.0.0', '127.0.0.1', '127.0.0.2', '127.0.0.3']
 >>> r=nm.scan('127.0.0.1', arguments='-O')
->>> nm['127.0.0.1']['osclass']
-[{'vendor': 'Linux', 'osfamily': 'Linux', 'type': 'general purpose', 'osgen': '2.6.X', 'accuracy': '96'}, {'vendor': 'AXIS', 'osfamily': 'Linux', 'type': 'webcam', 'osgen': '2.6.X', 'accuracy': '91'}, {'vendor': 'Crestron', 'osfamily': '2-Series', 'type': 'specialized', 'osgen': '', 'accuracy': ''}, {'vendor': 'Gemtek', 'osfamily': 'embedded', 'type': 'WAP', 'osgen': '', 'accuracy': ''}, {'vendor': 'Siemens', 'osfamily': 'embedded', 'type': 'WAP', 'osgen': '', 'accuracy': ''}, {'vendor': 'Linux', 'osfamily': 'Linux', 'type': 'general purpose', 'osgen': '2.4.X', 'accuracy': '88'}, {'vendor': 'Linux', 'osfamily': 'Linux', 'type': 'WAP', 'osgen': '2.6.X', 'accuracy': '88'}, {'vendor': 'Check Point', 'osfamily': 'embedded', 'type': 'firewall', 'osgen': '', 'accuracy': ''}, {'vendor': 'Check Point', 'osfamily': 'Linux', 'type': 'firewall', 'osgen': '2.4.X', 'accuracy': '88'}, {'vendor': 'Linux', 'osfamily': 'Linux', 'type': 'WAP', 'osgen': '2.4.X', 'accuracy': '88'}, {'vendor': 'Linux', 'osfamily': 'Linux', 'type': 'general purpose', 'osgen': '', 'accuracy': ''}, {'vendor': 'Vodavi', 'osfamily': 'embedded', 'type': 'PBX', 'osgen': '', 'accuracy': ''}, {'vendor': 'Lexmark', 'osfamily': 'embedded', 'type': 'printer', 'osgen': '', 'accuracy': ''}]
->>> nm['127.0.0.1']['fingerprint']
-'OS:SCAN(V=5.21%D=2/24%OT=22%CT=1%CU=42516%PV=N%DS=0%DC=L%G=Y%TM=512A8382%P=\\nOS:x86_64-unknown-linux-gnu)SEQ(SP=106%GCD=1%ISR=10A%TI=Z%CI=Z%II=I%TS=8)OP\\nOS:S(O1=M400CST11NW6%O2=M400CST11NW6%O3=M400CNNT11NW6%O4=M400CST11NW6%O5=M4\\nOS:00CST11NW6%O6=M400CST11)WIN(W1=8000%W2=8000%W3=8000%W4=8000%W5=8000%W6=8\\nOS:000)ECN(R=Y%DF=Y%T=40%W=8018%O=M400CNNSNW6%CC=Y%Q=)T1(R=Y%DF=Y%T=40%S=O%\\nOS:A=S+%F=AS%RD=0%Q=)T2(R=N)T3(R=N)T4(R=Y%DF=Y%T=40%W=0%S=A%A=Z%F=R%O=%RD=0\\nOS:%Q=)T5(R=Y%DF=Y%T=40%W=0%S=Z%A=S+%F=AR%O=%RD=0%Q=)T6(R=Y%DF=Y%T=40%W=0%S\\nOS:=A%A=Z%F=R%O=%RD=0%Q=)T7(R=Y%DF=Y%T=40%W=0%S=Z%A=S+%F=AR%O=%RD=0%Q=)U1(R\\nOS:=Y%DF=N%T=40%IPL=164%UN=0%RIPL=G%RID=G%RIPCK=G%RUCK=G%RUD=G)IE(R=Y%DFI=N\\nOS:%T=40%CD=S)\\n'
+>>> len(nm['127.0.0.1']['osclass'])>0
+True
+>>> r=nm['127.0.0.1']['fingerprint']
+>>> r[:7]
+'OS:SCAN'
 >>> nm.csv()
 'host;protocol;port;name;state;product;extrainfo;reason;version;conf\\r\\n127.0.0.1;tcp;22;ssh;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;25;smtp;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;53;domain;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;80;http;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;111;rpcbind;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;139;netbios-ssn;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;443;https;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;445;microsoft-ds;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;631;ipp;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;2049;nfs;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;3306;mysql;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;5222;unknown;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;5269;unknown;open;;;syn-ack;;3\\r\\n'
 
@@ -89,8 +98,8 @@ True
 
 
 __author__ = 'Alexandre Norman (norman@xael.org)'
-__version__ = '0.2.7'
-__last_modification__ = '2012.12.13'
+__version__ = '0.2.8'
+__last_modification__ = '2013.02.25'
 
 
 import collections
@@ -116,18 +125,21 @@ except ImportError:
 
 class PortScanner(object):
     """
-    PortScanner allows to use nmap from python
+    PortScanner class allows to use nmap from python
+
     """
     
     def __init__(self, nmap_search_path=('nmap','/usr/bin/nmap','/usr/local/bin/nmap','/sw/bin/nmap','/opt/local/bin/nmap') ):
         """
-        Initialize the module
-        detects nmap on the system and nmap version
-        may raise PortScannerError exception if nmap is not found in the path
+        Initialize PortScanner module
 
-        nmap_search_path = tupple of string where to search for nmap executable. Change this if you want to use a specific version of nmap.
+        * detects nmap on the system and nmap version
+        * may raise PortScannerError exception if nmap is not found in the path
+
+        :param nmap_search_path: tupple of string where to search for nmap executable. Change this if you want to use a specific version of nmap.
+        :returns: nothing
+
         """
-
         self._nmap_path = ''                # nmap path
         self._scan_result = {}
         self._nmap_version_number = 0       # nmap version number
@@ -179,8 +191,10 @@ class PortScanner(object):
 
     def get_nmap_last_output(self):
         """
-        returns the last text output of nmap in raw text
+        Returns the last text output of nmap in raw text
         this may be used for debugging purpose
+
+        :returns: string containing the last text output of nmap in raw text
         """
         return self._nmap_last_output
 
@@ -190,6 +204,7 @@ class PortScanner(object):
         """
         returns nmap version if detected (int version, int subversion)
         or (0, 0) if unknown
+        :returns: (nmap_version_number, nmap_subversion_number)
         """
         return (self._nmap_version_number, self._nmap_subversion_number)
 
@@ -262,6 +277,24 @@ class PortScanner(object):
                         #raise PortScannerError(nmap_err)
                         nmap_err_keep_trace.append(nmap_err)
 
+        return self.analyse_nmap_xml_scan(nmap_xml_output = self._nmap_last_output,
+                                          nmap_err = nmap_err,
+                                          nmap_err_keep_trace = nmap_err_keep_trace)
+
+
+    def analyse_nmap_xml_scan(self, nmap_xml_output=None, nmap_err='', nmap_err_keep_trace=''):
+        """
+        Analyses NMAP xml scan ouput
+
+        May raise PortScannerError exception if nmap output was not xml
+
+        Test existance of the following key to know if something went wrong : ['nmap']['scaninfo']['error']
+        If not present, everything was ok.
+
+        :param nmap_xml_output: xml string to analyse
+        :returns: scan_result as dictionnary 
+        """
+
         # nmap xml output looks like :
         #  <host starttime="1267974521" endtime="1267974522">
         #  <status state="up" reason="user-set"/>
@@ -280,8 +313,9 @@ class PortScanner(object):
         #  <times srtt="-1" rttvar="-1" to="1000000" />
         #  </host>
 
-
-
+        if nmap_xml_output is not None:
+            self._nmap_last_output = nmap_xml_output
+            
         scan_result = {}
 
 
@@ -592,13 +626,16 @@ class PortScannerAsync(object):
     """
     PortScannerAsync allows to use nmap from python asynchronously
     for each host scanned, callback is called with scan result for the host
+
     """
 
     def __init__(self):
         """
         Initialize the module
-        detects nmap on the system and nmap version
-        may raise PortScannerError exception if nmap is not found in the path
+
+        * detects nmap on the system and nmap version
+        * may raise PortScannerError exception if nmap is not found in the path
+
         """
         self._process = None
         self._nm = PortScanner()
@@ -608,6 +645,7 @@ class PortScannerAsync(object):
     def __del__(self):
         """
         Cleanup when deleted
+
         """
         if self._process is not None and self._process.is_alive():
             self._process.terminate()
@@ -620,10 +658,11 @@ class PortScannerAsync(object):
 
         PortScannerError exception from standard nmap is catched and you won't know about it
 
-        hosts = string for hosts as nmap use it 'scanme.nmap.org' or '198.116.0-255.1-127' or '216.163.128.20/20'
-        ports = string for ports as nmap use it '22,53,110,143-4564'
-        arguments = string of arguments for nmap '-sU -sX -sC'
-        callback = callback function which takes (host, scan_data) as arguments
+        :param hosts: string for hosts as nmap use it 'scanme.nmap.org' or '198.116.0-255.1-127' or '216.163.128.20/20'
+        :param ports: string for ports as nmap use it '22,53,110,143-4564'
+        :param arguments: string of arguments for nmap '-sU -sX -sC'
+        :param callback: callback function which takes (host, scan_data) as arguments
+
         """
 
         assert type(hosts) is str, 'Wrong type for [hosts], should be a string [was {0}]'.format(type(hosts))
@@ -653,6 +692,7 @@ class PortScannerAsync(object):
     def stop(self):
         """
         Stop the current scan process
+
         """
         if self._process is not None:
             self._process.terminate()
@@ -662,6 +702,9 @@ class PortScannerAsync(object):
     def wait(self, timeout=None):
         """
         Wait for the current scan process to finish, or timeout
+
+        :param timeout: default = None, wait timeout seconds 
+
         """
 
         assert type(timeout) in (int, type(None)), 'Wrong type for [timeout], should be an int or None [was {0}]'.format(type(timeout))
@@ -673,7 +716,8 @@ class PortScannerAsync(object):
 
     def still_scanning(self):
         """
-        Return True if a scan is currently running, False otherwise
+        :returns: True if a scan is currently running, False otherwise
+
         """
         try:
             return self._process.is_alive()
@@ -689,28 +733,33 @@ class PortScannerAsync(object):
 class PortScannerHostDict(dict):
     """
     Special dictionnary class for storing and accessing host scan result
+
     """
     def hostname(self):
         """
-        returns hostname
+        :returns: hostname
+
         """
         return self['hostname']
 
     def state(self):
         """
-        returns host state
+        :returns: host state
+
         """
         return self['status']['state']
 
     def uptime(self):
         """
-        returns host state
+        :returns: host state
+
         """
         return self['uptime']
 
     def all_protocols(self):
         """
-        returns a list of all scanned protocols
+        :returns: a list of all scanned protocols
+
         """
         lp = list(self.keys())
         lp.remove('status')
@@ -722,7 +771,8 @@ class PortScannerHostDict(dict):
 
     def all_tcp(self):
         """
-        returns list of tcp ports
+        :returns: list of tcp ports
+
         """
         if 'tcp' in list(self.keys()):
             ltcp = list(self['tcp'].keys())
@@ -733,7 +783,9 @@ class PortScannerHostDict(dict):
     
     def has_tcp(self, port):
         """
-        returns True if tcp port has info, False otherwise
+        :param port: (int) tcp port
+        :returns: True if tcp port has info, False otherwise
+
         """
         assert type(port) is int, 'Wrong type for [port], should be an int [was {0}]'.format(type(port))
         
@@ -745,7 +797,9 @@ class PortScannerHostDict(dict):
 
     def tcp(self, port):
         """
-        returns info for tpc port
+        :param port: (int) tcp port
+        :returns: info for tpc port
+
         """
         assert type(port) is int, 'Wrong type for [port], should be an int [was {0}]'.format(type(port))
         return self['tcp'][port]
@@ -753,7 +807,8 @@ class PortScannerHostDict(dict):
 
     def all_udp(self):
         """
-        returns list of udp ports
+        :returns: list of udp ports
+
         """
         if 'udp' in list(self.keys()):
             ludp = list(self['udp'].keys())
@@ -764,7 +819,9 @@ class PortScannerHostDict(dict):
 
     def has_udp(self, port):
         """
-        returns True if udp port has info, False otherwise
+        :param port: (int) udp port
+        :returns: True if udp port has info, False otherwise
+
         """
         assert type(port) is int, 'Wrong type for [port], should be an int [was {0}]'.format(type(port))
 
@@ -776,7 +833,9 @@ class PortScannerHostDict(dict):
 
     def udp(self, port):
         """
-        returns info for udp port
+        :param port: (int) udp port
+        :returns: info for udp port
+
         """
         assert type(port) is int, 'Wrong type for [port], should be an int [was {0}]'.format(type(port))
 
@@ -785,7 +844,8 @@ class PortScannerHostDict(dict):
 
     def all_ip(self):
         """
-        returns list of ip ports
+        :returns: list of ip ports
+
         """
         if 'ip' in list(self.keys()):
             lip = list(self['ip'].keys())
@@ -796,7 +856,9 @@ class PortScannerHostDict(dict):
 
     def has_ip(self, port):
         """
-        returns True if ip port has info, False otherwise
+        :param port: (int) ip port
+        :returns: True if ip port has info, False otherwise
+
         """
         assert type(port) is int, 'Wrong type for [port], should be an int [was {0}]'.format(type(port))
 
@@ -808,7 +870,9 @@ class PortScannerHostDict(dict):
 
     def ip(self, port):
         """
-        returns info for ip port
+        :param port: (int) ip port
+        :returns: info for ip port
+
         """
         assert type(port) is int, 'Wrong type for [port], should be an int [was {0}]'.format(type(port))
 
@@ -817,7 +881,8 @@ class PortScannerHostDict(dict):
 
     def all_sctp(self):
         """
-        returns list of sctp ports
+        :returns: list of sctp ports
+
         """
         if 'sctp' in list(self.keys()):
             lsctp = list(self['sctp'].keys())
@@ -828,7 +893,8 @@ class PortScannerHostDict(dict):
 
     def has_sctp(self, port):
         """
-        returns True if sctp port has info, False otherwise
+        :returns: True if sctp port has info, False otherwise
+
         """
         assert type(port) is int, 'Wrong type for [port], should be an int [was {0}]'.format(type(port))
 
@@ -840,7 +906,8 @@ class PortScannerHostDict(dict):
 
     def sctp(self, port):
         """
-        returns info for sctp port
+        :returns: info for sctp port
+
         """
         assert type(port) is int, 'Wrong type for [port], should be an int [was {0}]'.format(type(port))
 
@@ -854,6 +921,7 @@ class PortScannerHostDict(dict):
 class PortScannerError(Exception):
     """
     Exception error class for PortScanner class
+
     """
     def __init__(self, value):
         self.value = value
@@ -870,9 +938,11 @@ class PortScannerError(Exception):
 def __get_last_online_version():
     """
     Gets last python-nmap published version
+    
     WARNING : it does an http connection to http://xael.org/norman/python/python-nmap/python-nmap_CURRENT_VERSION.txt
 
-    returns a string '0.2.3'
+    :returns: a string which indicate last published version (example :'0.2.3')
+
     """
     import http.client
     conn = http.client.HTTPConnection("xael.org")

@@ -24,6 +24,7 @@ register:
 
 doc:
 	@pydoc3 -w nmap/nmap.py
+	@cd docs && make html
 
 web:
 	@echo $(VERSION) > web/python-nmap_CURRENT_VERSION.txt

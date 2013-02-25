@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<?xml-stylesheet href="file:///usr/share/nmap/nmap.xsl" type="text/xsl"?>
+<!-- Nmap 5.21 scan initiated Mon Feb 25 23:46:00 2013 as: nmap -oX - -p 22-443 -sV 127.0.0.1 -->
+<nmaprun scanner="nmap" args="nmap -oX - -p 22-443 -sV 127.0.0.1" start="1361832360" startstr="Mon Feb 25 23:46:00 2013" version="5.21" xmloutputversion="1.03">
+<scaninfo type="syn"  protocol="tcp" numservices="422" services="22-443" />
+<verbose level="0" />
+<debugging level="0" />
+<host starttime="1361832360" endtime="1361832386"><status state="up" reason="localhost-response"/>
+<address addr="127.0.0.1" addrtype="ipv4" />
+<hostnames>
+<hostname name="localhost" type="PTR"/>
+</hostnames>
+<ports><extraports state="closed" count="415">
+<extrareasons reason="resets" count="415"/>
+</extraports>
+<port protocol="tcp" portid="22"><state state="open" reason="syn-ack" reason_ttl="64"/><service name="ssh" product="OpenSSH" version="5.9p1 Debian 5ubuntu1" extrainfo="protocol 2.0" ostype="Linux" method="probed" conf="10" /></port>
+<port protocol="tcp" portid="25"><state state="open" reason="syn-ack" reason_ttl="64"/><service name="smtp" product="Exim smtpd" version="4.76" hostname="grostruc" method="probed" conf="10" /></port>
+<port protocol="tcp" portid="53"><state state="open" reason="syn-ack" reason_ttl="64"/><service name="domain" product="dnsmasq" version="2.59" method="probed" conf="10" /></port>
+<port protocol="tcp" portid="80"><state state="open" reason="syn-ack" reason_ttl="64"/><service name="http" product="Apache httpd" version="2.2.22" extrainfo="(Ubuntu)" method="probed" conf="10" /></port>
+<port protocol="tcp" portid="111"><state state="open" reason="syn-ack" reason_ttl="64"/><service name="rpcbind" method="probed" conf="10" /></port>
+<port protocol="tcp" portid="139"><state state="open" reason="syn-ack" reason_ttl="64"/><service name="netbios-ssn" product="Samba smbd" version="3.X" extrainfo="workgroup: WORKGROUP" method="probed" conf="10" /></port>
+<port protocol="tcp" portid="443"><state state="open" reason="syn-ack" reason_ttl="64"/></port>
+</ports>
+<times srtt="10" rttvar="2" to="100000" />
+</host>
+<runstats><finished time="1361832386" timestr="Mon Feb 25 23:46:26 2013" elapsed="26.15"/><hosts up="1" down="0" total="1" />
+<!-- Nmap done at Mon Feb 25 23:46:26 2013; 1 IP address (1 host up) scanned in 26.15 seconds -->
+</runstats></nmaprun>
