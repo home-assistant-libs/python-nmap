@@ -4,6 +4,8 @@
 """
 nmap.py - version and date, see below
 
+Source code : https://code.google.com/p/python-nmap/
+
 Author :
 
 * Alexandre Norman - norman at xael.org
