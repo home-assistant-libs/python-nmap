@@ -95,13 +95,15 @@ True
 'OS:SCAN'
 >>> nm.csv()
 'host;protocol;port;name;state;product;extrainfo;reason;version;conf\\r\\n127.0.0.1;tcp;22;ssh;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;25;smtp;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;53;domain;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;80;http;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;111;rpcbind;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;139;netbios-ssn;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;443;https;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;445;microsoft-ds;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;631;ipp;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;2049;nfs;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;3306;mysql;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;5222;unknown;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;5269;unknown;open;;;syn-ack;;3\\r\\n'
-
+>>> r=nm.scan(hosts='127.0.0.1', ports='139', arguments="-sC -T4")
+>>> nm._scan_result['scan']['127.0.0.1']['hostscript'][0].keys()
+dict_keys(['output', 'id'])
 """
 
 
 __author__ = 'Alexandre Norman (norman@xael.org)'
-__version__ = '0.2.8'
-__last_modification__ = '2013.02.25'
+__version__ = '0.3.0'
+__last_modification__ = '2013.06.23'
 
 
 import collections
@@ -298,22 +300,27 @@ class PortScanner(object):
         """
 
         # nmap xml output looks like :
-        #  <host starttime="1267974521" endtime="1267974522">
-        #  <status state="up" reason="user-set"/>
-        #  <address addr="192.168.1.1" addrtype="ipv4" />
-        #  <hostnames><hostname name="neufbox" type="PTR" /></hostnames>
-        #  <ports>
-        #    <port protocol="tcp" portid="22">
-        #      <state state="filtered" reason="no-response" reason_ttl="0"/>
-        #      <service name="ssh" method="table" conf="3" />
-        #    </port>
-        #    <port protocol="tcp" portid="25">
-        #      <state state="filtered" reason="no-response" reason_ttl="0"/>
-        #      <service name="smtp" method="table" conf="3" />
-        #    </port>
-        #  </ports>
-        #  <times srtt="-1" rttvar="-1" to="1000000" />
-        #  </host>
+        # <host starttime="1267974521" endtime="1267974522">
+        #   <status state="up" reason="user-set"/>
+        #   <address addr="192.168.1.1" addrtype="ipv4" />
+        #   <hostnames><hostname name="neufbox" type="PTR" /></hostnames>
+        #   <ports>
+        #     <port protocol="tcp" portid="22">
+        #       <state state="filtered" reason="no-response" reason_ttl="0"/>
+        #       <service name="ssh" method="table" conf="3" />
+        #     </port>
+        #     <port protocol="tcp" portid="25">
+        #       <state state="filtered" reason="no-response" reason_ttl="0"/>
+        #       <service name="smtp" method="table" conf="3" />
+        #     </port>
+        #   </ports>
+        #   <hostscript>
+  #    <script id="nbstat" output="NetBIOS name: GROSTRUC, NetBIOS user: &lt;unknown&gt;, NetBIOS MAC: &lt;unknown&gt;&#xa;" />
+  #    <script id="smb-os-discovery" output=" &#xa;  OS: Unix (Samba 3.6.3)&#xa;  Name: WORKGROUP\Unknown&#xa;  System time: 2013-06-23 15:37:40 UTC+2&#xa;" />
+  #    <script id="smbv2-enabled" output="Server doesn&apos;t support SMBv2 protocol" />
+  #   </hostscript>
+        #   <times srtt="-1" rttvar="-1" to="1000000" />
+        # </host>
 
         if nmap_xml_output is not None:
             self._nmap_last_output = nmap_xml_output
@@ -423,6 +430,28 @@ class PortScanner(object):
                         scan_result['scan'][host][proto][port]['script'] = {}
 
                     scan_result['scan'][host][proto][port]['script'][script_id] = script_out
+
+
+            # <hostscript>
+      #  <script id="nbstat" output="NetBIOS name: GROSTRUC, NetBIOS user: &lt;unknown&gt;, NetBIOS MAC: &lt;unknown&gt;&#xa;" />
+      #  <script id="smb-os-discovery" output=" &#xa;  OS: Unix (Samba 3.6.3)&#xa;  Name: WORKGROUP\Unknown&#xa;  System time: 2013-06-23 15:37:40 UTC+2&#xa;" />
+      #  <script id="smbv2-enabled" output="Server doesn&apos;t support SMBv2 protocol" />
+      # </hostscript>
+            for dhostscript in dhost.getElementsByTagName('hostscript'):
+                for dname in dhostscript.getElementsByTagName('script'):
+                    hsid = dname.getAttributeNode('id').value
+                    hsoutput = dname.getAttributeNode('output').value
+
+                    if not 'hostscript' in list(scan_result['scan'][host].keys()):
+                        scan_result['scan'][host]['hostscript'] = []
+
+                    scan_result['scan'][host]['hostscript'].append(
+                        {
+                            'id': hsid,
+                            'output': hsoutput
+                            }
+                        )
+
 
             for dport in dhost.getElementsByTagName('osclass'):
                 # <osclass type="general purpose" vendor="Linux" osfamily="Linux" osgen="2.6.X" accuracy="98"/>
