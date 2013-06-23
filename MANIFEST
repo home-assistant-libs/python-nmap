@@ -9,3 +9,5 @@ setup.py
 nmap/__init__.py
 nmap/example.py
 nmap/nmap.py
+nmap/t.py
+nmap/t2.py

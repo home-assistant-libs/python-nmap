@@ -6,10 +6,12 @@
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
 <tr bgcolor="#7799ee">
 <td valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>nmap</strong></big></big> (version 0.2.8)</font></td
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>nmap</strong></big></big> (version 0.3.0)</font></td
 ><td align=right valign=bottom
 ><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/xael/ESPACE_KM/python/python-nmap/nmap/nmap.py">/home/xael/ESPACE_KM/python/python-nmap/nmap/nmap.py</a></font></td></tr></table>
     <p><tt>nmap.py&nbsp;-&nbsp;version&nbsp;and&nbsp;date,&nbsp;see&nbsp;below<br>
+&nbsp;<br>
+Source&nbsp;code&nbsp;:&nbsp;https://code.google.com/p/python-nmap/<br>
 &nbsp;<br>
 Author&nbsp;:<br>
 &nbsp;<br>
@@ -52,7 +54,8 @@ Test&nbsp;strings&nbsp;:<br>
 ...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
 &gt;&gt;&gt;&nbsp;'error'&nbsp;in&nbsp;nm.scan('yahoo.fs',&nbsp;arguments='-sP')['nmap']['scaninfo']<br>
 True<br>
-&gt;&gt;&gt;&nbsp;r=nm.scan('127.0.0.1',&nbsp;'22-443')<br>
+&gt;&gt;&gt;&nbsp;r=nm.scan('127.0.0.1',&nbsp;'22-25')<br>
+&gt;&gt;&gt;&nbsp;r=nm.analyse_nmap_xml_scan(open('nmap_output.xml').read())<br>
 &gt;&gt;&gt;&nbsp;nm.command_line()<br>
 'nmap&nbsp;-oX&nbsp;-&nbsp;-p&nbsp;22-443&nbsp;-sV&nbsp;127.0.0.1'<br>
 &gt;&gt;&gt;&nbsp;nm.scaninfo()<br>
@@ -92,12 +95,16 @@ True<br>
 &gt;&gt;&gt;&nbsp;nm.listscan('localhost/30')<br>
 ['127.0.0.0',&nbsp;'127.0.0.1',&nbsp;'127.0.0.2',&nbsp;'127.0.0.3']<br>
 &gt;&gt;&gt;&nbsp;r=nm.scan('127.0.0.1',&nbsp;arguments='-O')<br>
-&gt;&gt;&gt;&nbsp;nm['127.0.0.1']['osclass']<br>
-[{'vendor':&nbsp;'Linux',&nbsp;'osfamily':&nbsp;'Linux',&nbsp;'type':&nbsp;'general&nbsp;purpose',&nbsp;'osgen':&nbsp;'2.6.X',&nbsp;'accuracy':&nbsp;'96'},&nbsp;{'vendor':&nbsp;'AXIS',&nbsp;'osfamily':&nbsp;'Linux',&nbsp;'type':&nbsp;'webcam',&nbsp;'osgen':&nbsp;'2.6.X',&nbsp;'accuracy':&nbsp;'91'},&nbsp;{'vendor':&nbsp;'Crestron',&nbsp;'osfamily':&nbsp;'2-Series',&nbsp;'type':&nbsp;'specialized',&nbsp;'osgen':&nbsp;'',&nbsp;'accuracy':&nbsp;''},&nbsp;{'vendor':&nbsp;'Gemtek',&nbsp;'osfamily':&nbsp;'embedded',&nbsp;'type':&nbsp;'WAP',&nbsp;'osgen':&nbsp;'',&nbsp;'accuracy':&nbsp;''},&nbsp;{'vendor':&nbsp;'Siemens',&nbsp;'osfamily':&nbsp;'embedded',&nbsp;'type':&nbsp;'WAP',&nbsp;'osgen':&nbsp;'',&nbsp;'accuracy':&nbsp;''},&nbsp;{'vendor':&nbsp;'Linux',&nbsp;'osfamily':&nbsp;'Linux',&nbsp;'type':&nbsp;'general&nbsp;purpose',&nbsp;'osgen':&nbsp;'2.4.X',&nbsp;'accuracy':&nbsp;'88'},&nbsp;{'vendor':&nbsp;'Linux',&nbsp;'osfamily':&nbsp;'Linux',&nbsp;'type':&nbsp;'WAP',&nbsp;'osgen':&nbsp;'2.6.X',&nbsp;'accuracy':&nbsp;'88'},&nbsp;{'vendor':&nbsp;'Check&nbsp;Point',&nbsp;'osfamily':&nbsp;'embedded',&nbsp;'type':&nbsp;'firewall',&nbsp;'osgen':&nbsp;'',&nbsp;'accuracy':&nbsp;''},&nbsp;{'vendor':&nbsp;'Check&nbsp;Point',&nbsp;'osfamily':&nbsp;'Linux',&nbsp;'type':&nbsp;'firewall',&nbsp;'osgen':&nbsp;'2.4.X',&nbsp;'accuracy':&nbsp;'88'},&nbsp;{'vendor':&nbsp;'Linux',&nbsp;'osfamily':&nbsp;'Linux',&nbsp;'type':&nbsp;'WAP',&nbsp;'osgen':&nbsp;'2.4.X',&nbsp;'accuracy':&nbsp;'88'},&nbsp;{'vendor':&nbsp;'Linux',&nbsp;'osfamily':&nbsp;'Linux',&nbsp;'type':&nbsp;'general&nbsp;purpose',&nbsp;'osgen':&nbsp;'',&nbsp;'accuracy':&nbsp;''},&nbsp;{'vendor':&nbsp;'Vodavi',&nbsp;'osfamily':&nbsp;'embedded',&nbsp;'type':&nbsp;'PBX',&nbsp;'osgen':&nbsp;'',&nbsp;'accuracy':&nbsp;''},&nbsp;{'vendor':&nbsp;'Lexmark',&nbsp;'osfamily':&nbsp;'embedded',&nbsp;'type':&nbsp;'printer',&nbsp;'osgen':&nbsp;'',&nbsp;'accuracy':&nbsp;''}]<br>
-&gt;&gt;&gt;&nbsp;nm['127.0.0.1']['fingerprint']<br>
-'OS:SCAN(V=5.21%D=2/24%OT=22%CT=1%CU=42516%PV=N%DS=0%DC=L%G=Y%TM=512A8382%P=\nOS:x86_64-unknown-linux-gnu)SEQ(SP=106%GCD=1%ISR=10A%TI=Z%CI=Z%II=I%TS=8)OP\nOS:S(O1=M400CST11NW6%O2=M400CST11NW6%O3=M400CNNT11NW6%O4=M400CST11NW6%O5=M4\nOS:00CST11NW6%O6=M400CST11)WIN(W1=8000%W2=8000%W3=8000%W4=8000%W5=8000%W6=8\nOS:000)ECN(R=Y%DF=Y%T=40%W=8018%O=M400CNNSNW6%CC=Y%Q=)T1(R=Y%DF=Y%T=40%S=O%\nOS:A=S+%F=AS%RD=0%Q=)T2(R=N)T3(R=N)T4(R=Y%DF=Y%T=40%W=0%S=A%A=Z%F=R%O=%RD=0\nOS:%Q=)T5(R=Y%DF=Y%T=40%W=0%S=Z%A=S+%F=AR%O=%RD=0%Q=)T6(R=Y%DF=Y%T=40%W=0%S\nOS:=A%A=Z%F=R%O=%RD=0%Q=)T7(R=Y%DF=Y%T=40%W=0%S=Z%A=S+%F=AR%O=%RD=0%Q=)U1(R\nOS:=Y%DF=N%T=40%IPL=164%UN=0%RIPL=G%RID=G%RIPCK=G%RUCK=G%RUD=G)IE(R=Y%DFI=N\nOS:%T=40%CD=S)\n'<br>
+&gt;&gt;&gt;&nbsp;len(nm['127.0.0.1']['osclass'])&gt;0<br>
+True<br>
+&gt;&gt;&gt;&nbsp;r=nm['127.0.0.1']['fingerprint']<br>
+&gt;&gt;&gt;&nbsp;r[:7]<br>
+'OS:SCAN'<br>
 &gt;&gt;&gt;&nbsp;nm.csv()<br>
-'host;protocol;port;name;state;product;extrainfo;reason;version;conf\r\n127.0.0.1;tcp;22;ssh;open;;;syn-ack;;3\r\n127.0.0.1;tcp;25;smtp;open;;;syn-ack;;3\r\n127.0.0.1;tcp;53;domain;open;;;syn-ack;;3\r\n127.0.0.1;tcp;80;http;open;;;syn-ack;;3\r\n127.0.0.1;tcp;111;rpcbind;open;;;syn-ack;;3\r\n127.0.0.1;tcp;139;netbios-ssn;open;;;syn-ack;;3\r\n127.0.0.1;tcp;443;https;open;;;syn-ack;;3\r\n127.0.0.1;tcp;445;microsoft-ds;open;;;syn-ack;;3\r\n127.0.0.1;tcp;631;ipp;open;;;syn-ack;;3\r\n127.0.0.1;tcp;2049;nfs;open;;;syn-ack;;3\r\n127.0.0.1;tcp;3306;mysql;open;;;syn-ack;;3\r\n127.0.0.1;tcp;5222;unknown;open;;;syn-ack;;3\r\n127.0.0.1;tcp;5269;unknown;open;;;syn-ack;;3\r\n'</tt></p>
+'host;protocol;port;name;state;product;extrainfo;reason;version;conf\r\n127.0.0.1;tcp;22;ssh;open;;;syn-ack;;3\r\n127.0.0.1;tcp;25;smtp;open;;;syn-ack;;3\r\n127.0.0.1;tcp;53;domain;open;;;syn-ack;;3\r\n127.0.0.1;tcp;80;http;open;;;syn-ack;;3\r\n127.0.0.1;tcp;111;rpcbind;open;;;syn-ack;;3\r\n127.0.0.1;tcp;139;netbios-ssn;open;;;syn-ack;;3\r\n127.0.0.1;tcp;443;https;open;;;syn-ack;;3\r\n127.0.0.1;tcp;445;microsoft-ds;open;;;syn-ack;;3\r\n127.0.0.1;tcp;631;ipp;open;;;syn-ack;;3\r\n127.0.0.1;tcp;2049;nfs;open;;;syn-ack;;3\r\n127.0.0.1;tcp;3306;mysql;open;;;syn-ack;;3\r\n127.0.0.1;tcp;5222;unknown;open;;;syn-ack;;3\r\n127.0.0.1;tcp;5269;unknown;open;;;syn-ack;;3\r\n'<br>
+&gt;&gt;&gt;&nbsp;r=nm.scan(hosts='127.0.0.1',&nbsp;ports='139',&nbsp;arguments="-sC&nbsp;-T4")<br>
+&gt;&gt;&gt;&nbsp;nm._scan_result['scan']['127.0.0.1']['hostscript'][0].keys()<br>
+dict_keys(['output',&nbsp;'id'])</tt></p>
 <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#aa55cc">
@@ -471,7 +478,7 @@ Data and other attributes inherited from <a href="builtins.html#dict">builtins.d
 <font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
     
 <tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><strong>__last_modification__</strong> = '2013.02.25'</td></tr></table><p>
+<td width="100%"><strong>__last_modification__</strong> = '2013.06.23'</td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#7799ee">
 <td colspan=3 valign=bottom>&nbsp;<br>

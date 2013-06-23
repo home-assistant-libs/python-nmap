@@ -315,10 +315,10 @@ class PortScanner(object):
         #     </port>
         #   </ports>
         #   <hostscript>
-  #    <script id="nbstat" output="NetBIOS name: GROSTRUC, NetBIOS user: &lt;unknown&gt;, NetBIOS MAC: &lt;unknown&gt;&#xa;" />
-  #    <script id="smb-os-discovery" output=" &#xa;  OS: Unix (Samba 3.6.3)&#xa;  Name: WORKGROUP\Unknown&#xa;  System time: 2013-06-23 15:37:40 UTC+2&#xa;" />
-  #    <script id="smbv2-enabled" output="Server doesn&apos;t support SMBv2 protocol" />
-  #   </hostscript>
+        #    <script id="nbstat" output="NetBIOS name: GROSTRUC, NetBIOS user: &lt;unknown&gt;, NetBIOS MAC: &lt;unknown&gt;&#xa;" />
+        #    <script id="smb-os-discovery" output=" &#xa;  OS: Unix (Samba 3.6.3)&#xa;  Name: WORKGROUP\Unknown&#xa;  System time: 2013-06-23 15:37:40 UTC+2&#xa;" />
+        #    <script id="smbv2-enabled" output="Server doesn&apos;t support SMBv2 protocol" />
+        #   </hostscript>
         #   <times srtt="-1" rttvar="-1" to="1000000" />
         # </host>
 
