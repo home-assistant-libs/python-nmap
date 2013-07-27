@@ -6,7 +6,7 @@
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
 <tr bgcolor="#7799ee">
 <td valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>nmap</strong></big></big> (version 0.3.0)</font></td
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>nmap</strong></big></big> (version 0.3.1)</font></td
 ><td align=right valign=bottom
 ><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/xael/ESPACE_KM/python/python-nmap/nmap/nmap.py">/home/xael/ESPACE_KM/python/python-nmap/nmap/nmap.py</a></font></td></tr></table>
     <p><tt>nmap.py&nbsp;-&nbsp;version&nbsp;and&nbsp;date,&nbsp;see&nbsp;below<br>
@@ -23,7 +23,8 @@ Contributors:<br>
 *&nbsp;Brian&nbsp;Bustin&nbsp;-&nbsp;brian&nbsp;at&nbsp;bustin.us<br>
 *&nbsp;old.schepperhand<br>
 *&nbsp;Johan&nbsp;Lundberg<br>
-*&nbsp;Thomas&nbsp;D.&nbsp;maaaaz&nbsp;<br>
+*&nbsp;Thomas&nbsp;D.&nbsp;maaaaz<br>
+*&nbsp;Robert&nbsp;Bost<br>
 &nbsp;<br>
 Licence&nbsp;:&nbsp;GPL&nbsp;v3&nbsp;or&nbsp;any&nbsp;later&nbsp;version<br>
 &nbsp;<br>
@@ -103,7 +104,7 @@ True<br>
 &gt;&gt;&gt;&nbsp;nm.csv()<br>
 'host;protocol;port;name;state;product;extrainfo;reason;version;conf\r\n127.0.0.1;tcp;22;ssh;open;;;syn-ack;;3\r\n127.0.0.1;tcp;25;smtp;open;;;syn-ack;;3\r\n127.0.0.1;tcp;53;domain;open;;;syn-ack;;3\r\n127.0.0.1;tcp;80;http;open;;;syn-ack;;3\r\n127.0.0.1;tcp;111;rpcbind;open;;;syn-ack;;3\r\n127.0.0.1;tcp;139;netbios-ssn;open;;;syn-ack;;3\r\n127.0.0.1;tcp;443;https;open;;;syn-ack;;3\r\n127.0.0.1;tcp;445;microsoft-ds;open;;;syn-ack;;3\r\n127.0.0.1;tcp;631;ipp;open;;;syn-ack;;3\r\n127.0.0.1;tcp;2049;nfs;open;;;syn-ack;;3\r\n127.0.0.1;tcp;3306;mysql;open;;;syn-ack;;3\r\n127.0.0.1;tcp;5222;unknown;open;;;syn-ack;;3\r\n127.0.0.1;tcp;5269;unknown;open;;;syn-ack;;3\r\n'<br>
 &gt;&gt;&gt;&nbsp;r=nm.scan(hosts='127.0.0.1',&nbsp;ports='139',&nbsp;arguments="-sC&nbsp;-T4")<br>
-&gt;&gt;&gt;&nbsp;nm._scan_result['scan']['127.0.0.1']['hostscript'][0].keys()<br>
+&gt;&gt;&gt;&nbsp;nm['127.0.0.1']['hostscript'][0].keys()<br>
 dict_keys(['output',&nbsp;'id'])</tt></p>
 <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -478,7 +479,7 @@ Data and other attributes inherited from <a href="builtins.html#dict">builtins.d
 <font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
     
 <tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><strong>__last_modification__</strong> = '2013.06.23'</td></tr></table><p>
+<td width="100%"><strong>__last_modification__</strong> = '2013.07.27'</td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#7799ee">
 <td colspan=3 valign=bottom>&nbsp;<br>
