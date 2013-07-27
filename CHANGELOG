@@ -1,6 +1,10 @@
 Changelog
 =========
-2013/06/23 (v0.3)
+2013/07/27 (v0.3.1)
+ - Bug correction on callback's assert in PortScannerAsync.scan
+   proposed by Robert Bost
+
+2013/06/23 (v0.3.0)
  - added support for NMAP SCRIPT ENGINE
    >>> r=nm.scan(hosts='127.0.0.1', ports='139', arguments="-sC ")
    >>> print(nm._scan_result['scan']['127.0.0.1']['hostscript'])

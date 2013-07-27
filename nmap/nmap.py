@@ -16,7 +16,8 @@ Contributors:
 * Brian Bustin - brian at bustin.us
 * old.schepperhand
 * Johan Lundberg
-* Thomas D. maaaaz 
+* Thomas D. maaaaz
+* Robert Bost
  
 Licence : GPL v3 or any later version
 
@@ -96,14 +97,14 @@ True
 >>> nm.csv()
 'host;protocol;port;name;state;product;extrainfo;reason;version;conf\\r\\n127.0.0.1;tcp;22;ssh;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;25;smtp;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;53;domain;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;80;http;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;111;rpcbind;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;139;netbios-ssn;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;443;https;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;445;microsoft-ds;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;631;ipp;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;2049;nfs;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;3306;mysql;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;5222;unknown;open;;;syn-ack;;3\\r\\n127.0.0.1;tcp;5269;unknown;open;;;syn-ack;;3\\r\\n'
 >>> r=nm.scan(hosts='127.0.0.1', ports='139', arguments="-sC -T4")
->>> nm._scan_result['scan']['127.0.0.1']['hostscript'][0].keys()
+>>> nm['127.0.0.1']['hostscript'][0].keys()
 dict_keys(['output', 'id'])
 """
 
 
 __author__ = 'Alexandre Norman (norman@xael.org)'
-__version__ = '0.3.0'
-__last_modification__ = '2013.06.23'
+__version__ = '0.3.1'
+__last_modification__ = '2013.07.27'
 
 
 import collections
@@ -699,7 +700,7 @@ class PortScannerAsync(object):
         assert type(hosts) is str, 'Wrong type for [hosts], should be a string [was {0}]'.format(type(hosts))
         assert type(ports) in (str, type(None)), 'Wrong type for [ports], should be a string [was {0}]'.format(type(ports))
         assert type(arguments) is str, 'Wrong type for [arguments], should be a string [was {0}]'.format(type(arguments))
-        assert type(callback) in (types.FunctionType, type(None)), 'Wrong type for [callback], should be a function or None [was {0}]'.format(type(callback))
+        assert callable(callback) or callback is None, 'The [callback] {0} should be callable or None.'.format(str(callback))
         
         def scan_progressive(self, hosts, ports, arguments, callback):
             for host in self._nm.listscan(hosts):
@@ -707,7 +708,7 @@ class PortScannerAsync(object):
                     scan_data = self._nm.scan(host, ports, arguments)
                 except PortScannerError:
                     pass
-                if callback is not None and isinstance(callback, collections.Callable):
+                if callback is not None:
                     callback(host, scan_data)
             return
 
