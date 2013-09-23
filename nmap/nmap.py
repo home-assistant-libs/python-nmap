@@ -103,8 +103,8 @@ dict_keys(['output', 'id'])
 
 
 __author__ = 'Alexandre Norman (norman@xael.org)'
-__version__ = '0.3.1'
-__last_modification__ = '2013.07.27'
+__version__ = '0.3.2'
+__last_modification__ = '2013.09.23'
 
 
 import collections
@@ -323,6 +323,15 @@ class PortScanner(object):
         #   <times srtt="-1" rttvar="-1" to="1000000" />
         # </host>
 
+        # <port protocol="tcp" portid="25">
+        #  <state state="open" reason="syn-ack" reason_ttl="0"/>
+        #   <service name="smtp" product="Exim smtpd" version="4.76" hostname="grostruc" method="probed" conf="10">
+        #     <cpe>cpe:/a:exim:exim:4.76</cpe>
+        #   </service>
+        #   <script id="smtp-commands" output="grostruc Hello localhost [127.0.0.1], SIZE 52428800, PIPELINING, HELP, &#xa; Commands supported: AUTH HELO EHLO MAIL RCPT DATA NOOP QUIT RSET HELP "/>
+        # </port>
+
+
         if nmap_xml_output is not None:
             self._nmap_last_output = nmap_xml_output
             
@@ -400,7 +409,7 @@ class PortScanner(object):
                 # reason
                 reason = dport.getElementsByTagName('state')[0].getAttributeNode('reason').value
                 # name, product, version, extra info and conf if any
-                name,product,version,extrainfo,conf = '','','','',''
+                name,product,version,extrainfo,conf,cpe = '','','','','',''
                 for dname in dport.getElementsByTagName('service'):
                     name = dname.getAttributeNode('name').value
                     if dname.hasAttribute('product'):
@@ -411,6 +420,9 @@ class PortScanner(object):
                         extrainfo = dname.getAttributeNode('extrainfo').value
                     if dname.hasAttribute('conf'):
                         conf = dname.getAttributeNode('conf').value
+
+                    for dcpe in dname.getElementsByTagName('cpe'):
+                        cpe = dcpe.firstChild.data
                 # store everything
                 if not proto in list(scan_result['scan'][host].keys()):
                     scan_result['scan'][host][proto] = {}
@@ -420,7 +432,8 @@ class PortScanner(object):
                                                   'product': product,
                                                   'version': version,
                                                   'extrainfo': extrainfo,
-                                                  'conf': conf}
+                                                  'conf': conf,
+                                                  'cpe': cpe}
                 script_id = ''
                 script_out = ''
                 # get script output if any
@@ -602,10 +615,10 @@ class PortScanner(object):
         returns CSV output as text
 
         Example :
-        host;protocol;port;name;state;product;extrainfo;reason;version;conf
-        127.0.0.1;tcp;22;ssh;open;OpenSSH;protocol 2.0;syn-ack;5.9p1 Debian 5ubuntu1;10
-        127.0.0.1;tcp;23;telnet;closed;;;conn-refused;;3
-        127.0.0.1;tcp;24;priv-mail;closed;;;conn-refused;;3
+        host;protocol;port;name;state;product;extrainfo;reason;version;conf;cpe
+        127.0.0.1;tcp;22;ssh;open;OpenSSH;protocol 2.0;syn-ack;5.9p1 Debian 5ubuntu1;10;cpe
+        127.0.0.1;tcp;23;telnet;closed;;;conn-refused;;3;
+        127.0.0.1;tcp;24;priv-mail;closed;;;conn-refused;;3;
         """
         assert 'scan' in self._scan_result, 'Do a scan before trying to get result !'
 
@@ -625,7 +638,8 @@ class PortScanner(object):
             'extrainfo',
             'reason',
             'version',
-            'conf'
+            'conf',
+            'cpe'
             ]
 
         csv_ouput.writerow(csv_header)
@@ -645,7 +659,8 @@ class PortScanner(object):
                         self[host][proto][port]['extrainfo'],
                         self[host][proto][port]['reason'],
                         self[host][proto][port]['version'],
-                        self[host][proto][port]['conf']
+                        self[host][proto][port]['conf'],
+                        self[host][proto][port]['cpe']
                         ]
                     csv_ouput.writerow(csv_row)
 

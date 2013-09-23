@@ -1,5 +1,8 @@
 Changelog
 =========
+2013/09/23 (v0.3.2)
+ - adding acces to CPE values under [host][proto][port]['cpe'] key
+
 2013/07/27 (v0.3.1)
  - Bug correction on callback's assert in PortScannerAsync.scan
    proposed by Robert Bost
