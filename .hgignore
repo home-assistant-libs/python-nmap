@@ -2,6 +2,7 @@ syntax: glob
 dist/
 web/
 docs/_build
+nmap-6.40/
 *~
 *.pyc
 *.elc

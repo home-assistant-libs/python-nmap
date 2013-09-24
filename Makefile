@@ -7,6 +7,9 @@ ARCHIVE=`python setup.py --fullname`
 test:
 	@python3 nmap/nmap.py
 
+testcase:
+	@./nmap-6.40/nmap -sV scanme.nmap.org -oX scanme_output.xml
+
 install:
 	@python3 setup.py install
 
