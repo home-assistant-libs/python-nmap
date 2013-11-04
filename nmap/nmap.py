@@ -104,8 +104,8 @@ dict_keys(['output', 'id'])
 
 
 __author__ = 'Alexandre Norman (norman@xael.org)'
-__version__ = '0.3.2'
-__last_modification__ = '2013.09.24'
+__version__ = '0.3.3'
+__last_modification__ = '2013.11.04'
 
 
 import collections
@@ -239,6 +239,8 @@ class PortScanner(object):
         hosts = string for hosts as nmap use it 'scanme.nmap.org' or '198.116.0-255.1-127' or '216.163.128.20/20'
         ports = string for ports as nmap use it '22,53,110,143-4564'
         arguments = string of arguments for nmap '-sU -sX -sC'
+
+        :returns: scan_result as dictionnary 
         """
         if sys.version_info[0]==2:
             assert type(hosts) in (str, unicode), 'Wrong type for [hosts], should be a string [was {0}]'.format(type(hosts))
@@ -997,6 +999,26 @@ def __get_last_online_version():
     conn.request("GET", "/norman/python/python-nmap/python-nmap_CURRENT_VERSION.txt")
     online_version = bytes.decode(conn.getresponse().read()).strip()
     return online_version
+
+
+############################################################################
+
+def convert_nmap_output_to_encoding(value, code="ascii"):
+    """
+    Change encoding for scan_result object from unicode to whatever
+    
+    :param value: scan_result as dictionnary
+    :param code: default = "ascii", encoding destination
+
+    :returns: scan_result as dictionnary with new encoding
+    """
+    new_value = {}
+    for k in value:
+        if type(value[k]) in [dict, nmap.PortScannerHostDict] :
+            new_value[k] = convert_to_encoding(value[k], code)
+        else:
+            new_value[k] = value[k].encode(code)
+    return new_value
 
 
 ############################################################################
