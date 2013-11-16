@@ -3,6 +3,8 @@
 VERSION=`python setup.py --version`
 ARCHIVE=`python setup.py --fullname`
 
+manifest:
+	@python setup.py sdist --manifest-only
 
 test:
 	@python3 nmap/nmap.py

@@ -249,6 +249,9 @@ class PortScanner(object):
         assert type(ports) in (str, type(None)), 'Wrong type for [ports], should be a string [was {0}]'.format(type(ports))
         assert type(arguments) is str, 'Wrong type for [arguments], should be a string [was {0}]'.format(type(arguments))
 
+        for redirecting_output in ['-oX', '-oA']:
+            assert not redirecting_output in arguments, 'Xml output can\'t be redirected from command line.\nYou can access it after a scan using:\nnmap.nm.get_nmap_last_output()'
+
         h_args = shlex.split(hosts)
         f_args = shlex.split(arguments)
         
@@ -719,7 +722,10 @@ class PortScannerAsync(object):
         assert type(ports) in (str, type(None)), 'Wrong type for [ports], should be a string [was {0}]'.format(type(ports))
         assert type(arguments) is str, 'Wrong type for [arguments], should be a string [was {0}]'.format(type(arguments))
         assert callable(callback) or callback is None, 'The [callback] {0} should be callable or None.'.format(str(callback))
-        
+
+        for redirecting_output in ['-oX', '-oA']:
+            assert not redirecting_output in arguments, 'Xml output can\'t be redirected from command line.\nYou can access it after a scan using:\nnmap.nm.get_nmap_last_output()'
+
         def scan_progressive(self, hosts, ports, arguments, callback):
             for host in self._nm.listscan(hosts):
                 try:
