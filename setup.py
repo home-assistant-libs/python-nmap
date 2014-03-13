@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 from distutils.core import setup, Extension
 
@@ -33,7 +35,7 @@ setup (
         "License :: OSI Approved :: GNU General Public License (GPL)",
         "Operating System :: OS Independent",
         "Topic :: System :: Monitoring",
-                                    "Topic :: System :: Networking",
+        "Topic :: System :: Networking",
         "Topic :: System :: Networking :: Firewalls",
         "Topic :: System :: Networking :: Monitoring",
         ],

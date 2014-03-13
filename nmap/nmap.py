@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# -*- coding: latin-1 -*-
+# -*- coding: utf-8 -*-
 
 """
 nmap.py - version and date, see below
@@ -61,7 +61,7 @@ True
 >>> nm['74.207.244.221'].state()
 'up'
 >>> nm['74.207.244.221'].all_protocols()
-['addresses', 'tcp']
+['addresses', 'tcp', 'vendor']
 >>> nm['74.207.244.221']['tcp'].keys()
 dict_keys([80, 9929, 22])
 >>> nm['74.207.244.221'].has_tcp(22)
@@ -92,20 +92,29 @@ True
 >>> if os.getuid() == 0:
 ...   r=nm.scan('127.0.0.1', arguments='-O')
 ...   len(nm['127.0.0.1']['osclass'])>0
-...   nm.csv()
+...   len(nm.csv()) > 0
+... else:
+...   True
+...   True
 True
-'host;protocol;port;name;state;product;extrainfo;reason;version;conf;cpe\\r\\n127.0.0.1;tcp;22;ssh;open;;;syn-ack;;3;\\r\\n127.0.0.1;tcp;25;smtp;open;;;syn-ack;;3;\\r\\n127.0.0.1;tcp;53;domain;open;;;syn-ack;;3;\\r\\n127.0.0.1;tcp;80;http;open;;;syn-ack;;3;\\r\\n127.0.0.1;tcp;111;rpcbind;open;;;syn-ack;;3;\\r\\n127.0.0.1;tcp;139;netbios-ssn;open;;;syn-ack;;3;\\r\\n127.0.0.1;tcp;443;https;open;;;syn-ack;;3;\\r\\n127.0.0.1;tcp;445;microsoft-ds;open;;;syn-ack;;3;\\r\\n127.0.0.1;tcp;631;ipp;open;;;syn-ack;;3;\\r\\n127.0.0.1;tcp;2049;nfs;open;;;syn-ack;;3;\\r\\n127.0.0.1;tcp;3306;mysql;open;;;syn-ack;;3;\\r\\n127.0.0.1;tcp;5222;unknown;open;;;syn-ack;;3;\\r\\n127.0.0.1;tcp;5269;unknown;open;;;syn-ack;;3;\\r\\n127.0.0.1;tcp;6969;acmsoda;open;;;syn-ack;;3;\\r\\n'
+True
 >>> if os.getuid() == 0:
 ...   r=nm.scan(hosts='127.0.0.1', ports='139', arguments="-sC -T4")
 >>> if os.getuid() == 0:
 ...   nm['127.0.0.1']['hostscript'][0].keys()
 dict_keys(['output', 'id'])
+>>> if os.getuid() == 0:
+...   r=nm.scan('192.168.0.254', arguments='-O')
+...   len(nm['192.168.0.254']['vendor']) > 0
+... else:
+...   True
+True
 """
 
 
 __author__ = 'Alexandre Norman (norman@xael.org)'
 __version__ = '0.3.3'
-__last_modification__ = '2013.11.04'
+__last_modification__ = '2014.03.13'
 
 
 import collections
@@ -381,11 +390,14 @@ class PortScanner(object):
             # host ip, mac and other addresses
             host = None
             address_block = {}
+            vendor_block = {}
             for address in dhost.getElementsByTagName('address'):
                 addtype = address.getAttributeNode('addrtype').value
                 address_block[addtype] = address.getAttributeNode('addr').value
                 if addtype == 'ipv4':
                     host = address_block[addtype]
+                elif addtype == 'mac' and address.getAttributeNode('vendor') != None:
+                    vendor_block[address_block[addtype]] = address.getAttributeNode('vendor').value
 
             if host is None:
                 host = dhost.getElementsByTagName('address')[0].getAttributeNode('addr').value
@@ -396,6 +408,7 @@ class PortScanner(object):
             scan_result['scan'][host] = PortScannerHostDict({'hostname': hostname})
 
             scan_result['scan'][host]['addresses'] = address_block
+            scan_result['scan'][host]['vendor'] = vendor_block
 
             for dstatus in dhost.getElementsByTagName('status'):
                 # status : up...

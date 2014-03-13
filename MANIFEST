@@ -9,6 +9,3 @@ nmap.html
 setup.py
 nmap/__init__.py
 nmap/nmap.py
-nmap/t.py
-nmap/t2.py
-nmap/t3.py

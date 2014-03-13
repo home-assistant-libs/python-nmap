@@ -7,7 +7,7 @@ manifest:
 	@python setup.py sdist --manifest-only
 
 test:
-	@python3 nmap/nmap.py
+	@(cd nmap; python3 nmap.py)
 
 testcase:
 	@./nmap-6.40/nmap -sV scanme.nmap.org -oX scanme_output.xml
