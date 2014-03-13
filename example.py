@@ -85,7 +85,7 @@ print(nm.csv())
 
 print('----------------------------------------------------')
 # If you want to do a pingsweep on network 192.168.1.0/24:
-nm.scan(hosts='192.168.1.0/24', arguments='-n -sP -PE -PA21,23,80,3389')
+nm.scan(hosts='192.168.0.0/24', arguments='-n -sP -PE -PA21,23,80,3389')
 hosts_list = [(x, nm[x]['status']['state']) for x in nm.all_hosts()]
 for host, status in hosts_list:
     print('{0}:{1}'.format(host, status))
@@ -104,7 +104,7 @@ def callback_result(host, scan_result):
     print('------------------')
     print(host, scan_result)
 
-nma.scan(hosts='192.168.1.0/30', arguments='-sP', callback=callback_result)
+nma.scan(hosts='192.168.0.0/30', arguments='-sP', callback=callback_result)
 
 while nma.still_scanning():
     print("Waiting ...")
@@ -114,7 +114,7 @@ if (os.getuid() == 0):
     print('----------------------------------------------------')
     # Os detection (need root privileges)
     nm.scan("127.0.0.1", arguments="-O")
-    if nm['127.0.0.1'].has_key('osclass'):
+    if 'osclass' in nm['127.0.0.1']:
         for osclass in nm['127.0.0.1']['osclass']:
             print('OsClass.type : {0}'.format(osclass['type']))
             print('OsClass.vendor : {0}'.format(osclass['vendor']))
@@ -123,15 +123,22 @@ if (os.getuid() == 0):
             print('OsClass.accuracy : {0}'.format(osclass['accuracy']))
             print('')
 
-    if nm['127.0.0.1'].has_key('osmatch'):
+    if 'osmatch' in nm['127.0.0.1']:
         for osmatch in nm['127.0.0.1']['osmatch']:
             print('OsMatch.name : {0}'.format(osclass['name']))
             print('OsMatch.accuracy : {0}'.format(osclass['accuracy']))
             print('OsMatch.line : {0}'.format(osclass['line']))
             print('')
 
-    if nm['127.0.0.1'].has_key('fingerprint'):
+    if 'fingerprint' in nm['127.0.0.1']:
         print('Fingerprint : {0}'.format(nm['127.0.0.1']['fingerprint']))
+
+
+    # Vendor list for MAC address
+    nm.scan('192.168.0.0/24', arguments='-O')
+    for h in nm.all_hosts():
+        if 'mac' in nm[h]['addresses']:
+            print(nm[h]['addresses'], nm[h]['vendor'])
 
 
 
@@ -139,7 +146,7 @@ print('----------------------------------------------------')
 # Read output captured to a file
 # Example : nmap -oX - -p 22-443 -sV 127.0.0.1 > nmap_output.xml
 
-with open("../nmap_output.xml", "r") as fd:
+with open("./nmap_output.xml", "r") as fd:
     content = fd.read()
     nm.analyse_nmap_xml_scan(content)
     print(nm.csv())
