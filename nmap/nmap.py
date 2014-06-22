@@ -113,8 +113,8 @@ True
 
 
 __author__ = 'Alexandre Norman (norman@xael.org)'
-__version__ = '0.3.3'
-__last_modification__ = '2014.03.13'
+__version__ = '0.3.4'
+__last_modification__ = '2014.06.22'
 
 
 import collections
@@ -792,6 +792,71 @@ class PortScannerAsync(object):
             return self._process.is_alive()
         except:
             return False
+
+    
+
+############################################################################
+
+
+class PortScannerYield(PortScannerAsync):
+    """
+    PortScannerYield allows to use nmap from python with a generator
+    for each host scanned, yield is called with scan result for the host
+
+    """
+
+    def __init__(self):
+        """
+        Initialize the module
+
+        * detects nmap on the system and nmap version
+        * may raise PortScannerError exception if nmap is not found in the path
+
+        """
+        PortScannerAsync.__init__(self)
+        return
+
+
+
+    def scan(self, hosts='127.0.0.1', ports=None, arguments='-sV'):
+        """
+        Scan given hosts in a separate process and return host by host result using callback function
+
+        PortScannerError exception from standard nmap is catched and you won't know about it
+
+        :param hosts: string for hosts as nmap use it 'scanme.nmap.org' or '198.116.0-255.1-127' or '216.163.128.20/20'
+        :param ports: string for ports as nmap use it '22,53,110,143-4564'
+        :param arguments: string of arguments for nmap '-sU -sX -sC'
+        :param callback: callback function which takes (host, scan_data) as arguments
+
+        """
+
+        assert type(hosts) is str, 'Wrong type for [hosts], should be a string [was {0}]'.format(type(hosts))
+        assert type(ports) in (str, type(None)), 'Wrong type for [ports], should be a string [was {0}]'.format(type(ports))
+        assert type(arguments) is str, 'Wrong type for [arguments], should be a string [was {0}]'.format(type(arguments))
+
+        for redirecting_output in ['-oX', '-oA']:
+            assert not redirecting_output in arguments, 'Xml output can\'t be redirected from command line.\nYou can access it after a scan using:\nnmap.nm.get_nmap_last_output()'
+
+        for host in self._nm.listscan(hosts):
+            try:
+                scan_data = self._nm.scan(host, ports, arguments)
+            except PortScannerError:
+                pass
+            yield (host, scan_data)
+        return
+
+
+
+    def stop(self):
+        pass
+
+    def wait(self, timeout=None):
+        pass
+    
+
+    def still_scanning(self):
+        pass
 
     
 

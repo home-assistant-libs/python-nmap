@@ -8,4 +8,5 @@ gpl-3.0.txt
 nmap.html
 setup.py
 nmap/__init__.py
+nmap/nmap-0.1.5.py
 nmap/nmap.py
