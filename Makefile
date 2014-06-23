@@ -26,6 +26,7 @@ license:
 
 register:
 	@python3 setup.py register
+	@python3 setup.py sdist upload
 
 doc:
 	@pydoc3 -w nmap/nmap.py
