@@ -34,8 +34,6 @@ doc:
 web:
 	@echo $(VERSION) > web/python-nmap_CURRENT_VERSION.txt
 	@cp dist/$(ARCHIVE).tar.gz web/
-	@md5sum web/$(ARCHIVE).tar.gz > LAST_MD5
-	@emacsclient -a /usr/bin/emacs22 LAST_MD5 web/index.gtm
-	@rm LAST_MD5
+	@m4 -DVERSION=$(VERSION) -DMD5SUM=$(shell md5sum dist/$(ARCHIVE).tar.gz |cut -d' ' -f1) -DDATE=$(shell date +%Y-%m-%d) web/index.gtm.m4 > web/index.gtm
 
 .PHONY: web
