@@ -27,8 +27,6 @@ license:
 register:
 	@python3 setup.py register
 	@python3 setup.py sdist upload
-	@python setup.py bdist_egg upload
-	@python3 setup.py bdist_egg upload
 
 doc:
 	@pydoc3 -w nmap/nmap.py
