@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2015/05/08 (v0.3.5)
+ - correcting a bug in all_protocols()
+ - correcting issue 8 : PortScannerAsync Doesn't work in windows...
+
 2014/06/22 (v0.3.4)
  - adding PortScannerYield class with generator
    >>> nm = nmap.PortScannerYield()

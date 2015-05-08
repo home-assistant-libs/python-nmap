@@ -27,6 +27,8 @@ license:
 register:
 	@python3 setup.py register
 	@python3 setup.py sdist upload
+	@python setup.py bdist_egg upload
+	@python3 setup.py bdist_egg upload
 
 doc:
 	@pydoc3 -w nmap/nmap.py
@@ -36,5 +38,8 @@ web:
 	@echo $(VERSION) > web/python-nmap_CURRENT_VERSION.txt
 	@cp dist/$(ARCHIVE).tar.gz web/
 	@m4 -DVERSION=$(VERSION) -DMD5SUM=$(shell md5sum dist/$(ARCHIVE).tar.gz |cut -d' ' -f1) -DDATE=$(shell date +%Y-%m-%d) web/index.gtm.m4 > web/index.gtm
+	@(cd /home/xael/ESPACE_KM/xael.org/web/xael.org/www.xael.org/html/norman/python ; make)
+	@(cd /home/xael/ESPACE_KM/xael.org/web/xael.org/www.xael.org/html/norman/ ; make ftp-all)
+
 
 .PHONY: web

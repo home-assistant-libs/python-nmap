@@ -37,7 +37,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 Test strings :
-^^^^^^^^^^^^
+^^^^^^^^^^^^^^
 >>> import nmap
 >>> if __get_last_online_version() != __version__:
 ...     raise ValueError('Current version is {0} - Last published version is {1}'.format(__version__, __get_last_online_version()))
@@ -61,7 +61,7 @@ True
 >>> nm['74.207.244.221'].state()
 'up'
 >>> nm['74.207.244.221'].all_protocols()
-['addresses', 'tcp', 'vendor']
+['tcp']
 >>> nm['74.207.244.221']['tcp'].keys()
 dict_keys([80, 9929, 22])
 >>> nm['74.207.244.221'].has_tcp(22)
@@ -113,8 +113,8 @@ True
 
 
 __author__ = 'Alexandre Norman (norman@xael.org)'
-__version__ = '0.3.4'
-__last_modification__ = '2014.06.22'
+__version__ = '0.3.5'
+__last_modification__ = '2015.05.08'
 
 
 import collections
@@ -687,6 +687,20 @@ class PortScanner(object):
 
 ############################################################################
 
+def __scan_progressive__(self, hosts, ports, arguments, callback):
+    """
+    Used by PortScannerAsync for callback
+    """
+    for host in self._nm.listscan(hosts):
+        try:
+            scan_data = self._nm.scan(host, ports, arguments)
+        except PortScannerError:
+            pass
+        if callback is not None:
+            callback(host, scan_data)
+    return
+
+############################################################################
 
 class PortScannerAsync(object):
     """
@@ -739,19 +753,10 @@ class PortScannerAsync(object):
         for redirecting_output in ['-oX', '-oA']:
             assert not redirecting_output in arguments, 'Xml output can\'t be redirected from command line.\nYou can access it after a scan using:\nnmap.nm.get_nmap_last_output()'
 
-        def scan_progressive(self, hosts, ports, arguments, callback):
-            for host in self._nm.listscan(hosts):
-                try:
-                    scan_data = self._nm.scan(host, ports, arguments)
-                except PortScannerError:
-                    pass
-                if callback is not None:
-                    callback(host, scan_data)
-            return
 
         self._process = Process(
-            target=scan_progressive,
-            args=(self, hosts, ports, arguments, callback)
+            target = __scan_progressive__,
+            args = (self, hosts, ports, arguments, callback)
             )
         self._process.daemon = True
         self._process.start()
@@ -896,8 +901,10 @@ class PortScannerHostDict(dict):
 
         """
         lp = list(self.keys())
-        lp.remove('status')
+        lp.remove('addresses')
         lp.remove('hostname')
+        lp.remove('status')
+        lp.remove('vendor')
         lp.sort()
         return lp
 
