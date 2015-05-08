@@ -113,7 +113,7 @@ True
 
 
 __author__ = 'Alexandre Norman (norman@xael.org)'
-__version__ = '0.3.5'
+__version__ = '0.3.6'
 __last_modification__ = '2015.05.08'
 
 
@@ -182,7 +182,7 @@ class PortScanner(object):
 
             
         self._nmap_last_output = bytes.decode(p.communicate()[0]) # store stdout
-        for line in self._nmap_last_output.split('\n'):
+        for line in self._nmap_last_output.split(os.linesep):
             if regex.match(line) is not None:
                 is_nmap_found = True
                 # Search for version number
@@ -287,11 +287,11 @@ class PortScanner(object):
         nmap_err_keep_trace = []
         if len(nmap_err) > 0:
             regex_warning = re.compile('^Warning: .*')
-            for line in nmap_err.split('\n'):
+            for line in nmap_err.split(os.linesep):
                 if len(line) > 0:
                     rgw = regex_warning.search(line)
                     if rgw is not None:
-                        sys.stderr.write(line+'\n')
+                        sys.stderr.write(line+os.linesep)
                         pass
                     else:
                         #raise PortScannerError(nmap_err)
