@@ -6,7 +6,7 @@
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
 <tr bgcolor="#7799ee">
 <td valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>nmap</strong></big></big> (version 0.3.6)</font></td
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>nmap</strong></big></big> (version 0.3.7)</font></td
 ><td align=right valign=bottom
 ><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/xael/ESPACE_KM/python/python-nmap/nmap/nmap.py">/home/xael/ESPACE_KM/python/python-nmap/nmap/nmap.py</a></font></td></tr></table>
     <p><tt>nmap.py&nbsp;-&nbsp;version&nbsp;and&nbsp;date,&nbsp;see&nbsp;below<br>
@@ -224,16 +224,17 @@ this&nbsp;may&nbsp;be&nbsp;used&nbsp;for&nbsp;debugging&nbsp;purpose<br>
 or&nbsp;(0,&nbsp;0)&nbsp;if&nbsp;unknown<br>
 :returns:&nbsp;(nmap_version_number,&nbsp;nmap_subversion_number)</tt></dd></dl>
 
-<dl><dt><a name="PortScanner-scan"><strong>scan</strong></a>(self, hosts='127.0.0.1', ports=None, arguments='-sV')</dt><dd><tt>Scan&nbsp;given&nbsp;hosts<br>
+<dl><dt><a name="PortScanner-scan"><strong>scan</strong></a>(self, hosts='127.0.0.1', ports=None, arguments='-sV', sudo=False)</dt><dd><tt>Scan&nbsp;given&nbsp;hosts<br>
 &nbsp;<br>
 May&nbsp;raise&nbsp;<a href="#PortScannerError">PortScannerError</a>&nbsp;exception&nbsp;if&nbsp;nmap&nbsp;output&nbsp;was&nbsp;not&nbsp;xml<br>
 &nbsp;<br>
 Test&nbsp;existance&nbsp;of&nbsp;the&nbsp;following&nbsp;key&nbsp;to&nbsp;know&nbsp;if&nbsp;something&nbsp;went&nbsp;wrong&nbsp;:&nbsp;['nmap']['scaninfo']['error']<br>
 If&nbsp;not&nbsp;present,&nbsp;everything&nbsp;was&nbsp;ok.<br>
 &nbsp;<br>
-hosts&nbsp;=&nbsp;string&nbsp;for&nbsp;hosts&nbsp;as&nbsp;nmap&nbsp;use&nbsp;it&nbsp;'scanme.nmap.org'&nbsp;or&nbsp;'198.116.0-255.1-127'&nbsp;or&nbsp;'216.163.128.20/20'<br>
-ports&nbsp;=&nbsp;string&nbsp;for&nbsp;ports&nbsp;as&nbsp;nmap&nbsp;use&nbsp;it&nbsp;'22,53,110,143-4564'<br>
-arguments&nbsp;=&nbsp;string&nbsp;of&nbsp;arguments&nbsp;for&nbsp;nmap&nbsp;'-sU&nbsp;-sX&nbsp;-sC'<br>
+:param&nbsp;hosts:&nbsp;string&nbsp;for&nbsp;hosts&nbsp;as&nbsp;nmap&nbsp;use&nbsp;it&nbsp;'scanme.nmap.org'&nbsp;or&nbsp;'198.116.0-255.1-127'&nbsp;or&nbsp;'216.163.128.20/20'<br>
+:param&nbsp;ports:&nbsp;string&nbsp;for&nbsp;ports&nbsp;as&nbsp;nmap&nbsp;use&nbsp;it&nbsp;'22,53,110,143-4564'<br>
+:param&nbsp;arguments:&nbsp;string&nbsp;of&nbsp;arguments&nbsp;for&nbsp;nmap&nbsp;'-sU&nbsp;-sX&nbsp;-sC'<br>
+:param&nbsp;sudo:&nbsp;launch&nbsp;nmap&nbsp;with&nbsp;sudo&nbsp;if&nbsp;true<br>
 &nbsp;<br>
 :returns:&nbsp;scan_result&nbsp;as&nbsp;dictionnary</tt></dd></dl>
 
@@ -273,14 +274,15 @@ for&nbsp;each&nbsp;host&nbsp;scanned,&nbsp;callback&nbsp;is&nbsp;called&nbsp;wit
 *&nbsp;detects&nbsp;nmap&nbsp;on&nbsp;the&nbsp;system&nbsp;and&nbsp;nmap&nbsp;version<br>
 *&nbsp;may&nbsp;raise&nbsp;<a href="#PortScannerError">PortScannerError</a>&nbsp;exception&nbsp;if&nbsp;nmap&nbsp;is&nbsp;not&nbsp;found&nbsp;in&nbsp;the&nbsp;path</tt></dd></dl>
 
-<dl><dt><a name="PortScannerAsync-scan"><strong>scan</strong></a>(self, hosts='127.0.0.1', ports=None, arguments='-sV', callback=None)</dt><dd><tt>Scan&nbsp;given&nbsp;hosts&nbsp;in&nbsp;a&nbsp;separate&nbsp;process&nbsp;and&nbsp;return&nbsp;host&nbsp;by&nbsp;host&nbsp;result&nbsp;using&nbsp;callback&nbsp;function<br>
+<dl><dt><a name="PortScannerAsync-scan"><strong>scan</strong></a>(self, hosts='127.0.0.1', ports=None, arguments='-sV', callback=None, sudo=False)</dt><dd><tt>Scan&nbsp;given&nbsp;hosts&nbsp;in&nbsp;a&nbsp;separate&nbsp;process&nbsp;and&nbsp;return&nbsp;host&nbsp;by&nbsp;host&nbsp;result&nbsp;using&nbsp;callback&nbsp;function<br>
 &nbsp;<br>
 <a href="#PortScannerError">PortScannerError</a>&nbsp;exception&nbsp;from&nbsp;standard&nbsp;nmap&nbsp;is&nbsp;catched&nbsp;and&nbsp;you&nbsp;won't&nbsp;know&nbsp;about&nbsp;it<br>
 &nbsp;<br>
 :param&nbsp;hosts:&nbsp;string&nbsp;for&nbsp;hosts&nbsp;as&nbsp;nmap&nbsp;use&nbsp;it&nbsp;'scanme.nmap.org'&nbsp;or&nbsp;'198.116.0-255.1-127'&nbsp;or&nbsp;'216.163.128.20/20'<br>
 :param&nbsp;ports:&nbsp;string&nbsp;for&nbsp;ports&nbsp;as&nbsp;nmap&nbsp;use&nbsp;it&nbsp;'22,53,110,143-4564'<br>
 :param&nbsp;arguments:&nbsp;string&nbsp;of&nbsp;arguments&nbsp;for&nbsp;nmap&nbsp;'-sU&nbsp;-sX&nbsp;-sC'<br>
-:param&nbsp;callback:&nbsp;callback&nbsp;function&nbsp;which&nbsp;takes&nbsp;(host,&nbsp;scan_data)&nbsp;as&nbsp;arguments</tt></dd></dl>
+:param&nbsp;callback:&nbsp;callback&nbsp;function&nbsp;which&nbsp;takes&nbsp;(host,&nbsp;scan_data)&nbsp;as&nbsp;arguments<br>
+:param&nbsp;sudo:&nbsp;launch&nbsp;nmap&nbsp;with&nbsp;sudo&nbsp;if&nbsp;true</tt></dd></dl>
 
 <dl><dt><a name="PortScannerAsync-still_scanning"><strong>still_scanning</strong></a>(self)</dt><dd><tt>:returns:&nbsp;True&nbsp;if&nbsp;a&nbsp;scan&nbsp;is&nbsp;currently&nbsp;running,&nbsp;False&nbsp;otherwise</tt></dd></dl>
 
@@ -512,14 +514,15 @@ Methods defined here:<br>
 *&nbsp;detects&nbsp;nmap&nbsp;on&nbsp;the&nbsp;system&nbsp;and&nbsp;nmap&nbsp;version<br>
 *&nbsp;may&nbsp;raise&nbsp;<a href="#PortScannerError">PortScannerError</a>&nbsp;exception&nbsp;if&nbsp;nmap&nbsp;is&nbsp;not&nbsp;found&nbsp;in&nbsp;the&nbsp;path</tt></dd></dl>
 
-<dl><dt><a name="PortScannerYield-scan"><strong>scan</strong></a>(self, hosts='127.0.0.1', ports=None, arguments='-sV')</dt><dd><tt>Scan&nbsp;given&nbsp;hosts&nbsp;in&nbsp;a&nbsp;separate&nbsp;process&nbsp;and&nbsp;return&nbsp;host&nbsp;by&nbsp;host&nbsp;result&nbsp;using&nbsp;callback&nbsp;function<br>
+<dl><dt><a name="PortScannerYield-scan"><strong>scan</strong></a>(self, hosts='127.0.0.1', ports=None, arguments='-sV', sudo=False)</dt><dd><tt>Scan&nbsp;given&nbsp;hosts&nbsp;in&nbsp;a&nbsp;separate&nbsp;process&nbsp;and&nbsp;return&nbsp;host&nbsp;by&nbsp;host&nbsp;result&nbsp;using&nbsp;callback&nbsp;function<br>
 &nbsp;<br>
 <a href="#PortScannerError">PortScannerError</a>&nbsp;exception&nbsp;from&nbsp;standard&nbsp;nmap&nbsp;is&nbsp;catched&nbsp;and&nbsp;you&nbsp;won't&nbsp;know&nbsp;about&nbsp;it<br>
 &nbsp;<br>
 :param&nbsp;hosts:&nbsp;string&nbsp;for&nbsp;hosts&nbsp;as&nbsp;nmap&nbsp;use&nbsp;it&nbsp;'scanme.nmap.org'&nbsp;or&nbsp;'198.116.0-255.1-127'&nbsp;or&nbsp;'216.163.128.20/20'<br>
 :param&nbsp;ports:&nbsp;string&nbsp;for&nbsp;ports&nbsp;as&nbsp;nmap&nbsp;use&nbsp;it&nbsp;'22,53,110,143-4564'<br>
 :param&nbsp;arguments:&nbsp;string&nbsp;of&nbsp;arguments&nbsp;for&nbsp;nmap&nbsp;'-sU&nbsp;-sX&nbsp;-sC'<br>
-:param&nbsp;callback:&nbsp;callback&nbsp;function&nbsp;which&nbsp;takes&nbsp;(host,&nbsp;scan_data)&nbsp;as&nbsp;arguments</tt></dd></dl>
+:param&nbsp;callback:&nbsp;callback&nbsp;function&nbsp;which&nbsp;takes&nbsp;(host,&nbsp;scan_data)&nbsp;as&nbsp;arguments<br>
+:param&nbsp;sudo:&nbsp;launch&nbsp;nmap&nbsp;with&nbsp;sudo&nbsp;if&nbsp;true</tt></dd></dl>
 
 <dl><dt><a name="PortScannerYield-still_scanning"><strong>still_scanning</strong></a>(self)</dt></dl>
 
@@ -546,7 +549,7 @@ Data descriptors inherited from <a href="nmap.html#PortScannerAsync">PortScanner
 <font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
     
 <tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><dl><dt><a name="-__scan_progressive__"><strong>__scan_progressive__</strong></a>(self, hosts, ports, arguments, callback)</dt><dd><tt>Used&nbsp;by&nbsp;<a href="#PortScannerAsync">PortScannerAsync</a>&nbsp;for&nbsp;callback</tt></dd></dl>
+<td width="100%"><dl><dt><a name="-__scan_progressive__"><strong>__scan_progressive__</strong></a>(self, hosts, ports, arguments, callback, sudo)</dt><dd><tt>Used&nbsp;by&nbsp;<a href="#PortScannerAsync">PortScannerAsync</a>&nbsp;for&nbsp;callback</tt></dd></dl>
  <dl><dt><a name="-convert_nmap_output_to_encoding"><strong>convert_nmap_output_to_encoding</strong></a>(value, code='ascii')</dt><dd><tt>Change&nbsp;encoding&nbsp;for&nbsp;scan_result&nbsp;<a href="builtins.html#object">object</a>&nbsp;from&nbsp;unicode&nbsp;to&nbsp;whatever<br>
 &nbsp;<br>
 :param&nbsp;value:&nbsp;scan_result&nbsp;as&nbsp;dictionnary<br>
