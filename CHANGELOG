@@ -1,6 +1,9 @@
 Changelog
 =========
 
+2015/05/08 (v0.3.7)
+ - adding sudo parameter for scanning (idea from scupython)
+
 2015/05/08 (v0.3.6)
  - correcting issue 7 : Issues under windows
 

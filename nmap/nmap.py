@@ -113,7 +113,7 @@ True
 
 
 __author__ = 'Alexandre Norman (norman@xael.org)'
-__version__ = '0.3.6'
+__version__ = '0.3.7'
 __last_modification__ = '2015.05.08'
 
 
@@ -236,7 +236,7 @@ class PortScanner(object):
 
 
 
-    def scan(self, hosts='127.0.0.1', ports=None, arguments='-sV'):
+    def scan(self, hosts='127.0.0.1', ports=None, arguments='-sV', sudo=False):
         """
         Scan given hosts
 
@@ -245,9 +245,10 @@ class PortScanner(object):
         Test existance of the following key to know if something went wrong : ['nmap']['scaninfo']['error']
         If not present, everything was ok.
 
-        hosts = string for hosts as nmap use it 'scanme.nmap.org' or '198.116.0-255.1-127' or '216.163.128.20/20'
-        ports = string for ports as nmap use it '22,53,110,143-4564'
-        arguments = string of arguments for nmap '-sU -sX -sC'
+        :param hosts: string for hosts as nmap use it 'scanme.nmap.org' or '198.116.0-255.1-127' or '216.163.128.20/20'
+        :param ports: string for ports as nmap use it '22,53,110,143-4564'
+        :param arguments: string of arguments for nmap '-sU -sX -sC'
+        :param sudo: launch nmap with sudo if true
 
         :returns: scan_result as dictionnary 
         """
@@ -266,6 +267,8 @@ class PortScanner(object):
         
         # Launch scan
         args = [self._nmap_path, '-oX', '-'] + h_args + ['-p', ports]*(ports!=None) + f_args
+        if sudo:
+            args = ['sudo'] + args
 
         p = subprocess.Popen(args, bufsize=100000, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
@@ -687,13 +690,13 @@ class PortScanner(object):
 
 ############################################################################
 
-def __scan_progressive__(self, hosts, ports, arguments, callback):
+def __scan_progressive__(self, hosts, ports, arguments, callback, sudo):
     """
     Used by PortScannerAsync for callback
     """
     for host in self._nm.listscan(hosts):
         try:
-            scan_data = self._nm.scan(host, ports, arguments)
+            scan_data = self._nm.scan(host, ports, arguments, sudo)
         except PortScannerError:
             pass
         if callback is not None:
@@ -732,7 +735,7 @@ class PortScannerAsync(object):
         return
 
 
-    def scan(self, hosts='127.0.0.1', ports=None, arguments='-sV', callback=None):
+    def scan(self, hosts='127.0.0.1', ports=None, arguments='-sV', callback=None, sudo=False):
         """
         Scan given hosts in a separate process and return host by host result using callback function
 
@@ -742,7 +745,7 @@ class PortScannerAsync(object):
         :param ports: string for ports as nmap use it '22,53,110,143-4564'
         :param arguments: string of arguments for nmap '-sU -sX -sC'
         :param callback: callback function which takes (host, scan_data) as arguments
-
+        :param sudo: launch nmap with sudo if true
         """
 
         assert type(hosts) is str, 'Wrong type for [hosts], should be a string [was {0}]'.format(type(hosts))
@@ -756,7 +759,7 @@ class PortScannerAsync(object):
 
         self._process = Process(
             target = __scan_progressive__,
-            args = (self, hosts, ports, arguments, callback)
+            args = (self, hosts, ports, arguments, callback, sudo)
             )
         self._process.daemon = True
         self._process.start()
@@ -823,7 +826,7 @@ class PortScannerYield(PortScannerAsync):
 
 
 
-    def scan(self, hosts='127.0.0.1', ports=None, arguments='-sV'):
+    def scan(self, hosts='127.0.0.1', ports=None, arguments='-sV', sudo=False):
         """
         Scan given hosts in a separate process and return host by host result using callback function
 
@@ -833,6 +836,7 @@ class PortScannerYield(PortScannerAsync):
         :param ports: string for ports as nmap use it '22,53,110,143-4564'
         :param arguments: string of arguments for nmap '-sU -sX -sC'
         :param callback: callback function which takes (host, scan_data) as arguments
+        :param sudo: launch nmap with sudo if true
 
         """
 
@@ -845,7 +849,7 @@ class PortScannerYield(PortScannerAsync):
 
         for host in self._nm.listscan(hosts):
             try:
-                scan_data = self._nm.scan(host, ports, arguments)
+                scan_data = self._nm.scan(host, ports, arguments, sudo)
             except PortScannerError:
                 pass
             yield (host, scan_data)
