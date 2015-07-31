@@ -1,6 +1,14 @@
 Changelog
 =========
 
+2015/08/01 (v0.4.0)
+ - Closes bugs :
+   - #2: use close_fds in subprocess.Popen
+   - #3: memory leak parsing xml using xml.dom.minidom
+ - Corrects a bug in parsing osclass
+ - Add nosetests for case testing
+ - Removed test case in docstring
+
 2015/05/08 (v0.3.7)
  - adding sudo parameter for scanning (idea from scupython)
 

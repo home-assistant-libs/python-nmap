@@ -9,3 +9,5 @@ nmap.html
 setup.py
 nmap/__init__.py
 nmap/nmap.py
+nmap/nmap_new.py
+nmap/test_nmap.py

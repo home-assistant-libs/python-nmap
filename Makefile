@@ -3,11 +3,12 @@
 VERSION=`python setup.py --version`
 ARCHIVE=`python setup.py --fullname`
 
+
 manifest:
 	@python setup.py sdist --manifest-only
 
 test:
-	@(cd nmap; python3 nmap.py)
+	@nosetests nmap -v
 
 testcase:
 	@./nmap-6.40/nmap -sV scanme.nmap.org -oX scanme_output.xml
@@ -38,6 +39,15 @@ web:
 	@m4 -DVERSION=$(VERSION) -DMD5SUM=$(shell md5sum dist/$(ARCHIVE).tar.gz |cut -d' ' -f1) -DDATE=$(shell date +%Y-%m-%d) web/index.gtm.m4 > web/index.gtm
 	@(cd /home/xael/ESPACE_KM/xael.org/web/xael.org/www.xael.org/html/norman/python ; make)
 	@(cd /home/xael/ESPACE_KM/xael.org/web/xael.org/www.xael.org/html/norman/ ; make ftp-all)
+
+changelog:
+	vi CHANGELOG
+
+hgcommit:
+	@hg commit
+	@hg push
+
+release: test manifest doc changelog archive hgcommit web register
 
 
 .PHONY: web
