@@ -47,7 +47,7 @@ hgcommit:
 	@hg commit
 	@hg push
 
-release: test manifest doc changelog archive hgcommit web register
+release: test manifest doc changelog hgcommit register web
 
 
 .PHONY: web
