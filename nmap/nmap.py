@@ -40,8 +40,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 __author__ = 'Alexandre Norman (norman@xael.org)'
-__version__ = '0.4.0'
-__last_modification__ = '2015.08.01'
+__version__ = '0.4.1'
+__last_modification__ = '2015.08.21'
 
 
 import collections
@@ -335,10 +335,13 @@ class PortScanner(object):
             if host is None:
                 host = dhost.find('address').get('addr')
                 
-            hostname = ''
+            hostnames = []
             for dhostname in dhost.findall('hostnames/hostname'):
-                hostname = dhostname.get('name')
-            scan_result['scan'][host] = PortScannerHostDict({'hostname': hostname})
+                hostnames.append({
+                    'name':dhostname.get('name'),
+                    'type':dhostname.get('type'),
+                    })
+            scan_result['scan'][host] = PortScannerHostDict({'hostnames': hostnames})
 
             scan_result['scan'][host]['addresses'] = address_block
             scan_result['scan'][host]['vendor'] = vendor_block
@@ -806,12 +809,28 @@ class PortScannerHostDict(dict):
     Special dictionnary class for storing and accessing host scan result
 
     """
-    def hostname(self):
+    def hostnames(self):
         """
-        :returns: hostname
+        :returns: list of hostnames
 
         """
-        return self['hostname']
+        return self['hostnames']
+
+    def hostname(self):
+        """
+        For compatibility purpose...
+        :returns: try to return the user record or the first hostname of the list hostnames
+
+        """
+        hostname = ''
+        for h in self['hostnames']:
+            if h['type'] == 'user':
+                return h['name']
+        else:
+            return self['hostnames'][0]['name']
+
+        return hostname
+
 
     def state(self):
         """
@@ -834,7 +853,7 @@ class PortScannerHostDict(dict):
         """
         lp = list(self.keys())
         lp.remove('addresses')
-        lp.remove('hostname')
+        lp.remove('hostnames')
         lp.remove('status')
         lp.remove('vendor')
         lp.sort()

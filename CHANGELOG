@@ -1,6 +1,12 @@
 Changelog
 =========
 
+2015/08/21 (v0.4.1)
+ - Closes bugs :
+   - #5: only one hostname stored per host
+ - Add hostnames() method which return the list of hostnames as a list of
+   dict [{'name':'hostname1', 'type':'PTR'}, {'name':'hostname2', 'type':'user'}]
+
 2015/08/01 (v0.4.0)
  - Closes bugs :
    - #2: use close_fds in subprocess.Popen

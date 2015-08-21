@@ -6,7 +6,7 @@
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
 <tr bgcolor="#7799ee">
 <td valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>nmap</strong></big></big> (version 0.4.0)</font></td
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>nmap</strong></big></big> (version 0.4.1)</font></td
 ><td align=right valign=bottom
 ><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/xael/ESPACE_KM/python/python-nmap/nmap/nmap.py">/home/xael/ESPACE_KM/python/python-nmap/nmap/nmap.py</a></font></td></tr></table>
     <p><tt>nmap.py&nbsp;-&nbsp;version&nbsp;and&nbsp;date,&nbsp;see&nbsp;below<br>
@@ -325,7 +325,10 @@ Methods defined here:<br>
 <dl><dt><a name="PortScannerHostDict-has_udp"><strong>has_udp</strong></a>(self, port)</dt><dd><tt>:param&nbsp;port:&nbsp;(int)&nbsp;udp&nbsp;port<br>
 :returns:&nbsp;True&nbsp;if&nbsp;udp&nbsp;port&nbsp;has&nbsp;info,&nbsp;False&nbsp;otherwise</tt></dd></dl>
 
-<dl><dt><a name="PortScannerHostDict-hostname"><strong>hostname</strong></a>(self)</dt><dd><tt>:returns:&nbsp;hostname</tt></dd></dl>
+<dl><dt><a name="PortScannerHostDict-hostname"><strong>hostname</strong></a>(self)</dt><dd><tt>For&nbsp;compatibility&nbsp;purpose...<br>
+:returns:&nbsp;try&nbsp;to&nbsp;return&nbsp;the&nbsp;user&nbsp;record&nbsp;or&nbsp;the&nbsp;first&nbsp;hostname&nbsp;of&nbsp;the&nbsp;list&nbsp;hostnames</tt></dd></dl>
+
+<dl><dt><a name="PortScannerHostDict-hostnames"><strong>hostnames</strong></a>(self)</dt><dd><tt>:returns:&nbsp;list&nbsp;of&nbsp;hostnames</tt></dd></dl>
 
 <dl><dt><a name="PortScannerHostDict-ip"><strong>ip</strong></a>(self, port)</dt><dd><tt>:param&nbsp;port:&nbsp;(int)&nbsp;ip&nbsp;port<br>
 :returns:&nbsp;info&nbsp;for&nbsp;ip&nbsp;port</tt></dd></dl>
@@ -488,7 +491,7 @@ Data descriptors inherited from <a href="nmap.html#PortScannerAsync">PortScanner
 <font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
     
 <tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><strong>__last_modification__</strong> = '2015.08.01'</td></tr></table><p>
+<td width="100%"><strong>__last_modification__</strong> = '2015.08.21'</td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#7799ee">
 <td colspan=3 valign=bottom>&nbsp;<br>
