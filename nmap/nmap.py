@@ -97,7 +97,11 @@ class PortScanner(object):
         # This is for Mac OSX. When idle3 is launched from the finder, PATH is not set so nmap was not found
         for nmap_path in nmap_search_path:
             try:
-                p = subprocess.Popen([nmap_path, '-V'], bufsize=10000, stdout=subprocess.PIPE, close_fds=True)
+                if sys.platform.startswith('freebsd') or sys.platform.startswith('linux') or sys.platform.startswith('darwin'):
+                    p = subprocess.Popen([nmap_path, '-V'], bufsize=10000, stdout=subprocess.PIPE, close_fds=True)
+                else:
+                    p = subprocess.Popen([nmap_path, '-V'], bufsize=10000, stdout=subprocess.PIPE)
+                    
             except OSError:
                 pass
             else:
