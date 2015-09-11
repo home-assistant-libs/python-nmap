@@ -52,7 +52,7 @@ changelog:
 
 hgcommit:
 	@hg commit
-	@hg tag $(VERSION)
+	@hg tag $(VERSION) -f
 	@hg push
 
 release: test manifest doc changelog hgcommit register web2
