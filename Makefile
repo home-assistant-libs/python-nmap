@@ -51,8 +51,8 @@ changelog:
 	vi CHANGELOG
 
 hgcommit:
-	@hg tag $(VERSION)
 	@hg commit
+	@hg tag $(VERSION)
 	@hg push
 
 release: test manifest doc changelog hgcommit register web2
