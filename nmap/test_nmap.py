@@ -159,7 +159,12 @@ def test_host():
     assert_equals('up', nm['74.207.244.221'].state())
     assert_equals(['tcp'], nm['74.207.244.221'].all_protocols())
 
+def test_host_no_hostname():
+    # Covers bug : https://bitbucket.org/xael/python-nmap/issues/7/error-with-hostname
+    nm.scan('127.0.0.2')
+    assert_equals('', nm['127.0.0.2'].hostname())
 
+    
 @with_setup(xmlfile_read_setup)
 def test_port():
     assert_equals([80, 9929, 22], list(nm['74.207.244.221']['tcp'].keys()))

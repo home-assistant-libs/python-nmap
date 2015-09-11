@@ -40,7 +40,7 @@ setup (
         "Topic :: System :: Networking :: Monitoring",
         ],
     packages=['nmap'],
-    url = 'http://xael.org/norman/python/python-nmap/',
+    url = 'http://xael.org/pages/python-nmap-en.html',
     description = 'This is a python class to use nmap and access scan results from python3',
     long_description=open('README.txt').read() + "\n" + open('CHANGELOG').read(),
     )

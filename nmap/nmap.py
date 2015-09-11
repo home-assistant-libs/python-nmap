@@ -40,8 +40,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 __author__ = 'Alexandre Norman (norman@xael.org)'
-__version__ = '0.4.1'
-__last_modification__ = '2015.08.21'
+__version__ = '0.4.2'
+__last_modification__ = '2015.09.11'
 
 
 import collections
@@ -827,7 +827,10 @@ class PortScannerHostDict(dict):
             if h['type'] == 'user':
                 return h['name']
         else:
-            return self['hostnames'][0]['name']
+            if len(self['hostnames']) > 0 and 'name' in self['hostnames']:
+                return self['hostnames'][0]['name']
+            else:
+                return ''
 
         return hostname
 
