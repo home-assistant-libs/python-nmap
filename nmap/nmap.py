@@ -40,7 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 __author__ = 'Alexandre Norman (norman@xael.org)'
-__version__ = '0.4.2'
+__version__ = '0.4.3'
 __last_modification__ = '2015.09.11'
 
 
@@ -1038,14 +1038,14 @@ def __get_last_online_version():
     """
     Gets last python-nmap published version
     
-    WARNING : it does an http connection to http://xael.org/norman/python/python-nmap/python-nmap_CURRENT_VERSION.txt
+    WARNING : it does an http connection to http://xael.org/pages/python-nmap/python-nmap_CURRENT_VERSION.txt
 
-    :returns: a string which indicate last published version (example :'0.2.3')
+    :returns: a string which indicate last published version (example :'0.4.3')
 
     """
     import http.client
     conn = http.client.HTTPConnection("xael.org")
-    conn.request("GET", "/norman/python/python-nmap/python-nmap_CURRENT_VERSION.txt")
+    conn.request("GET", "/pages/python-nmap/python-nmap_CURRENT_VERSION.txt")
     online_version = bytes.decode(conn.getresponse().read()).strip()
     return online_version
 

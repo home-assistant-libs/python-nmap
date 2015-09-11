@@ -1,6 +1,9 @@
 Changelog
 =========
 
+2015/09/11 (v0.4.3)
+ - Change in url for __get_last_online_version
+
 2015/09/11 (v0.4.2)
  - Closes bugs :
    - #7: Error with empty hostname

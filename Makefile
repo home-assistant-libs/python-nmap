@@ -40,14 +40,22 @@ web:
 	@(cd /home/xael/ESPACE_KM/xael.org/web/xael.org/www.xael.org/html/norman/python ; make)
 	@(cd /home/xael/ESPACE_KM/xael.org/web/xael.org/www.xael.org/html/norman/ ; make ftp-all)
 
+web2:
+	@echo $(VERSION) > web2/python-nmap_CURRENT_VERSION.txt
+	@cp dist/$(ARCHIVE).tar.gz web2/
+	@m4 -DVERSION=$(VERSION) -DMD5SUM=$(shell md5sum dist/$(ARCHIVE).tar.gz |cut -d' ' -f1) -DDATE=$(shell date +%Y-%m-%d) web2/index.md.m4 > web2/index.md
+	@m4 -DVERSION=$(VERSION) -DMD5SUM=$(shell md5sum dist/$(ARCHIVE).tar.gz |cut -d' ' -f1) -DDATE=$(shell date +%Y-%m-%d) web2/index-en.md.m4 > web2/index-en.md
+	@bash -c 'source /usr/local/bin/virtualenvwrapper.sh; workon xael.org; make ftp_upload'
+
 changelog:
 	vi CHANGELOG
 
 hgcommit:
+	@hg tag $(VERSION)
 	@hg commit
 	@hg push
 
-release: test manifest doc changelog hgcommit register web
+release: test manifest doc changelog hgcommit register web2
 
 
-.PHONY: web
+.PHONY: web web2
