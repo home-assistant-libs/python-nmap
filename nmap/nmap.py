@@ -40,8 +40,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 __author__ = 'Alexandre Norman (norman@xael.org)'
-__version__ = '0.4.3'
-__last_modification__ = '2015.09.11'
+__version__ = '0.4.4'
+__last_modification__ = '2015.10.17'
 
 
 import collections
@@ -55,7 +55,6 @@ import subprocess
 import sys
 import types
 from xml.etree import ElementTree as ET
-
 
 try:
     from multiprocessing import Process
@@ -161,8 +160,14 @@ class PortScanner(object):
         do not scan but interpret target hosts and return a list a hosts
         """
         assert type(hosts) is str, 'Wrong type for [hosts], should be a string [was {0}]'.format(type(hosts))
+        output = self.scan(hosts, arguments='-sL')
+        # Test if host was IPV6
+        try:
+            if 'looks like an IPv6 target specification' in output['nmap']['scaninfo']['error'][0]:
+                self.scan(hosts, arguments='-sL -6')
+        except KeyError:
+            pass
         
-        self.scan(hosts, arguments='-sL')
         return self.all_hosts()
 
 
@@ -195,7 +200,7 @@ class PortScanner(object):
 
         h_args = shlex.split(hosts)
         f_args = shlex.split(arguments)
-        
+
         # Launch scan
         args = [self._nmap_path, '-oX', '-'] + h_args + ['-p', ports]*(ports!=None) + f_args
         if sudo:
@@ -640,13 +645,13 @@ def __scan_progressive__(self, hosts, ports, arguments, callback, sudo):
 
 ############################################################################
 
+
 class PortScannerAsync(object):
     """
     PortScannerAsync allows to use nmap from python asynchronously
     for each host scanned, callback is called with scan result for the host
 
     """
-
     def __init__(self):
         """
         Initialize the module
@@ -659,7 +664,6 @@ class PortScannerAsync(object):
         self._nm = PortScanner()
         return
 
-
     def __del__(self):
         """
         Cleanup when deleted
@@ -668,7 +672,6 @@ class PortScannerAsync(object):
         if self._process is not None and self._process.is_alive():
             self._process.terminate()
         return
-
 
     def scan(self, hosts='127.0.0.1', ports=None, arguments='-sV', callback=None, sudo=False):
         """
@@ -700,7 +703,6 @@ class PortScannerAsync(object):
         self._process.start()
         return
 
-
     def stop(self):
         """
         Stop the current scan process
@@ -710,7 +712,6 @@ class PortScannerAsync(object):
             self._process.terminate()
         return
 
-
     def wait(self, timeout=None):
         """
         Wait for the current scan process to finish, or timeout
@@ -718,13 +719,10 @@ class PortScannerAsync(object):
         :param timeout: default = None, wait timeout seconds 
 
         """
-
         assert type(timeout) in (int, type(None)), 'Wrong type for [timeout], should be an int or None [was {0}]'.format(type(timeout))
 
         self._process.join(timeout)
         return
-
-    
 
     def still_scanning(self):
         """
@@ -736,7 +734,6 @@ class PortScannerAsync(object):
         except:
             return False
 
-    
 
 ############################################################################
 

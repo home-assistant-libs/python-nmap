@@ -9,6 +9,7 @@ from nose.tools import assert_equals
 from nose.tools import raises
 from nose import with_setup
 
+from multiprocessing import Value
 
 """
 test_nmap.py - tests cases for python-nmap
@@ -214,13 +215,56 @@ def test_listscan():
 
 def test_sudo():
     if os.getuid() == 0:
-        r=nm.scan('127.0.0.1', arguments='-O')
+        r = nm.scan('127.0.0.1', arguments='-O')
     else :
-        r=nm.scan('127.0.0.1', arguments='-O', sudo=True)
+        r = nm.scan('127.0.0.1', arguments='-O', sudo=True)
         
     assert(len(nm['127.0.0.1']['osclass']) > 0)
     assert_equals('Linux', nm['127.0.0.1']['osclass']['vendor'])
 
 
 
-    
+def test_ipv6():
+    if os.getuid() == 0:
+        r = nm.scan('127.0.0.1', arguments='-6')
+    else:
+        r = nm.scan('127.0.0.1', arguments='-6', sudo=True)
+
+
+
+def test_ipv4_async():
+    global FLAG
+    FLAG = Value('i', 0)
+    nma = nmap.PortScannerAsync()
+
+    def callback_result(host, scan_result):
+        global FLAG
+        FLAG.value = 1
+
+    nma.scan(hosts='127.0.0.1',
+             arguments='-p 22 -Pn',
+             callback=callback_result)
+
+    while nma.still_scanning():
+        nma.wait(2)
+
+    assert_equals(FLAG.value, 1)
+
+
+def test_ipv6_async():
+    global FLAG
+    FLAG = Value('i', 0)
+    nma = nmap.PortScannerAsync()
+
+    def callback_result(host, scan_result):
+        global FLAG
+        FLAG.value = 1
+
+    nma.scan(hosts='::1',
+             arguments='-6 -p 22 -Pn',
+             callback=callback_result)
+
+    while nma.still_scanning():
+        nma.wait(2)
+
+    assert_equals(FLAG.value, 1)

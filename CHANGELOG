@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2015/10/17 (v0.4.4)
+ - Closes bugs :
+   - #8 IPv6 Async scanner doesn't work
+
 2015/09/11 (v0.4.3)
  - Change in url for __get_last_online_version
 

@@ -41,6 +41,7 @@ setup (
         ],
     packages=['nmap'],
     url = 'http://xael.org/pages/python-nmap-en.html',
+    bugtrack_url = 'https://bitbucket.org/xael/python-nmap',
     description = 'This is a python class to use nmap and access scan results from python3',
     long_description=open('README.txt').read() + "\n" + open('CHANGELOG').read(),
     )
