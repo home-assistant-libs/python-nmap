@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2015/10/25 (v0.4.5)
+ - Closes bugs :
+   - #9 Can not pass ports with unicode string at scan function
+
 2015/10/17 (v0.4.4)
  - Closes bugs :
    - #8 IPv6 Async scanner doesn't work
@@ -12,7 +16,7 @@ Changelog
  - Closes bugs :
    - #7: Error with empty hostname
    - #6: Windows support of close_fds if you redirect stdin/stdout/stderr
-	
+
 2015/08/21 (v0.4.1)
  - Closes bugs :
    - #5: only one hostname stored per host

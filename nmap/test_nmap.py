@@ -268,3 +268,10 @@ def test_ipv6_async():
         nma.wait(2)
 
     assert_equals(FLAG.value, 1)
+
+
+# def test_host_and_port_as_unicode():
+#     # nosetests -x -s nmap/test_nmap.py:test_port_as_unicode
+#     # Covers bug : https://bitbucket.org/xael/python-nmap/issues/9/can-not-pass-ports-with-unicode-string-at
+#     nma = nm.scan(hosts=u'127.0.0.1', ports=u'22')
+#     assert_equals(nma['nmap']['scaninfo']['error'], '')
