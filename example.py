@@ -116,20 +116,20 @@ if (os.getuid() == 0):
     # Os detection (need root privileges)
     nm.scan("127.0.0.1", arguments="-O")
     if 'osclass' in nm['127.0.0.1']:
-        for osclass in nm['127.0.0.1']['osclass']:
-            print('OsClass.type : {0}'.format(osclass['type']))
-            print('OsClass.vendor : {0}'.format(osclass['vendor']))
-            print('OsClass.osfamily : {0}'.format(osclass['osfamily']))
-            print('OsClass.osgen : {0}'.format(osclass['osgen']))
-            print('OsClass.accuracy : {0}'.format(osclass['accuracy']))
-            print('')
+        osclass = nm['127.0.0.1']['osclass']
+        print('OsClass.type : {0}'.format(osclass['type']))
+        print('OsClass.vendor : {0}'.format(osclass['vendor']))
+        print('OsClass.osfamily : {0}'.format(osclass['osfamily']))
+        print('OsClass.osgen : {0}'.format(osclass['osgen']))
+        print('OsClass.accuracy : {0}'.format(osclass['accuracy']))
+        print('')
 
     if 'osmatch' in nm['127.0.0.1']:
-        for osmatch in nm['127.0.0.1']['osmatch']:
-            print('OsMatch.name : {0}'.format(osclass['name']))
-            print('OsMatch.accuracy : {0}'.format(osclass['accuracy']))
-            print('OsMatch.line : {0}'.format(osclass['line']))
-            print('')
+        osmatch = nm['127.0.0.1']['osmatch']
+        print('OsMatch.name : {0}'.format(osclass['name']))
+        print('OsMatch.accuracy : {0}'.format(osclass['accuracy']))
+        print('OsMatch.line : {0}'.format(osclass['line']))
+        print('')
 
     if 'fingerprint' in nm['127.0.0.1']:
         print('Fingerprint : {0}'.format(nm['127.0.0.1']['fingerprint']))

@@ -270,6 +270,28 @@ def test_ipv6_async():
     assert_equals(FLAG.value, 1)
 
 
+def test_parsing_osmap_osclass_and_others():
+    # nosetests -v -s nmap/test_nmap.py:test_parsing_osmap_osclass_and_others
+    if os.getuid() == 0:
+        r = nm.scan('127.0.0.1', arguments='-O')
+    else :
+        r = nm.scan('127.0.0.1', arguments='-O', sudo=True)
+
+    assert('osclass' in nm['127.0.0.1'])
+    assert_equals(nm['127.0.0.1']['osclass']['vendor'], 'Linux')
+
+    assert('type' in nm['127.0.0.1']['osclass'])
+    assert('osfamily' in nm['127.0.0.1']['osclass'])
+    assert('osgen' in nm['127.0.0.1']['osclass'])
+    assert('accuracy' in nm['127.0.0.1']['osclass'])
+
+    assert('osmatch' in nm['127.0.0.1'])
+    assert_equals(nm['127.0.0.1']['osmatch']['name'], 'Linux 3.7 - 3.15')
+
+    assert('accuracy' in nm['127.0.0.1']['osmatch'])
+    assert('line' in nm['127.0.0.1']['osmatch'])
+
+    
 # def test_host_and_port_as_unicode():
 #     # nosetests -x -s nmap/test_nmap.py:test_port_as_unicode
 #     # Covers bug : https://bitbucket.org/xael/python-nmap/issues/9/can-not-pass-ports-with-unicode-string-at

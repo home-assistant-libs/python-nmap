@@ -40,8 +40,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 __author__ = 'Alexandre Norman (norman@xael.org)'
-__version__ = '0.4.5'
-__last_modification__ = '2015.10.25'
+__version__ = '0.4.6'
+__last_modification__ = '2015.11.13'
 
 
 import collections
@@ -375,7 +375,7 @@ class PortScanner(object):
                 # reason
                 reason = dport.find('state').get('reason')
                 # name, product, version, extra info and conf if any
-                name,product,version,extrainfo,conf,cpe = '','','','','',''
+                name = product = version = extrainfo = conf = cpe = ''
                 for dname in dport.findall('service'):
                     name = dname.get('name')
                     if dname.get('product'):
@@ -392,15 +392,15 @@ class PortScanner(object):
                 # store everything
                 if not proto in list(scan_result['scan'][host].keys()):
                     scan_result['scan'][host][proto] = {}
-                    
+
                 scan_result['scan'][host][proto][port] = {'state': state,
-                                                  'reason': reason,
-                                                  'name': name,
-                                                  'product': product,
-                                                  'version': version,
-                                                  'extrainfo': extrainfo,
-                                                  'conf': conf,
-                                                  'cpe': cpe}
+                                                          'reason': reason,
+                                                          'name': name,
+                                                          'product': product,
+                                                          'version': version,
+                                                          'extrainfo': extrainfo,
+                                                          'conf': conf,
+                                                          'cpe': cpe}
                 script_id = ''
                 script_out = ''
                 # get script output if any
@@ -437,52 +437,47 @@ class PortScanner(object):
                 for dosmatch in dos.findall('osmatch'):
                     for dosclass in dosmatch.findall('osclass'):
                         # <osclass type="general purpose" vendor="Linux" osfamily="Linux" osgen="2.6.X" accuracy="98"/>
-                       ostype = ''
-                       vendor = ''
-                       osfamily = ''
-                       osgen = ''
-                       accuracy = ''
-                       try:
-                           ostype = dosclass.get('type')
-                           vendor = dosclass.get('vendor')
-                           osfamily = dosclass.get('osfamily')
-                           osgen = dosclass.get('osgen')
-                           accuracy = dosclass.get('accuracy')
-                       except AttributeError:
-                           pass
-       
-                       scan_result['scan'][host]['osclass'] = {
-                           'type': ostype,
-                           'vendor': vendor,
-                           'osfamily': osfamily,
-                           'osgen': osgen,
-                           'accuracy': accuracy
-                       }
-       
+                        ostype = ''
+                        vendor = ''
+                        osfamily = ''
+                        osgen = ''
+                        accuracy = ''
+                        try:
+                            ostype = dosclass.get('type')
+                            vendor = dosclass.get('vendor')
+                            osfamily = dosclass.get('osfamily')
+                            osgen = dosclass.get('osgen')
+                            accuracy = dosclass.get('accuracy')
+                        except AttributeError:
+                            pass
 
+                        scan_result['scan'][host]['osclass'] = {
+                            'type': ostype,
+                            'vendor': vendor,
+                            'osfamily': osfamily,
+                            'osgen': osgen,
+                            'accuracy': accuracy
+                        }
 
-            for dport in dhost.findall('osclass'):
-                # <osclass name="Linux 2.6.31" accuracy="98" line="30043"/>
-                name = ''
-                accuracy = ''
-                line = ''
-                try:
-                    name = dport.get('name')
-                    accuracy = dport.get('accuracy')
-                    line = dport.get('line')
-                except AttributeError:
-                    pass
-                if not 'osclass' in list(scan_result['scan'][host].keys()):
-                    scan_result['scan'][host]['osclass'] = []
+                for dport in dos.findall('osmatch'):
+                    # <osmatch name="Linux 3.7 - 3.15" accuracy="100" line="52790">
+                    name = ''
+                    accuracy = ''
+                    line = ''
+                    try:
+                        name = dport.get('name')
+                        accuracy = dport.get('accuracy')
+                        line = dport.get('line')
+                    except AttributeError:
+                        pass
+                    if not 'osmatch' in list(scan_result['scan'][host].keys()):
+                        scan_result['scan'][host]['osmatch'] = {}
 
-                scan_result['scan'][host]['osclass'].append(
-                    {
+                    scan_result['scan'][host]['osmatch'] = {
                         'name': name,
                         'accuracy': accuracy,
                         'line': line,
-                        }
-                    )
-
+                    }
 
             for dport in dhost.findall('osfingerprint'):
                 # <osfingerprint fingerprint="OS:SCAN(V=5.50%D=11/[...]S)&#xa;"/>

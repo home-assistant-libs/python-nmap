@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2015/11/13 (v0.4.6)
+ - Closes bugs :
+   - #10 Error when trying to parse 'osclass' , 'osmatch'
+
 2015/10/25 (v0.4.5)
  - Closes bugs :
    - #9 Can not pass ports with unicode string at scan function
