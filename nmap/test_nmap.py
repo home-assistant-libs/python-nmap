@@ -123,7 +123,7 @@ class Pdb(Plugin):
 def setup_module():
     global nm
     nm = nmap.PortScanner()
-    
+
 
 @raises(nmap.PortScannerError)
 def test_wrong_args():
@@ -213,15 +213,8 @@ def test_listscan():
                   nm.listscan('localhost/30'))
 
 
-def test_sudo():
-    if os.getuid() == 0:
-        r = nm.scan('127.0.0.1', arguments='-O')
-    else :
-        r = nm.scan('127.0.0.1', arguments='-O', sudo=True)
-        
-    assert(len(nm['127.0.0.1']['osclass']) > 0)
-    assert_equals('Linux', nm['127.0.0.1']['osclass']['vendor'])
 
+    
 
 
 def test_ipv6():
@@ -270,13 +263,33 @@ def test_ipv6_async():
     assert_equals(FLAG.value, 1)
 
 
+def scan_localhost_sudo_arg_O():
+    lastnm = nm.get_nmap_last_output()
+
+    if len(lastnm) > 0:
+        try:
+            nm.analyse_nmap_xml_scan(lastnm)
+        except:
+            pass
+        else:
+            if nm.command_line() == 'nmap -oX - -O 127.0.0.1':
+                return
+
+    if os.getuid() == 0:
+        nm.scan('127.0.0.1', arguments='-O')
+    else :
+        nm.scan('127.0.0.1', arguments='-O', sudo=True)
+
+
+@with_setup(scan_localhost_sudo_arg_O)
+def test_sudo():
+    assert(len(nm['127.0.0.1']['osclass']) > 0)
+    assert_equals('Linux', nm['127.0.0.1']['osclass']['vendor'])
+
+
+@with_setup(scan_localhost_sudo_arg_O)
 def test_parsing_osmap_osclass_and_others():
     # nosetests -v -s nmap/test_nmap.py:test_parsing_osmap_osclass_and_others
-    if os.getuid() == 0:
-        r = nm.scan('127.0.0.1', arguments='-O')
-    else :
-        r = nm.scan('127.0.0.1', arguments='-O', sudo=True)
-
     assert('osclass' in nm['127.0.0.1'])
     assert_equals(nm['127.0.0.1']['osclass']['vendor'], 'Linux')
 
@@ -291,7 +304,19 @@ def test_parsing_osmap_osclass_and_others():
     assert('accuracy' in nm['127.0.0.1']['osmatch'])
     assert('line' in nm['127.0.0.1']['osmatch'])
 
-    
+
+
+@with_setup(scan_localhost_sudo_arg_O)
+def test_all_protocols():
+    assert('addresses' not in nm['127.0.0.1'].all_protocols())
+    assert('hostnames' not in nm['127.0.0.1'].all_protocols())
+    assert('status' not in nm['127.0.0.1'].all_protocols())
+    assert('vendor' not in nm['127.0.0.1'].all_protocols())
+    assert('osclass' not in nm['127.0.0.1'].all_protocols())
+    assert('osmatch' not in nm['127.0.0.1'].all_protocols())
+    assert('uptime' not in nm['127.0.0.1'].all_protocols())
+    assert('tcp' in nm['127.0.0.1'].all_protocols())
+
 # def test_host_and_port_as_unicode():
 #     # nosetests -x -s nmap/test_nmap.py:test_port_as_unicode
 #     # Covers bug : https://bitbucket.org/xael/python-nmap/issues/9/can-not-pass-ports-with-unicode-string-at

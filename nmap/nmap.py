@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 """
@@ -40,8 +40,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 __author__ = 'Alexandre Norman (norman@xael.org)'
-__version__ = '0.4.6'
-__last_modification__ = '2015.11.13'
+__version__ = '0.4.7'
+__last_modification__ = '2015.11.17'
 
 
 import collections
@@ -863,6 +863,21 @@ class PortScannerHostDict(dict):
         lp.remove('hostnames')
         lp.remove('status')
         lp.remove('vendor')
+        try:
+            lp.remove('osclass')
+        except ValueError:
+            pass
+
+        try:
+            lp.remove('uptime')
+        except ValueError:
+            pass
+
+        try:
+            lp.remove('osmatch')
+        except ValueError:
+            pass
+        
         lp.sort()
         return lp
 
