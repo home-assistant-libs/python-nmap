@@ -18,6 +18,7 @@ Contributors:
 * Johan Lundberg
 * Thomas D. maaaaz
 * Robert Bost
+* David Peltier
  
 Licence : GPL v3 or any later version
 
@@ -40,8 +41,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 __author__ = 'Alexandre Norman (norman@xael.org)'
-__version__ = '0.4.7'
-__last_modification__ = '2015.11.17'
+__version__ = '0.5.0'
+__last_modification__ = '2015.11.18'
 
 
 import collections
@@ -433,8 +434,44 @@ class PortScanner(object):
                             }
                         )
 
+            ## <osmatch name="Juniper SA4000 SSL VPN gateway (IVE OS 7.0)" accuracy="98" line="36241">
+            ## <osclass type="firewall" vendor="Juniper" osfamily="IVE OS" osgen="7.X"
+            ## accuracy="98"><cpe>cpe:/h:juniper:sa4000</cpe><cpe>cpe:/o:juniper:ive_os:7</cpe></osclass>
+            ## </osmatch>
+            ## <osmatch name="Cymphonix EX550 firewall" accuracy="98" line="17929">
+            ## <osclass type="firewall" vendor="Cymphonix" osfamily="embedded"
+            ## accuracy="98"><cpe>cpe:/h:cymphonix:ex550</cpe></osclass>
+            ## </osmatch>
             for dos in dhost.findall('os'):
+                osmatch = []
+                portused = []
+                for dportused in dos.findall('portused'):
+                    # <portused state="open" proto="tcp" portid="443"/>
+                    state = dportused.get('state')
+                    proto = dportused.get('proto')
+                    portid = dportused.get('portid')
+                    portused.append({
+                        'state': state,
+                        'proto': proto,
+                        'portid': portid,
+                    })
+
+                scan_result['scan'][host]['portused'] = portused
+
+                    
                 for dosmatch in dos.findall('osmatch'):
+                    # <osmatch name="Linux 3.7 - 3.15" accuracy="100" line="52790">
+                    name = ''
+                    accuracy = ''
+                    line = ''
+                    try:
+                        name = dosmatch.get('name')
+                        accuracy = dosmatch.get('accuracy')
+                        line = dosmatch.get('line')
+                    except AttributeError:
+                        pass
+
+                    osclass = []
                     for dosclass in dosmatch.findall('osclass'):
                         # <osclass type="general purpose" vendor="Linux" osfamily="Linux" osgen="2.6.X" accuracy="98"/>
                         ostype = ''
@@ -451,33 +488,27 @@ class PortScanner(object):
                         except AttributeError:
                             pass
 
-                        scan_result['scan'][host]['osclass'] = {
+                        cpe = []
+                        for dcpe in dosclass.findall('cpe'):
+                            cpe.append(dcpe.text)                                           
+                        
+                        osclass.append({
                             'type': ostype,
                             'vendor': vendor,
                             'osfamily': osfamily,
                             'osgen': osgen,
-                            'accuracy': accuracy
-                        }
+                            'accuracy': accuracy,
+                            'cpe': cpe,
+                        })
 
-                for dport in dos.findall('osmatch'):
-                    # <osmatch name="Linux 3.7 - 3.15" accuracy="100" line="52790">
-                    name = ''
-                    accuracy = ''
-                    line = ''
-                    try:
-                        name = dport.get('name')
-                        accuracy = dport.get('accuracy')
-                        line = dport.get('line')
-                    except AttributeError:
-                        pass
-                    if not 'osmatch' in list(scan_result['scan'][host].keys()):
-                        scan_result['scan'][host]['osmatch'] = {}
-
-                    scan_result['scan'][host]['osmatch'] = {
+                    osmatch.append({
                         'name': name,
                         'accuracy': accuracy,
                         'line': line,
-                    }
+                        'osclass': osclass
+                    })
+                else:
+                    scan_result['scan'][host]['osmatch'] = osmatch
 
             for dport in dhost.findall('osfingerprint'):
                 # <osfingerprint fingerprint="OS:SCAN(V=5.50%D=11/[...]S)&#xa;"/>
@@ -488,7 +519,6 @@ class PortScanner(object):
                     pass
 
                 scan_result['scan'][host]['fingerprint'] = fingerprint
-
 
 
         self._scan_result = scan_result # store for later use
@@ -858,26 +888,10 @@ class PortScannerHostDict(dict):
         :returns: a list of all scanned protocols
 
         """
-        lp = list(self.keys())
-        lp.remove('addresses')
-        lp.remove('hostnames')
-        lp.remove('status')
-        lp.remove('vendor')
-        try:
-            lp.remove('osclass')
-        except ValueError:
-            pass
+        def _proto_filter(x):
+            return x in ['ip', 'tcp', 'udp', 'sctp']
 
-        try:
-            lp.remove('uptime')
-        except ValueError:
-            pass
-
-        try:
-            lp.remove('osmatch')
-        except ValueError:
-            pass
-        
+        lp = list(filter(_proto_filter, list(self.keys())))
         lp.sort()
         return lp
 

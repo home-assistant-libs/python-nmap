@@ -1,6 +1,6 @@
 syntax: glob
 dist/
-web/
+web2/
 docs/_build
 nmap-6.40/
 nmap-6.49BETA4/
