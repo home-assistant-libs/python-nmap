@@ -5,6 +5,9 @@ docs/_build
 nmap-6.40/
 nmap-6.49BETA4/
 nmap-5.51.6/
+htmlcov/
+.coverage
+requirements.txt
 *~
 *.pyc
 *.elc

@@ -1,0 +1,4 @@
+# for devevolpment purpose
+coverage
+nose
+pudb

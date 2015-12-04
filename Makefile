@@ -8,7 +8,8 @@ manifest:
 	@python setup.py sdist --manifest-only
 
 test:
-	@nosetests nmap -v
+	@nosetests --with-coverage nmap -v
+	@coverage html
 
 testcase:
 	@./nmap-6.40/nmap -sV scanme.nmap.org -oX scanme_output.xml
