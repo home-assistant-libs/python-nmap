@@ -6,6 +6,7 @@ README.txt
 example.py
 gpl-3.0.txt
 nmap.html
+requirements.txt
 setup.py
 nmap/__init__.py
 nmap/nmap.py

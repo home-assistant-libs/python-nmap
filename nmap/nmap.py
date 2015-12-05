@@ -41,8 +41,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 __author__ = 'Alexandre Norman (norman@xael.org)'
-__version__ = '0.5.0'
-__last_modification__ = '2015.11.18'
+__version__ = '0.5.0-1'
+__last_modification__ = '2015.12.05'
 
 
 import collections

@@ -37,7 +37,49 @@ except:
     sys.exit(1)
 
 
-
+# Data structure looks like :
+#
+#      {'addresses': {'ipv4': '127.0.0.1'},
+#       'hostnames': [],
+#       'osmatch': [{'accuracy': '98',
+#                    'line': '36241',
+#                    'name': 'Juniper SA4000 SSL VPN gateway (IVE OS 7.0)',
+#                    'osclass': [{'accuracy': '98',
+#                                 'cpe': ['cpe:/h:juniper:sa4000',
+#                                         'cpe:/o:juniper:ive_os:7'],
+#                                 'osfamily': 'IVE OS',
+#                                 'osgen': '7.X',
+#                                 'type': 'firewall',
+#                                 'vendor': 'Juniper'}]},
+#                   {'accuracy': '91',
+#                    'line': '17374',
+#                    'name': 'Citrix Access Gateway VPN gateway',
+#                    'osclass': [{'accuracy': '91',
+#                                 'cpe': [],
+#                                 'osfamily': 'embedded',
+#                                 'osgen': None,
+#                                 'type': 'proxy server',
+#                                 'vendor': 'Citrix'}]}],
+#       'portused': [{'portid': '443', 'proto': 'tcp', 'state': 'open'},
+#                    {'portid': '113', 'proto': 'tcp', 'state': 'closed'}],
+#       'status': {'reason': 'syn-ack', 'state': 'up'},
+#       'tcp': {113: {'conf': '3',
+#                     'cpe': '',
+#                     'extrainfo': '',
+#                     'name': 'ident',
+#                     'product': '',
+#                     'reason': 'conn-refused',
+#                     'state': 'closed',
+#                     'version': ''},
+#               443: {'conf': '10',
+#                     'cpe': '',
+#                     'extrainfo': '',
+#                     'name': 'http',
+#                     'product': 'Juniper SA2000 or SA4000 VPN gateway http config',
+#                     'reason': 'syn-ack',
+#                     'state': 'open',
+#                     'version': ''}},
+#       'vendor': {}}
 
 
 
@@ -115,29 +157,32 @@ if (os.getuid() == 0):
     print('----------------------------------------------------')
     # Os detection (need root privileges)
     nm.scan("127.0.0.1", arguments="-O")
-    if 'osclass' in nm['127.0.0.1']:
-        osclass = nm['127.0.0.1']['osclass']
-        print('OsClass.type : {0}'.format(osclass['type']))
-        print('OsClass.vendor : {0}'.format(osclass['vendor']))
-        print('OsClass.osfamily : {0}'.format(osclass['osfamily']))
-        print('OsClass.osgen : {0}'.format(osclass['osgen']))
-        print('OsClass.accuracy : {0}'.format(osclass['accuracy']))
-        print('')
-
     if 'osmatch' in nm['127.0.0.1']:
-        osmatch = nm['127.0.0.1']['osmatch']
-        print('OsMatch.name : {0}'.format(osclass['name']))
-        print('OsMatch.accuracy : {0}'.format(osclass['accuracy']))
-        print('OsMatch.line : {0}'.format(osclass['line']))
-        print('')
+        for osmatch in nm['127.0.0.1']['osmatch']:
+            print('OsMatch.name : {0}'.format(osmatch['name']))
+            print('OsMatch.accuracy : {0}'.format(osmatch['accuracy']))
+            print('OsMatch.line : {0}'.format(osmatch['line']))
+            print('')
+
+            if 'osclass' in osmatch:
+                for osclass in osmatch['osclass']:
+                    print('OsClass.type : {0}'.format(osclass['type']))
+                    print('OsClass.vendor : {0}'.format(osclass['vendor']))
+                    print('OsClass.osfamily : {0}'.format(osclass['osfamily']))
+                    print('OsClass.osgen : {0}'.format(osclass['osgen']))
+                    print('OsClass.accuracy : {0}'.format(osclass['accuracy']))
+                    print('')
+
 
     if 'fingerprint' in nm['127.0.0.1']:
         print('Fingerprint : {0}'.format(nm['127.0.0.1']['fingerprint']))
 
 
     # Vendor list for MAC address
+    print('scanning localnet')
     nm.scan('192.168.0.0/24', arguments='-O')
     for h in nm.all_hosts():
+        print(h)
         if 'mac' in nm[h]['addresses']:
             print(nm[h]['addresses'], nm[h]['vendor'])
 

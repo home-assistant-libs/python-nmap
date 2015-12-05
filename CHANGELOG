@@ -1,6 +1,9 @@
 Changelog
 =========
 
+2015/12/05 (v0.5.0-1)
+ - updating example.py
+
 2015/11/18 (v0.5.0)
  - Closes bugs :
    - #11 Display only one osclass/osmatch instead of multiple
