@@ -7,9 +7,14 @@ ARCHIVE=`python setup.py --fullname`
 manifest:
 	@python setup.py sdist --manifest-only
 
+tox:
+	@tox
+
 test:
 	@nosetests --with-coverage nmap -v
-	@coverage html
+
+coverage:
+	@coverage html nmap/nmap.py
 
 testcase:
 	@./nmap-6.40/nmap -sV scanme.nmap.org -oX scanme_output.xml
@@ -59,4 +64,4 @@ hgcommit:
 release: test manifest doc changelog hgcommit register web2
 
 
-.PHONY: web web2
+.PHONY: web web2 test
