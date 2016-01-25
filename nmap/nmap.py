@@ -19,7 +19,7 @@ Contributors:
 * Thomas D. maaaaz
 * Robert Bost
 * David Peltier
- 
+
 Licence : GPL v3 or any later version
 
 
@@ -41,20 +41,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 __author__ = 'Alexandre Norman (norman@xael.org)'
-__version__ = '0.5.0-1'
-__last_modification__ = '2015.12.05'
+__version__ = '0.5.0-2'
+__last_modification__ = '2016.01.25'
 
 
-import collections
 import csv
 import io
 import os
 import re
 import shlex
-import string
 import subprocess
 import sys
-import types
 from xml.etree import ElementTree as ET
 
 try:
@@ -65,13 +62,14 @@ except ImportError:
 
 ############################################################################
 
+
 class PortScanner(object):
     """
     PortScanner class allows to use nmap from python
 
     """
-    
-    def __init__(self, nmap_search_path=('nmap','/usr/bin/nmap','/usr/local/bin/nmap','/sw/bin/nmap','/opt/local/bin/nmap') ):
+
+    def __init__(self, nmap_search_path=('nmap', '/usr/bin/nmap', '/usr/local/bin/nmap', '/sw/bin/nmap', '/opt/local/bin/nmap')):
         """
         Initialize PortScanner module
 
@@ -92,27 +90,39 @@ class PortScanner(object):
         self.__process = None
 
         # regex used to detect nmap (http or https)
-        regex = re.compile('Nmap version [0-9]*\.[0-9]*[^ ]* \( http(|s)://.* \)')
-        # launch 'nmap -V', we wait after 'Nmap version 5.0 ( http://nmap.org )'
+        regex = re.compile(
+            'Nmap version [0-9]*\.[0-9]*[^ ]* \( http(|s)://.* \)'
+        )
+        # launch 'nmap -V', we wait after
+        #'Nmap version 5.0 ( http://nmap.org )'
         # This is for Mac OSX. When idle3 is launched from the finder, PATH is not set so nmap was not found
         for nmap_path in nmap_search_path:
             try:
-                if sys.platform.startswith('freebsd') or sys.platform.startswith('linux') or sys.platform.startswith('darwin'):
-                    p = subprocess.Popen([nmap_path, '-V'], bufsize=10000, stdout=subprocess.PIPE, close_fds=True)
+                if sys.platform.startswith('freebsd') \
+                   or sys.platform.startswith('linux') \
+                   or sys.platform.startswith('darwin'):
+                    p = subprocess.Popen([nmap_path, '-V'],
+                                         bufsize=10000,
+                                         stdout=subprocess.PIPE,
+                                         close_fds=True)
                 else:
-                    p = subprocess.Popen([nmap_path, '-V'], bufsize=10000, stdout=subprocess.PIPE)
-                    
+                    p = subprocess.Popen([nmap_path, '-V'],
+                                         bufsize=10000,
+                                         stdout=subprocess.PIPE)
+
             except OSError:
                 pass
             else:
-                self._nmap_path = nmap_path # save path 
+                self._nmap_path = nmap_path  # save path
                 break
         else:
-            raise PortScannerError('nmap program was not found in path. PATH is : {0}'.format(os.getenv('PATH')))            
+            raise PortScannerError(
+                'nmap program was not found in path. PATH is : {0}'.format(
+                    os.getenv('PATH')
+                )
+            )
 
-
-            
-        self._nmap_last_output = bytes.decode(p.communicate()[0]) # store stdout
+        self._nmap_last_output = bytes.decode(p.communicate()[0])  # sav stdout
         for line in self._nmap_last_output.split(os.linesep):
             if regex.match(line) is not None:
                 is_nmap_found = True
@@ -126,14 +136,15 @@ class PortScanner(object):
                 if rv is not None and rsv is not None:
                     # extract version/subversion
                     self._nmap_version_number = int(line[rv.start():rv.end()])
-                    self._nmap_subversion_number = int(line[rsv.start()+1:rsv.end()])
+                    self._nmap_subversion_number = int(
+                        line[rsv.start()+1:rsv.end()]
+                    )
                 break
 
-        if is_nmap_found == False:
+        if not is_nmap_found:
             raise PortScannerError('nmap program was not found in path')
 
         return
-
 
     def get_nmap_last_output(self):
         """
@@ -144,8 +155,6 @@ class PortScanner(object):
         """
         return self._nmap_last_output
 
-
-
     def nmap_version(self):
         """
         returns nmap version if detected (int version, int subversion)
@@ -154,24 +163,20 @@ class PortScanner(object):
         """
         return (self._nmap_version_number, self._nmap_subversion_number)
 
-
-
     def listscan(self, hosts='127.0.0.1'):
         """
         do not scan but interpret target hosts and return a list a hosts
         """
-        assert type(hosts) is str, 'Wrong type for [hosts], should be a string [was {0}]'.format(type(hosts))
+        assert type(hosts) is str, 'Wrong type for [hosts], should be a string [was {0}]'.format(type(hosts))  # noqa
         output = self.scan(hosts, arguments='-sL')
         # Test if host was IPV6
         try:
-            if 'looks like an IPv6 target specification' in output['nmap']['scaninfo']['error'][0]:
+            if 'looks like an IPv6 target specification' in output['nmap']['scaninfo']['error'][0]:  # noqa
                 self.scan(hosts, arguments='-sL -6')
         except KeyError:
             pass
-        
+
         return self.all_hosts()
-
-
 
     def scan(self, hosts='127.0.0.1', ports=None, arguments='-sV', sudo=False):
         """
@@ -179,7 +184,8 @@ class PortScanner(object):
 
         May raise PortScannerError exception if nmap output was not xml
 
-        Test existance of the following key to know if something went wrong : ['nmap']['scaninfo']['error']
+        Test existance of the following key to know
+        if something went wrong : ['nmap']['scaninfo']['error']
         If not present, everything was ok.
 
         :param hosts: string for hosts as nmap use it 'scanme.nmap.org' or '198.116.0-255.1-127' or '216.163.128.20/20'
@@ -187,25 +193,25 @@ class PortScanner(object):
         :param arguments: string of arguments for nmap '-sU -sX -sC'
         :param sudo: launch nmap with sudo if True
 
-        :returns: scan_result as dictionnary 
+        :returns: scan_result as dictionnary
         """
         if sys.version_info[0]==2:
-            assert type(hosts) in (str, unicode), 'Wrong type for [hosts], should be a string [was {0}]'.format(type(hosts))
-            assert type(ports) in (str, unicode, type(None)), 'Wrong type for [ports], should be a string [was {0}]'.format(type(ports))
-            assert type(arguments) in (str, unicode), 'Wrong type for [arguments], should be a string [was {0}]'.format(type(arguments))
+            assert type(hosts) in (str, unicode), 'Wrong type for [hosts], should be a string [was {0}]'.format(type(hosts))  # noqa
+            assert type(ports) in (str, unicode, type(None)), 'Wrong type for [ports], should be a string [was {0}]'.format(type(ports))  # noqa
+            assert type(arguments) in (str, unicode), 'Wrong type for [arguments], should be a string [was {0}]'.format(type(arguments))  # noqa
         else:
-            assert type(hosts) is str, 'Wrong type for [hosts], should be a string [was {0}]'.format(type(hosts))
-            assert type(ports) in (str, type(None)), 'Wrong type for [ports], should be a string [was {0}]'.format(type(ports))
-            assert type(arguments) is str, 'Wrong type for [arguments], should be a string [was {0}]'.format(type(arguments))
+            assert type(hosts) is str, 'Wrong type for [hosts], should be a string [was {0}]'.format(type(hosts))  # noqa
+            assert type(ports) in (str, type(None)), 'Wrong type for [ports], should be a string [was {0}]'.format(type(ports))  # noqa
+            assert type(arguments) is str, 'Wrong type for [arguments], should be a string [was {0}]'.format(type(arguments))  # noqa
 
         for redirecting_output in ['-oX', '-oA']:
-            assert not redirecting_output in arguments, 'Xml output can\'t be redirected from command line.\nYou can access it after a scan using:\nnmap.nm.get_nmap_last_output()'
+            assert redirecting_output not in arguments, 'Xml output can\'t be redirected from command line.\nYou can access it after a scan using:\nnmap.nm.get_nmap_last_output()'  # noqa
 
         h_args = shlex.split(hosts)
         f_args = shlex.split(arguments)
 
         # Launch scan
-        args = [self._nmap_path, '-oX', '-'] + h_args + ['-p', ports]*(ports!=None) + f_args
+        args = [self._nmap_path, '-oX', '-'] + h_args + ['-p', ports]*(ports is not None) + f_args
         if sudo:
             args = ['sudo'] + args
 
@@ -239,12 +245,14 @@ class PortScanner(object):
                         sys.stderr.write(line+os.linesep)
                         pass
                     else:
-                        #raise PortScannerError(nmap_err)
+                        # raise PortScannerError(nmap_err)
                         nmap_err_keep_trace.append(nmap_err)
 
-        return self.analyse_nmap_xml_scan(nmap_xml_output = self._nmap_last_output,
-                                          nmap_err = nmap_err,
-                                          nmap_err_keep_trace = nmap_err_keep_trace)
+        return self.analyse_nmap_xml_scan(
+            nmap_xml_output=self._nmap_last_output,
+            nmap_err=nmap_err,
+            nmap_err_keep_trace=nmap_err_keep_trace
+        )
 
 
     def analyse_nmap_xml_scan(self, nmap_xml_output=None, nmap_err='', nmap_err_keep_trace=''):
@@ -696,8 +704,16 @@ class PortScannerAsync(object):
         Cleanup when deleted
 
         """
-        if self._process is not None and self._process.is_alive():
-            self._process.terminate()
+        if self._process is not None:
+            try:
+                if self._process.is_alive():
+                    self._process.terminate()
+            except AssertionError:
+                # Happens on python3.4
+                # when using PortScannerAsync twice in a row
+                pass
+
+        self._process = None
         return
 
     def scan(self, hosts='127.0.0.1', ports=None, arguments='-sV', callback=None, sudo=False):
@@ -1090,15 +1106,17 @@ def convert_nmap_output_to_encoding(value, code="ascii"):
 
     :returns: scan_result as dictionnary with new encoding
     """
+    # import pdb;pdb.set_trace()
     new_value = {}
     for k in value:
-        if type(value[k]) in [dict, nmap.PortScannerHostDict] :
-            new_value[k] = convert_to_encoding(value[k], code)
+        if type(value[k]) in [dict, PortScannerHostDict]:
+            new_value[k] = convert_nmap_output_to_encoding(value[k], code)
         else:
-            new_value[k] = value[k].encode(code)
+            if type(value[k]) is list:
+                #import pdb;pdb.set_trace()
+                new_value[k] = [convert_nmap_output_to_encoding(x, code) for x in value[k]]
+            else:
+                new_value[k] = value[k].encode(code)
     return new_value
 
-
-
-#<EOF>######################################################################
-
+# <EOF>######################################################################

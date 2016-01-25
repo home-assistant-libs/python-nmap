@@ -214,9 +214,6 @@ def test_listscan():
 
 
 
-    
-
-
 def test_ipv6():
     if os.getuid() == 0:
         r = nm.scan('127.0.0.1', arguments='-6')
@@ -245,22 +242,22 @@ def test_ipv4_async():
 
 
 def test_ipv6_async():
-    global FLAG
-    FLAG = Value('i', 0)
-    nma = nmap.PortScannerAsync()
+    global FLAG_ipv6
+    FLAG_ipv6 = Value('i', 0)
+    nma_ipv6 = nmap.PortScannerAsync()
 
     def callback_result(host, scan_result):
-        global FLAG
-        FLAG.value = 1
+        global FLAG_ipv6
+        FLAG_ipv6.value = 1
 
-    nma.scan(hosts='::1',
+    nma_ipv6.scan(hosts='::1',
              arguments='-6 -p 22 -Pn',
              callback=callback_result)
 
-    while nma.still_scanning():
-        nma.wait(2)
+    while nma_ipv6.still_scanning():
+        nma_ipv6.wait(2)
 
-    assert_equals(FLAG.value, 1)
+    assert_equals(FLAG_ipv6.value, 1)
 
 
 def scan_localhost_sudo_arg_O():
@@ -324,7 +321,7 @@ def test_all_protocols():
 def xmlfile_read_setup_multiple_osmatch():
     nm.analyse_nmap_xml_scan(open('osmatch_output.xml').read())
 
-    
+
 @with_setup(xmlfile_read_setup_multiple_osmatch)
 def test_multipe_osmatch():
     assert('osmatch' in nm['127.0.0.1'])
@@ -342,7 +339,13 @@ def test_multipe_osmatch():
         assert('type' in osm['osclass'][0])
         assert('vendor' in osm['osclass'][0])
 
-    
+
+@with_setup(xmlfile_read_setup)
+def test_convert_nmap_output_to_encoding():
+    a=nm.analyse_nmap_xml_scan(open('scanme_output.xml').read())
+    out = nmap.convert_nmap_output_to_encoding(a, code="ascii")
+    assert(out['scan']['74.207.244.221']['addresses']['ipv4'] == b'74.207.244.221')
+
 # def test_host_and_port_as_unicode():
 #     # nosetests -x -s nmap/test_nmap.py:test_port_as_unicode
 #     # Covers bug : https://bitbucket.org/xael/python-nmap/issues/9/can-not-pass-ports-with-unicode-string-at

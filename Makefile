@@ -13,6 +13,9 @@ tox:
 test:
 	@nosetests --with-coverage nmap -v
 
+qa:
+	@flake8 nmap
+
 coverage:
 	@coverage html nmap/nmap.py
 
