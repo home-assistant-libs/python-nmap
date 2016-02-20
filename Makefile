@@ -20,7 +20,8 @@ coverage:
 	@coverage html nmap/nmap.py
 
 testcase:
-	@./nmap-6.40/nmap -sV scanme.nmap.org -oX scanme_output.xml
+	@./nmap-6.40/nmap -sV scanme.nmap.org -oX scanme_output-6.40.xml
+	@./nmap-7.01/nmap -sV scanme.nmap.org -oX scanme_output-7.01.xml
 
 install:
 	@python3 setup.py install

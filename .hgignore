@@ -2,10 +2,13 @@ syntax: glob
 dist/
 web2/
 docs/_build
+nmap-7.01/
 nmap-6.40/
 nmap-6.49BETA4/
 nmap-5.51.6/
 htmlcov/
+python_nmap.egg-info/
+scanme_output.xml
 .coverage
 .tox
 requirements.txt
@@ -16,6 +19,6 @@ requirements.txt
 *.toc
 *.log
 Thumbs.db
-#*#
+\#*\#
 *\#
-
+.\#*

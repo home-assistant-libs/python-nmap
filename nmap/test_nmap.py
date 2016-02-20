@@ -139,7 +139,13 @@ def xmlfile_read_setup():
 
 @with_setup(xmlfile_read_setup)
 def test_command_line():
-    assert_equals(nm.command_line(), './nmap-6.40/nmap -sV -oX scanme_output.xml scanme.nmap.org')
+    try:
+        global NMAP_XML_VERSION
+        NMAP_XML_VERSION = os.environ['NMAP_XML_VERSION']
+    except:
+        raise ValueError('Set env NMAP_XML_VERSION')
+    
+    assert_equals(nm.command_line(), './nmap-{0}/nmap -sV -oX scanme_output-{0}.xml scanme.nmap.org'.format(NMAP_XML_VERSION))
 
 @with_setup(xmlfile_read_setup)
 def test_scan_info():
@@ -150,15 +156,15 @@ def test_scan_info():
 
 @with_setup(xmlfile_read_setup)
 def test_all_hosts():
-    assert_equals(['74.207.244.221'], nm.all_hosts())
+    assert_equals(['45.33.32.156'], nm.all_hosts())
 
 
 @with_setup(xmlfile_read_setup)
 def test_host():
-    assert_equals('scanme.nmap.org', nm['74.207.244.221'].hostname())
-    assert({'name':'scanme.nmap.org', 'type':'user'} in  nm['74.207.244.221'].hostnames())
-    assert_equals('up', nm['74.207.244.221'].state())
-    assert_equals(['tcp'], nm['74.207.244.221'].all_protocols())
+    assert_equals('scanme.nmap.org', nm['45.33.32.156'].hostname())
+    assert({'name':'scanme.nmap.org', 'type':'user'} in  nm['45.33.32.156'].hostnames())
+    assert_equals('up', nm['45.33.32.156'].state())
+    assert_equals(['tcp'], nm['45.33.32.156'].all_protocols())
 
 def test_host_no_hostname():
     # Covers bug : https://bitbucket.org/xael/python-nmap/issues/7/error-with-hostname
@@ -168,26 +174,32 @@ def test_host_no_hostname():
     
 @with_setup(xmlfile_read_setup)
 def test_port():
-    assert_equals([80, 9929, 22], list(nm['74.207.244.221']['tcp'].keys()))
-    assert(nm['74.207.244.221'].has_tcp(22))
-    assert(nm['74.207.244.221'].has_tcp(23) == False)
-    assert('conf' in list(nm['74.207.244.221']['tcp'][22]))
-    assert('cpe' in list(nm['74.207.244.221']['tcp'][22]))
-    assert('name' in list(nm['74.207.244.221']['tcp'][22]))
-    assert('product' in list(nm['74.207.244.221']['tcp'][22]))
-    assert('reason' in list(nm['74.207.244.221']['tcp'][22]))
-    assert('state' in list(nm['74.207.244.221']['tcp'][22]))
-    assert('version' in list(nm['74.207.244.221']['tcp'][22]))
+    assert_equals([80, 9929, 22, 31337], list(nm['45.33.32.156']['tcp'].keys()))
+    assert(nm['45.33.32.156'].has_tcp(22))
+    assert(nm['45.33.32.156'].has_tcp(23) == False)
+    assert('conf' in list(nm['45.33.32.156']['tcp'][22]))
+    assert('cpe' in list(nm['45.33.32.156']['tcp'][22]))
+    assert('name' in list(nm['45.33.32.156']['tcp'][22]))
+    assert('product' in list(nm['45.33.32.156']['tcp'][22]))
+    assert('reason' in list(nm['45.33.32.156']['tcp'][22]))
+    assert('state' in list(nm['45.33.32.156']['tcp'][22]))
+    assert('version' in list(nm['45.33.32.156']['tcp'][22]))
                   
-    assert('10' in nm['74.207.244.221']['tcp'][22]['conf'])
-    assert('cpe:/o:linux:linux_kernel' in nm['74.207.244.221']['tcp'][22]['cpe'])
-    assert('ssh' in nm['74.207.244.221']['tcp'][22]['name'])
-    assert('OpenSSH' in nm['74.207.244.221']['tcp'][22]['product'])
-    assert('syn-ack' in nm['74.207.244.221']['tcp'][22]['reason'])
-    assert('open' in nm['74.207.244.221']['tcp'][22]['state'])
-    assert('5.3p1 Debian 3ubuntu7' in nm['74.207.244.221']['tcp'][22]['version'])
+    assert('10' in nm['45.33.32.156']['tcp'][22]['conf'])
+    if NMAP_XML_VERSION=='6.40':
+        assert_equals('', nm['45.33.32.156']['tcp'][22]['cpe'])
+        assert_equals('', nm['45.33.32.156']['tcp'][22]['product'])
+        assert_equals('', nm['45.33.32.156']['tcp'][22]['version'])
+    else:
+        assert('cpe:/o:linux:linux_kernel' in nm['45.33.32.156']['tcp'][22]['cpe'])
+        assert('OpenSSH' in nm['45.33.32.156']['tcp'][22]['product'])
+        assert('6.6.1p1 Ubuntu 2ubuntu2.3' in nm['45.33.32.156']['tcp'][22]['version'])
+        
+    assert('ssh' in nm['45.33.32.156']['tcp'][22]['name'])
+    assert('syn-ack' in nm['45.33.32.156']['tcp'][22]['reason'])
+    assert('open' in nm['45.33.32.156']['tcp'][22]['state'])
 
-    assert_equals(nm['74.207.244.221']['tcp'][22], nm['74.207.244.221'].tcp(22))
+    assert_equals(nm['45.33.32.156']['tcp'][22], nm['45.33.32.156'].tcp(22))
 
 
 @with_setup(xmlfile_read_setup)
@@ -203,8 +215,13 @@ def test_listscan():
 def test_csv_output():
     assert_equals('host;protocol;port;name;state;product;extrainfo;reason;version;conf;cpe',
                   nm.csv().split('\n')[0].strip())
-    assert_equals('74.207.244.221;tcp;22;ssh;open;OpenSSH;"Ubuntu Linux; protocol 2.0";syn-ack;5.3p1 Debian 3ubuntu7;10;cpe:/o:linux:linux_kernel',
-                  nm.csv().split('\n')[1].strip())
+
+    if NMAP_XML_VERSION == '6.40':
+        assert_equals('45.33.32.156;tcp;22;ssh;open;;protocol 2.0;syn-ack;;10;',
+                      nm.csv().split('\n')[1].strip())
+    else:
+        assert_equals('45.33.32.156;tcp;22;ssh;open;OpenSSH;"Ubuntu Linux; protocol 2.0";syn-ack;6.6.1p1 Ubuntu 2ubuntu2.3;10;cpe:/o:linux:linux_kernel',
+                      nm.csv().split('\n')[1].strip())
 
     
 def test_listscan():
@@ -344,7 +361,7 @@ def test_multipe_osmatch():
 def test_convert_nmap_output_to_encoding():
     a=nm.analyse_nmap_xml_scan(open('scanme_output.xml').read())
     out = nmap.convert_nmap_output_to_encoding(a, code="ascii")
-    assert(out['scan']['74.207.244.221']['addresses']['ipv4'] == b'74.207.244.221')
+    assert(out['scan']['45.33.32.156']['addresses']['ipv4'] == b'45.33.32.156')
 
 # def test_host_and_port_as_unicode():
 #     # nosetests -x -s nmap/test_nmap.py:test_port_as_unicode
