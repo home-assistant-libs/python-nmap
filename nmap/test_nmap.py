@@ -128,7 +128,7 @@ def setup_module():
 @raises(nmap.PortScannerError)
 def test_wrong_args():
     nm.scan(arguments='-wrongargs')
-    
+
 
 def test_host_scan_error():
     assert('error' in nm.scan('noserver.example.com', arguments='-sP')['nmap']['scaninfo'])
@@ -186,6 +186,7 @@ def test_port():
     assert('version' in list(nm['45.33.32.156']['tcp'][22]))
                   
     assert('10' in nm['45.33.32.156']['tcp'][22]['conf'])
+    global NMAP_XML_VERSION
     if NMAP_XML_VERSION=='6.40':
         assert_equals('', nm['45.33.32.156']['tcp'][22]['cpe'])
         assert_equals('', nm['45.33.32.156']['tcp'][22]['product'])
@@ -213,14 +214,15 @@ def test_listscan():
     
 @with_setup(xmlfile_read_setup)
 def test_csv_output():
-    assert_equals('host;protocol;port;name;state;product;extrainfo;reason;version;conf;cpe',
+    assert_equals('host;hostname;hostname_type;protocol;port;name;state;product;extrainfo;reason;version;conf;cpe',
                   nm.csv().split('\n')[0].strip())
 
+    global NMAP_XML_VERSION
     if NMAP_XML_VERSION == '6.40':
-        assert_equals('45.33.32.156;tcp;22;ssh;open;;protocol 2.0;syn-ack;;10;',
+        assert_equals('45.33.32.156;scanme.nmap.org;user;tcp;22;ssh;open;;protocol 2.0;syn-ack;;10;',
                       nm.csv().split('\n')[1].strip())
     else:
-        assert_equals('45.33.32.156;tcp;22;ssh;open;OpenSSH;"Ubuntu Linux; protocol 2.0";syn-ack;6.6.1p1 Ubuntu 2ubuntu2.3;10;cpe:/o:linux:linux_kernel',
+        assert_equals('45.33.32.156;scanme.nmap.org;user;tcp;22;ssh;open;OpenSSH;"Ubuntu Linux; protocol 2.0";syn-ack;6.6.1p1 Ubuntu 2ubuntu2.3;10;cpe:/o:linux:linux_kernel',
                       nm.csv().split('\n')[1].strip())
 
     

@@ -1,6 +1,9 @@
 Changelog
 =========
 
+2016/03/15 (v0.5.2)
+ - add hostname to csv export
+
 2015/12/05 (v0.5.0-1)
  - updating example.py
 

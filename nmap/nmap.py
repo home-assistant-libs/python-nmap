@@ -41,8 +41,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 __author__ = 'Alexandre Norman (norman@xael.org)'
-__version__ = '0.5.0-2'
-__last_modification__ = '2016.01.25'
+__version__ = '0.5.1'
+__last_modification__ = '2016.03.15'
 
 
 import csv
@@ -612,10 +612,10 @@ class PortScanner(object):
         returns CSV output as text
 
         Example :
-        host;protocol;port;name;state;product;extrainfo;reason;version;conf;cpe
-        127.0.0.1;tcp;22;ssh;open;OpenSSH;protocol 2.0;syn-ack;5.9p1 Debian 5ubuntu1;10;cpe
-        127.0.0.1;tcp;23;telnet;closed;;;conn-refused;;3;
-        127.0.0.1;tcp;24;priv-mail;closed;;;conn-refused;;3;
+        host;hostname;hostname_type;protocol;port;name;state;product;extrainfo;reason;version;conf;cpe
+        127.0.0.1;localhost;PTR;tcp;22;ssh;open;OpenSSH;protocol 2.0;syn-ack;5.9p1 Debian 5ubuntu1;10;cpe
+        127.0.0.1;localhost;PTR;tcp;23;telnet;closed;;;conn-refused;;3;
+        127.0.0.1;localhost;PTR;tcp;24;priv-mail;closed;;;conn-refused;;3;
         """
         assert 'scan' in self._scan_result, 'Do a scan before trying to get result !'
 
@@ -627,6 +627,8 @@ class PortScanner(object):
         csv_ouput = csv.writer(fd, delimiter=';')
         csv_header = [
             'host',
+            'hostname',
+            'hostname_type',
             'protocol',
             'port',
             'name',
@@ -648,18 +650,23 @@ class PortScanner(object):
                 lport = list(self[host][proto].keys())
                 lport.sort()
                 for port in lport:
-                    csv_row = [
-                        host, proto, port, 
-                        self[host][proto][port]['name'],
-                        self[host][proto][port]['state'],
-                        self[host][proto][port]['product'],
-                        self[host][proto][port]['extrainfo'],
-                        self[host][proto][port]['reason'],
-                        self[host][proto][port]['version'],
-                        self[host][proto][port]['conf'],
-                        self[host][proto][port]['cpe']
+                    hostname = ''
+                    for h in self[host]['hostnames']:
+                        hostname = h['name']
+                        hostname_type = h['type']
+                        csv_row = [
+                            host, hostname, hostname_type,
+                            proto, port,
+                            self[host][proto][port]['name'],
+                            self[host][proto][port]['state'],
+                            self[host][proto][port]['product'],
+                            self[host][proto][port]['extrainfo'],
+                            self[host][proto][port]['reason'],
+                            self[host][proto][port]['version'],
+                            self[host][proto][port]['conf'],
+                            self[host][proto][port]['cpe']
                         ]
-                    csv_ouput.writerow(csv_row)
+                        csv_ouput.writerow(csv_row)
 
         return fd.getvalue()
 
