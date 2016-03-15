@@ -65,7 +65,7 @@ hgcommit:
 	@hg tag $(VERSION) -f
 	@hg push
 
-release: test manifest doc changelog hgcommit register web2
+release: tox manifest doc changelog hgcommit register web2
 
 
 .PHONY: web web2 test
