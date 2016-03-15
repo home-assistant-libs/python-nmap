@@ -20,7 +20,7 @@ Contributors:
 * Robert Bost
 * David Peltier
 
-Licence : GPL v3 or any later version
+Licence: GPL v3 or any later version for python-nmap
 
 
 This program is free software: you can redistribute it and/or modify
@@ -37,11 +37,21 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+**************
+IMPORTANT NOTE
+**************
+
+The Nmap Security Scanner used by python-nmap is distributed
+under it's own licence that you can find at https://svn.nmap.org/nmap/COPYING
+
+Any redistribution of python-nmap along with the Nmap Security Scanner
+must conform to the Nmap Security Scanner licence
+
 """
 
 
 __author__ = 'Alexandre Norman (norman@xael.org)'
-__version__ = '0.5.1'
+__version__ = '0.6.0'
 __last_modification__ = '2016.03.15'
 
 

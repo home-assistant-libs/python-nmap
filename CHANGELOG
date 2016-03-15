@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2016/03/15 (v0.6.0)
+ - Add information about Nmap special licence
+ - Licence precision for distributing python-nmap along with nmap
+
 2016/03/15 (v0.5.2)
  - add hostname to csv export
 
