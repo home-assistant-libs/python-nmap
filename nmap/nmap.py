@@ -366,11 +366,18 @@ class PortScanner(object):
                 host = dhost.find('address').get('addr')
                 
             hostnames = []
-            for dhostname in dhost.findall('hostnames/hostname'):
-                hostnames.append({
-                    'name':dhostname.get('name'),
-                    'type':dhostname.get('type'),
-                    })
+            if len(dhost.findall('hostnames/hostname')) > 0:
+		for dhostname in dhost.findall('hostnames/hostname'):
+		    hostnames.append({
+		      'name':dhostname.get('name'),
+		      'type':dhostname.get('type'),
+		    })
+            else:
+		hostnames.append({
+		    'name':'',
+		    'type':'',
+		})
+            
             scan_result['scan'][host] = PortScannerHostDict({'hostnames': hostnames})
 
             scan_result['scan'][host]['addresses'] = address_block
