@@ -894,7 +894,7 @@ class PortScannerHostDict(dict):
             if h['type'] == 'user':
                 return h['name']
         else:
-            if len(self['hostnames']) > 0 and 'name' in self['hostnames']:
+            if len(self['hostnames']) > 0 and 'name' in self['hostnames'][0]:
                 return self['hostnames'][0]['name']
             else:
                 return ''
