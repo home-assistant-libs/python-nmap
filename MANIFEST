@@ -10,4 +10,5 @@ requirements.txt
 setup.py
 nmap/__init__.py
 nmap/nmap.py
+nmap/test.py
 nmap/test_nmap.py

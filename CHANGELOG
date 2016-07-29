@@ -1,6 +1,15 @@
 Changelog
 =========
 
+2016/07/29 (v0.6.1)
+ - Fix bug #22 UnboundLocalError in scan_progressive
+ - Fix bug #23 Scanning fails on nmap warnings
+ - Fix bug #20: Fix for empty <hostnames> values which results in blank CSV output
+ - Fix bug #18: print(nm.csv()) does not return any results
+ - Fix bug #19: nmap program was not found in path
+ - Fix bug #17: hostname is no longer reported
+
+
 2016/03/15 (v0.6.0)
  - Add information about Nmap special licence
  - Licence precision for distributing python-nmap along with nmap
