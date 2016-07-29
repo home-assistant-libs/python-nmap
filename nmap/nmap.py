@@ -246,14 +246,15 @@ class PortScanner(object):
         # keeps on trucking.
 
         nmap_err_keep_trace = []
+        nmap_warn_keep_trace = []
         if len(nmap_err) > 0:
             regex_warning = re.compile('^Warning: .*', re.IGNORECASE)
             for line in nmap_err.split(os.linesep):
                 if len(line) > 0:
                     rgw = regex_warning.search(line)
                     if rgw is not None:
-                        sys.stderr.write(line+os.linesep)
-                        pass
+                        # sys.stderr.write(line+os.linesep)
+                        nmap_warn_keep_trace.append(line+os.linesep)
                     else:
                         # raise PortScannerError(nmap_err)
                         nmap_err_keep_trace.append(nmap_err)
@@ -261,11 +262,12 @@ class PortScanner(object):
         return self.analyse_nmap_xml_scan(
             nmap_xml_output=self._nmap_last_output,
             nmap_err=nmap_err,
-            nmap_err_keep_trace=nmap_err_keep_trace
+            nmap_err_keep_trace=nmap_err_keep_trace,
+            nmap_warn_keep_trace=nmap_warn_keep_trace
         )
 
 
-    def analyse_nmap_xml_scan(self, nmap_xml_output=None, nmap_err='', nmap_err_keep_trace=''):
+    def analyse_nmap_xml_scan(self, nmap_xml_output=None, nmap_err='', nmap_err_keep_trace='', nmap_warn_keep_trace=''):
         """
         Analyses NMAP xml scan ouput
 
@@ -338,6 +340,10 @@ class PortScanner(object):
         # if there was an error
         if len(nmap_err_keep_trace)>0:
             scan_result['nmap']['scaninfo']['error'] = nmap_err_keep_trace
+
+        # if there was a warning
+        if len(nmap_warn_keep_trace)>0:
+            scan_result['nmap']['scaninfo']['warning'] = nmap_warn_keep_trace
 
         # info about scan
         for dsci in dom.findall('scaninfo'):

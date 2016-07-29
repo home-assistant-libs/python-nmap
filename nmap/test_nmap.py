@@ -375,4 +375,5 @@ def test_convert_nmap_output_to_encoding():
 
 def test_WARNING_case_sensitive():
     nm.scan('localhost', arguments= '-S 127.0.0.1')
-    assert('error' not in nm.scaninfo())
+    assert('warning'  in nm.scaninfo())
+    assert('WARNING' in nm.scaninfo()['warning'][0])
