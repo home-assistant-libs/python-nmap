@@ -370,3 +370,9 @@ def test_convert_nmap_output_to_encoding():
 #     # Covers bug : https://bitbucket.org/xael/python-nmap/issues/9/can-not-pass-ports-with-unicode-string-at
 #     nma = nm.scan(hosts=u'127.0.0.1', ports=u'22')
 #     assert_equals(nma['nmap']['scaninfo']['error'], '')
+
+
+
+def test_WARNING_case_sensitive():
+    nm.scan('localhost', arguments= '-S 127.0.0.1')
+    assert('error' not in nm.scaninfo())

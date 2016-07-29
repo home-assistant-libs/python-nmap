@@ -51,8 +51,8 @@ must conform to the Nmap Security Scanner licence
 
 
 __author__ = 'Alexandre Norman (norman@xael.org)'
-__version__ = '0.6.0'
-__last_modification__ = '2016.03.15'
+__version__ = '0.6.1'
+__last_modification__ = '2016.07.29'
 
 
 import csv
@@ -247,7 +247,7 @@ class PortScanner(object):
 
         nmap_err_keep_trace = []
         if len(nmap_err) > 0:
-            regex_warning = re.compile('^Warning: .*')
+            regex_warning = re.compile('^Warning: .*', re.IGNORECASE)
             for line in nmap_err.split(os.linesep):
                 if len(line) > 0:
                     rgw = regex_warning.search(line)
@@ -367,17 +367,17 @@ class PortScanner(object):
                 
             hostnames = []
             if len(dhost.findall('hostnames/hostname')) > 0:
-		for dhostname in dhost.findall('hostnames/hostname'):
-		    hostnames.append({
-		      'name':dhostname.get('name'),
-		      'type':dhostname.get('type'),
-		    })
+                for dhostname in dhost.findall('hostnames/hostname'):
+                    hostnames.append({
+                        'name':dhostname.get('name'),
+                        'type':dhostname.get('type'),
+                    })
             else:
-		hostnames.append({
-		    'name':'',
-		    'type':'',
-		})
-            
+                hostnames.append({
+                    'name':'',
+                    'type':'',
+                })
+
             scan_result['scan'][host] = PortScannerHostDict({'hostnames': hostnames})
 
             scan_result['scan'][host]['addresses'] = address_block
