@@ -863,26 +863,21 @@ class PortScannerYield(PortScannerAsync):
             try:
                 scan_data = self._nm.scan(host, ports, arguments, sudo)
             except PortScannerError:
-                pass
+                scan_data = None
             yield (host, scan_data)
         return
-
-
 
     def stop(self):
         pass
 
     def wait(self, timeout=None):
         pass
-    
 
     def still_scanning(self):
         pass
 
-    
 
 ############################################################################
-    
 
 
 class PortScannerHostDict(dict):
