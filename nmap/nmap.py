@@ -703,7 +703,8 @@ def __scan_progressive__(self, hosts, ports, arguments, callback, sudo):
         try:
             scan_data = self._nm.scan(host, ports, arguments, sudo)
         except PortScannerError:
-            pass
+            scan_data = None
+
         if callback is not None:
             callback(host, scan_data)
     return
@@ -750,7 +751,7 @@ class PortScannerAsync(object):
         """
         Scan given hosts in a separate process and return host by host result using callback function
 
-        PortScannerError exception from standard nmap is catched and you won't know about it
+        PortScannerError exception from standard nmap is catched and you won't know about but get None as scan_data
 
         :param hosts: string for hosts as nmap use it 'scanme.nmap.org' or '198.116.0-255.1-127' or '216.163.128.20/20'
         :param ports: string for ports as nmap use it '22,53,110,143-4564'

@@ -377,3 +377,14 @@ def test_WARNING_case_sensitive():
     nm.scan('localhost', arguments= '-S 127.0.0.1')
     assert('warning'  in nm.scaninfo())
     assert('WARNING' in nm.scaninfo()['warning'][0])
+
+
+def test_scan_progressive():
+    nmp = nmap.PortScannerAsync()
+
+    def callback(host, scan_data):
+        assert(host is not None)
+    
+    nmp.scan(hosts='127.0.0.1', arguments='-sV', callback=callback)
+    nmp.wait()
+    
