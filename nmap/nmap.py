@@ -490,52 +490,19 @@ class PortScanner(object):
                 scan_result['scan'][host]['portused'] = portused
 
                 for dosmatch in dos.findall('osmatch'):
-                    # import pdb; pdb.set_trace()
                     # <osmatch name="Linux 3.7 - 3.15" accuracy="100" line="52790">
-                    name = ''
-                    accuracy = ''
-                    line = ''
-                    try:
-                        name = dosmatch.get('name')
-                    except AttributeError:
-                        pass
-                    try:
-                        accuracy = dosmatch.get('accuracy')
-                    except AttributeError:
-                        pass
-                    try:
-                        line = dosmatch.get('line')
-                    except AttributeError:
-                        pass
+                    name = dosmatch.get('name')
+                    accuracy = dosmatch.get('accuracy')
+                    line = dosmatch.get('line')
 
                     osclass = []
                     for dosclass in dosmatch.findall('osclass'):
                         # <osclass type="general purpose" vendor="Linux" osfamily="Linux" osgen="2.6.X" accuracy="98"/>
-                        ostype = ''
-                        vendor = ''
-                        osfamily = ''
-                        osgen = ''
-                        accuracy = ''
-                        try:
-                            ostype = dosclass.get('type')
-                        except AttributeError:
-                            pass
-                        try:
-                            vendor = dosclass.get('vendor')
-                        except AttributeError:
-                            pass
-                        try:
-                            osfamily = dosclass.get('osfamily')
-                        except AttributeError:
-                            pass
-                        try:
-                            osgen = dosclass.get('osgen')
-                        except AttributeError:
-                            pass
-                        try:
-                            accuracy = dosclass.get('accuracy')
-                        except AttributeError:
-                            pass
+                        ostype = dosclass.get('type')
+                        vendor = dosclass.get('vendor')
+                        osfamily = dosclass.get('osfamily')
+                        osgen = dosclass.get('osgen')
+                        accuracy = dosclass.get('accuracy')
 
                         cpe = []
                         for dcpe in dosclass.findall('cpe'):
@@ -561,11 +528,7 @@ class PortScanner(object):
 
             for dport in dhost.findall('osfingerprint'):
                 # <osfingerprint fingerprint="OS:SCAN(V=5.50%D=11/[...]S)&#xa;"/>
-                fingerprint = ''
-                try:
-                    fingerprint = dport.get('fingerprint')
-                except AttributeError:
-                    pass
+                fingerprint = dport.get('fingerprint')
 
                 scan_result['scan'][host]['fingerprint'] = fingerprint
 
