@@ -11,7 +11,7 @@ tox:
 	@tox
 
 test:
-	@nosetests --with-coverage nmap -v
+	@(export NMAP_XML_VERSION=7.01 ; nosetests --with-coverage nmap -v)
 
 qa:
 	@flake8 nmap

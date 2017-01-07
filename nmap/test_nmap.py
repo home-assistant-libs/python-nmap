@@ -384,7 +384,15 @@ def test_scan_progressive():
 
     def callback(host, scan_data):
         assert(host is not None)
-    
+
     nmp.scan(hosts='127.0.0.1', arguments='-sV', callback=callback)
     nmp.wait()
-    
+
+
+def test_sudo_encoding__T24():
+    """
+    When using "sudo=True" like this 'nm.scan(hosts=ip_range, arguments="-sP", sudo = True)' 
+    i got a UnicodeDecodeError: 'ascii' codec can't decode byte 0xc3 in position 9: ordinal not in range(128). 
+    But if sudo is false all thing work nice. 
+    """
+    r = nm.scan('192.168.0.1/24', arguments='-sP', sudo=True)
