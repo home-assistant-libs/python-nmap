@@ -6,6 +6,9 @@ Changelog
 
   - Refactor Readme and changelog files for the Pypi pattern and applying styles to the blocks for better visualization
   - Change setup.py to use an explicit version of python, since asynchronous tasks are not available for python 2.x
+  - Add clean method to the Makefile
+  - Update Manifest file
+  - Update version and Fix PEP8 on nmap/nmap.py
 
 2017/01/07 (v0.6.2)
 -------------------
