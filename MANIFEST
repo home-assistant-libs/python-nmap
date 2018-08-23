@@ -2,13 +2,12 @@
 CHANGELOG
 MANIFEST.in
 Makefile
-README.txt
+README.rst
 example.py
 gpl-3.0.txt
 nmap.html
-requirements.txt
+setup.cfg
 setup.py
 nmap/__init__.py
 nmap/nmap.py
-nmap/test.py
 nmap/test_nmap.py

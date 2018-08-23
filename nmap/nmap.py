@@ -48,13 +48,6 @@ Any redistribution of python-nmap along with the Nmap Security Scanner
 must conform to the Nmap Security Scanner licence
 
 """
-
-
-__author__ = 'Alexandre Norman (norman@xael.org)'
-__version__ = '0.6.2'
-__last_modification__ = '2017.01.07'
-
-
 import csv
 import io
 import os
@@ -69,6 +62,12 @@ try:
 except ImportError:
     # For pre 2.6 releases
     from threading import Thread as Process
+
+
+__author__ = 'Alexandre Norman (norman@xael.org)'
+__version__ = '0.6.3'
+__last_modification__ = '2018/09/23'
+
 
 ############################################################################
 
@@ -588,7 +587,7 @@ class PortScanner(object):
         assert 'nmap' in self._scan_result, 'Do a scan before trying to get result !'
         assert 'scanstats' in self._scan_result['nmap'], 'Do a scan before trying to get result !'
 
-        return self._scan_result['nmap']['scanstats']        
+        return self._scan_result['nmap']['scanstats']
 
     def has_host(self, host):
         """
@@ -1038,7 +1037,7 @@ class PortScannerHostDict(dict):
         assert type(port) is int, 'Wrong type for [port], should be an int [was {0}]'.format(type(port))
 
         return self['sctp'][port]
-    
+
 ############################################################################
 
 
@@ -1062,7 +1061,7 @@ class PortScannerError(Exception):
 def __get_last_online_version():
     """
     Gets last python-nmap published version
-    
+
     WARNING : it does an http connection to http://xael.org/pages/python-nmap/python-nmap_CURRENT_VERSION.txt
 
     :returns: a string which indicate last published version (example :'0.4.3')
