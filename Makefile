@@ -70,7 +70,7 @@ web2:
 	@cp dist/$(ARCHIVE).tar.gz web2/
 	@m4 -DVERSION=$(VERSION) -DMD5SUM=$(shell md5sum dist/$(ARCHIVE).tar.gz |cut -d' ' -f1) -DDATE=$(shell date +%Y-%m-%d) web2/index.md.m4 > web2/index.md
 	@m4 -DVERSION=$(VERSION) -DMD5SUM=$(shell md5sum dist/$(ARCHIVE).tar.gz |cut -d' ' -f1) -DDATE=$(shell date +%Y-%m-%d) web2/index-en.md.m4 > web2/index-en.md
-	@bash -c 'source /usr/local/bin/virtualenvwrapper.sh; workon xael.org; make ftp_upload'
+	@bash -c 'source /usr/local/bin/virtualenvwrapper.sh; workon xael.org; make rsync_upload'
 
 changelog:
 	vi CHANGELOG

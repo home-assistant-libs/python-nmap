@@ -1,6 +1,5 @@
 syntax: glob
 dist/
-web2/
 docs/_build
 nmap-7.01/
 nmap-6.40/
@@ -22,3 +21,4 @@ Thumbs.db
 \#*\#
 *\#
 .\#*
+web2
