@@ -39,8 +39,8 @@ class VersionCommand(Command):
         print(version)
 
 
-# Get the shor description
-description = 'This is a python class to use nmap and access scan results from python3',
+# Get the short description
+description = 'This is a python class to use nmap and access scan results from python3'
 
 # Get the long description
 with codecs.open(os.path.join(here, 'README.rst')) as f:
@@ -54,7 +54,7 @@ with codecs.open(os.path.join(here, 'CHANGELOG')) as f:
 setup(
     author='Alexandre Norman',
     author_email='norman@xael.org',
-    bugtrack_url='https://bitbucket.org/xael/python-nmap',
+    # bugtrack_url='https://bitbucket.org/xael/python-nmap',
     cmdclass={'version': VersionCommand},
     description=description,
     classifiers=[
