@@ -204,3 +204,9 @@ print('----------------------------------------------------')
 nm = nmap.PortScannerYield()
 for progressive_result in nm.scan('127.0.0.1/24', '22-25'):
     print(progressive_result)
+
+
+print('----------------------------------------------------')
+# Using a timeout
+nm = nmap.PortScanner()
+nm.scan('127.0.0.1', '22-40043', timeout=1)

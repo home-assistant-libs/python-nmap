@@ -19,6 +19,7 @@ Contributors:
 * Thomas D. maaaaz
 * Robert Bost
 * David Peltier
+* Ed Jones
 
 Licence: GPL v3 or any later version for python-nmap
 
@@ -65,8 +66,8 @@ except ImportError:
 
 
 __author__ = 'Alexandre Norman (norman@xael.org)'
-__version__ = '0.6.3'
-__last_modification__ = '2018/09/23'
+__version__ = '0.6.4'
+__last_modification__ = '2021.02.28'
 
 
 ############################################################################
@@ -190,7 +191,7 @@ class PortScanner(object):
 
         return self.all_hosts()
 
-    def scan(self, hosts='127.0.0.1', ports=None, arguments='-sV', sudo=False):
+    def scan(self, hosts='127.0.0.1', ports=None, arguments='-sV', sudo=False, timeout=0):
         """
         Scan given hosts
 
@@ -204,6 +205,7 @@ class PortScanner(object):
         :param ports: string for ports as nmap use it '22,53,110,143-4564'
         :param arguments: string of arguments for nmap '-sU -sX -sC'
         :param sudo: launch nmap with sudo if True
+        :param timeout: int, if > zero, will terminate scan after seconds, otherwise will wait indefintely
 
         :returns: scan_result as dictionnary
         """
@@ -234,8 +236,17 @@ class PortScanner(object):
 
         # wait until finished
         # get output
-        (self._nmap_last_output, nmap_err) = p.communicate()
-        self._nmap_last_output = bytes.decode(self._nmap_last_output)
+        # Terminate after user timeout
+        # (self._nmap_last_output, nmap_err) = p.communicate()
+        if timeout == 0:
+            (self._nmap_last_output, nmap_err) = p.communicate()
+        else:
+            try:
+                (self._nmap_last_output, nmap_err) = p.communicate(timeout=timeout)
+            except subprocess.TimeoutExpired:
+                p.kill()
+                raise PortScannerTimeout('Timeout from nmap process')
+
         nmap_err = bytes.decode(nmap_err)
 
         # If there was something on stderr, there was a problem so abort...  in
@@ -461,8 +472,8 @@ class PortScanner(object):
                         {
                             'id': hsid,
                             'output': hsoutput
-                            }
-                        )
+                        }
+                    )
 
             # <osmatch name="Juniper SA4000 SSL VPN gateway (IVE OS 7.0)" accuracy="98" line="36241">
             # <osclass type="firewall" vendor="Juniper" osfamily="IVE OS" osgen="7.X"
@@ -667,13 +678,13 @@ class PortScanner(object):
 ############################################################################
 
 
-def __scan_progressive__(self, hosts, ports, arguments, callback, sudo):
+def __scan_progressive__(self, hosts, ports, arguments, callback, sudo, timeout):
     """
     Used by PortScannerAsync for callback
     """
     for host in self._nm.listscan(hosts):
         try:
-            scan_data = self._nm.scan(host, ports, arguments, sudo)
+            scan_data = self._nm.scan(host, ports, arguments, sudo, timeout)
         except PortScannerError:
             scan_data = None
 
@@ -719,7 +730,7 @@ class PortScannerAsync(object):
         self._process = None
         return
 
-    def scan(self, hosts='127.0.0.1', ports=None, arguments='-sV', callback=None, sudo=False):
+    def scan(self, hosts='127.0.0.1', ports=None, arguments='-sV', callback=None, sudo=False, timeout=0):
         """
         Scan given hosts in a separate process and return host by host result using callback function
 
@@ -730,6 +741,8 @@ class PortScannerAsync(object):
         :param arguments: string of arguments for nmap '-sU -sX -sC'
         :param callback: callback function which takes (host, scan_data) as arguments
         :param sudo: launch nmap with sudo if true
+        :param timeout: int, if > zero, will terminate scan after seconds, otherwise will wait indefintely
+
         """
 
         if sys.version_info[0] == 2:
@@ -748,7 +761,7 @@ class PortScannerAsync(object):
 
         self._process = Process(
             target=__scan_progressive__,
-            args=(self, hosts, ports, arguments, callback, sudo)
+            args=(self, hosts, ports, arguments, callback, sudo, timeout)
             )
         self._process.daemon = True
         self._process.start()
@@ -807,7 +820,7 @@ class PortScannerYield(PortScannerAsync):
         PortScannerAsync.__init__(self)
         return
 
-    def scan(self, hosts='127.0.0.1', ports=None, arguments='-sV', sudo=False):
+    def scan(self, hosts='127.0.0.1', ports=None, arguments='-sV', sudo=False, timeout=0):
         """
         Scan given hosts in a separate process and return host by host result using callback function
 
@@ -818,6 +831,7 @@ class PortScannerYield(PortScannerAsync):
         :param arguments: string of arguments for nmap '-sU -sX -sC'
         :param callback: callback function which takes (host, scan_data) as arguments
         :param sudo: launch nmap with sudo if true
+        :param timeout: int, if > zero, will terminate scan after seconds, otherwise will wait indefintely
 
         """
 
@@ -830,7 +844,7 @@ class PortScannerYield(PortScannerAsync):
 
         for host in self._nm.listscan(hosts):
             try:
-                scan_data = self._nm.scan(host, ports, arguments, sudo)
+                scan_data = self._nm.scan(host, ports, arguments, sudo, timeout)
             except PortScannerError:
                 scan_data = None
             yield (host, scan_data)
@@ -1055,6 +1069,9 @@ class PortScannerError(Exception):
     def __repr__(self):
         return 'PortScannerError exception {0}'.format(self.value)
 
+
+class PortScannerTimeout(PortScannerError):
+    pass
 
 ############################################################################
 

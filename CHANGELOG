@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2020/02/28 (v0.6.4)
+-------------------
+
+  - Add timeout parameter and PortScannerTimeout exception
+	
 2018/09/23 (v0.6.3)
 -------------------
 

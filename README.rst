@@ -176,6 +176,15 @@ Using a Scanner Async
 See also example.py in archive file.
 
 
+Using a Scanner Async
+---------------------
+
+.. code-block:: python
+
+    >>> nm = nmap.PortScanner()                                                                                                                                                                                                              
+    >>> nm.scan('127.0.0.1', '22-40043', timeout=10)
+    PortScannerTimeout: 'Timeout from nmap process'
+
 Contributors
 ============
 
@@ -187,6 +196,8 @@ Contributors
     Johan Lundberg
     Thomas D. maaaaz
     Robert Bost
+    David Peltier
+    Ed Jones
 
 
 Homepage
