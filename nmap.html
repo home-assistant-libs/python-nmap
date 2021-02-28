@@ -6,7 +6,7 @@
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
 <tr bgcolor="#7799ee">
 <td valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>nmap</strong></big></big> (version 0.6.1)</font></td
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>nmap</strong></big></big> (version 0.6.4)</font></td
 ><td align=right valign=bottom
 ><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/xael/ESPACE_KM/python/python-nmap/nmap/nmap.py">/home/xael/ESPACE_KM/python/python-nmap/nmap/nmap.py</a></font></td></tr></table>
     <p><tt>nmap.py&nbsp;-&nbsp;version&nbsp;and&nbsp;date,&nbsp;see&nbsp;below<br>
@@ -26,6 +26,7 @@ Contributors:<br>
 *&nbsp;Thomas&nbsp;D.&nbsp;maaaaz<br>
 *&nbsp;Robert&nbsp;Bost<br>
 *&nbsp;David&nbsp;Peltier<br>
+*&nbsp;Ed&nbsp;Jones<br>
 &nbsp;<br>
 Licence:&nbsp;GPL&nbsp;v3&nbsp;or&nbsp;any&nbsp;later&nbsp;version&nbsp;for&nbsp;python-nmap<br>
 &nbsp;<br>
@@ -80,7 +81,12 @@ must&nbsp;conform&nbsp;to&nbsp;the&nbsp;Nmap&nbsp;Security&nbsp;Scanner&nbsp;lic
 </font></dt><dd>
 <dl>
 <dt><font face="helvetica, arial"><a href="nmap.html#PortScannerError">PortScannerError</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="nmap.html#PortScannerTimeout">PortScannerTimeout</a>
 </font></dt></dl>
+</dd>
+</dl>
 </dd>
 <dt><font face="helvetica, arial"><a href="builtins.html#dict">builtins.dict</a>(<a href="builtins.html#object">builtins.object</a>)
 </font></dt><dd>
@@ -158,7 +164,7 @@ this&nbsp;may&nbsp;be&nbsp;used&nbsp;for&nbsp;debugging&nbsp;purpose<br>
 or&nbsp;(0,&nbsp;0)&nbsp;if&nbsp;unknown<br>
 :returns:&nbsp;(nmap_version_number,&nbsp;nmap_subversion_number)</tt></dd></dl>
 
-<dl><dt><a name="PortScanner-scan"><strong>scan</strong></a>(self, hosts='127.0.0.1', ports=None, arguments='-sV', sudo=False)</dt><dd><tt>Scan&nbsp;given&nbsp;hosts<br>
+<dl><dt><a name="PortScanner-scan"><strong>scan</strong></a>(self, hosts='127.0.0.1', ports=None, arguments='-sV', sudo=False, timeout=0)</dt><dd><tt>Scan&nbsp;given&nbsp;hosts<br>
 &nbsp;<br>
 May&nbsp;raise&nbsp;<a href="#PortScannerError">PortScannerError</a>&nbsp;exception&nbsp;if&nbsp;nmap&nbsp;output&nbsp;was&nbsp;not&nbsp;xml<br>
 &nbsp;<br>
@@ -170,6 +176,7 @@ If&nbsp;not&nbsp;present,&nbsp;everything&nbsp;was&nbsp;ok.<br>
 :param&nbsp;ports:&nbsp;string&nbsp;for&nbsp;ports&nbsp;as&nbsp;nmap&nbsp;use&nbsp;it&nbsp;'22,53,110,143-4564'<br>
 :param&nbsp;arguments:&nbsp;string&nbsp;of&nbsp;arguments&nbsp;for&nbsp;nmap&nbsp;'-sU&nbsp;-sX&nbsp;-sC'<br>
 :param&nbsp;sudo:&nbsp;launch&nbsp;nmap&nbsp;with&nbsp;sudo&nbsp;if&nbsp;True<br>
+:param&nbsp;timeout:&nbsp;int,&nbsp;if&nbsp;&gt;&nbsp;zero,&nbsp;will&nbsp;terminate&nbsp;scan&nbsp;after&nbsp;seconds,&nbsp;otherwise&nbsp;will&nbsp;wait&nbsp;indefintely<br>
 &nbsp;<br>
 :returns:&nbsp;scan_result&nbsp;as&nbsp;dictionnary</tt></dd></dl>
 
@@ -209,7 +216,7 @@ for&nbsp;each&nbsp;host&nbsp;scanned,&nbsp;callback&nbsp;is&nbsp;called&nbsp;wit
 *&nbsp;detects&nbsp;nmap&nbsp;on&nbsp;the&nbsp;system&nbsp;and&nbsp;nmap&nbsp;version<br>
 *&nbsp;may&nbsp;raise&nbsp;<a href="#PortScannerError">PortScannerError</a>&nbsp;exception&nbsp;if&nbsp;nmap&nbsp;is&nbsp;not&nbsp;found&nbsp;in&nbsp;the&nbsp;path</tt></dd></dl>
 
-<dl><dt><a name="PortScannerAsync-scan"><strong>scan</strong></a>(self, hosts='127.0.0.1', ports=None, arguments='-sV', callback=None, sudo=False)</dt><dd><tt>Scan&nbsp;given&nbsp;hosts&nbsp;in&nbsp;a&nbsp;separate&nbsp;process&nbsp;and&nbsp;return&nbsp;host&nbsp;by&nbsp;host&nbsp;result&nbsp;using&nbsp;callback&nbsp;function<br>
+<dl><dt><a name="PortScannerAsync-scan"><strong>scan</strong></a>(self, hosts='127.0.0.1', ports=None, arguments='-sV', callback=None, sudo=False, timeout=0)</dt><dd><tt>Scan&nbsp;given&nbsp;hosts&nbsp;in&nbsp;a&nbsp;separate&nbsp;process&nbsp;and&nbsp;return&nbsp;host&nbsp;by&nbsp;host&nbsp;result&nbsp;using&nbsp;callback&nbsp;function<br>
 &nbsp;<br>
 <a href="#PortScannerError">PortScannerError</a>&nbsp;exception&nbsp;from&nbsp;standard&nbsp;nmap&nbsp;is&nbsp;catched&nbsp;and&nbsp;you&nbsp;won't&nbsp;know&nbsp;about&nbsp;but&nbsp;get&nbsp;None&nbsp;as&nbsp;scan_data<br>
 &nbsp;<br>
@@ -217,7 +224,8 @@ for&nbsp;each&nbsp;host&nbsp;scanned,&nbsp;callback&nbsp;is&nbsp;called&nbsp;wit
 :param&nbsp;ports:&nbsp;string&nbsp;for&nbsp;ports&nbsp;as&nbsp;nmap&nbsp;use&nbsp;it&nbsp;'22,53,110,143-4564'<br>
 :param&nbsp;arguments:&nbsp;string&nbsp;of&nbsp;arguments&nbsp;for&nbsp;nmap&nbsp;'-sU&nbsp;-sX&nbsp;-sC'<br>
 :param&nbsp;callback:&nbsp;callback&nbsp;function&nbsp;which&nbsp;takes&nbsp;(host,&nbsp;scan_data)&nbsp;as&nbsp;arguments<br>
-:param&nbsp;sudo:&nbsp;launch&nbsp;nmap&nbsp;with&nbsp;sudo&nbsp;if&nbsp;true</tt></dd></dl>
+:param&nbsp;sudo:&nbsp;launch&nbsp;nmap&nbsp;with&nbsp;sudo&nbsp;if&nbsp;true<br>
+:param&nbsp;timeout:&nbsp;int,&nbsp;if&nbsp;&gt;&nbsp;zero,&nbsp;will&nbsp;terminate&nbsp;scan&nbsp;after&nbsp;seconds,&nbsp;otherwise&nbsp;will&nbsp;wait&nbsp;indefintely</tt></dd></dl>
 
 <dl><dt><a name="PortScannerAsync-still_scanning"><strong>still_scanning</strong></a>(self)</dt><dd><tt>:returns:&nbsp;True&nbsp;if&nbsp;a&nbsp;scan&nbsp;is&nbsp;currently&nbsp;running,&nbsp;False&nbsp;otherwise</tt></dd></dl>
 
@@ -434,6 +442,68 @@ Data and other attributes inherited from <a href="builtins.html#dict">builtins.d
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="PortScannerTimeout">class <strong>PortScannerTimeout</strong></a>(<a href="nmap.html#PortScannerError">PortScannerError</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="nmap.html#PortScannerTimeout">PortScannerTimeout</a></dd>
+<dd><a href="nmap.html#PortScannerError">PortScannerError</a></dd>
+<dd><a href="builtins.html#Exception">builtins.Exception</a></dd>
+<dd><a href="builtins.html#BaseException">builtins.BaseException</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods inherited from <a href="nmap.html#PortScannerError">PortScannerError</a>:<br>
+<dl><dt><a name="PortScannerTimeout-__init__"><strong>__init__</strong></a>(self, value)</dt></dl>
+
+<dl><dt><a name="PortScannerTimeout-__repr__"><strong>__repr__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="PortScannerTimeout-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="nmap.html#PortScannerError">PortScannerError</a>:<br>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="builtins.html#Exception">builtins.Exception</a>:<br>
+<dl><dt><a name="PortScannerTimeout-__new__"><strong>__new__</strong></a>(*args, **kwargs)<font color="#909090"><font face="helvetica, arial"> from <a href="builtins.html#type">builtins.type</a></font></font></dt><dd><tt>Create&nbsp;and&nbsp;return&nbsp;a&nbsp;new&nbsp;<a href="builtins.html#object">object</a>.&nbsp;&nbsp;See&nbsp;help(type)&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="builtins.html#BaseException">builtins.BaseException</a>:<br>
+<dl><dt><a name="PortScannerTimeout-__delattr__"><strong>__delattr__</strong></a>(self, name, /)</dt><dd><tt>Implement&nbsp;delattr(self,&nbsp;name).</tt></dd></dl>
+
+<dl><dt><a name="PortScannerTimeout-__getattribute__"><strong>__getattribute__</strong></a>(self, name, /)</dt><dd><tt>Return&nbsp;getattr(self,&nbsp;name).</tt></dd></dl>
+
+<dl><dt><a name="PortScannerTimeout-__reduce__"><strong>__reduce__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="PortScannerTimeout-__setattr__"><strong>__setattr__</strong></a>(self, name, value, /)</dt><dd><tt>Implement&nbsp;setattr(self,&nbsp;name,&nbsp;value).</tt></dd></dl>
+
+<dl><dt><a name="PortScannerTimeout-__setstate__"><strong>__setstate__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="PortScannerTimeout-with_traceback"><strong>with_traceback</strong></a>(...)</dt><dd><tt><a href="builtins.html#Exception">Exception</a>.<a href="#PortScannerTimeout-with_traceback">with_traceback</a>(tb)&nbsp;--<br>
+set&nbsp;self.<strong>__traceback__</strong>&nbsp;to&nbsp;tb&nbsp;and&nbsp;return&nbsp;self.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="builtins.html#BaseException">builtins.BaseException</a>:<br>
+<dl><dt><strong>__cause__</strong></dt>
+<dd><tt>exception&nbsp;cause</tt></dd>
+</dl>
+<dl><dt><strong>__context__</strong></dt>
+<dd><tt>exception&nbsp;context</tt></dd>
+</dl>
+<dl><dt><strong>__dict__</strong></dt>
+</dl>
+<dl><dt><strong>__suppress_context__</strong></dt>
+</dl>
+<dl><dt><strong>__traceback__</strong></dt>
+</dl>
+<dl><dt><strong>args</strong></dt>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
 <font color="#000000" face="helvetica, arial"><a name="PortScannerYield">class <strong>PortScannerYield</strong></a>(<a href="nmap.html#PortScannerAsync">PortScannerAsync</a>)</font></td></tr>
     
 <tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
@@ -452,7 +522,7 @@ Methods defined here:<br>
 *&nbsp;detects&nbsp;nmap&nbsp;on&nbsp;the&nbsp;system&nbsp;and&nbsp;nmap&nbsp;version<br>
 *&nbsp;may&nbsp;raise&nbsp;<a href="#PortScannerError">PortScannerError</a>&nbsp;exception&nbsp;if&nbsp;nmap&nbsp;is&nbsp;not&nbsp;found&nbsp;in&nbsp;the&nbsp;path</tt></dd></dl>
 
-<dl><dt><a name="PortScannerYield-scan"><strong>scan</strong></a>(self, hosts='127.0.0.1', ports=None, arguments='-sV', sudo=False)</dt><dd><tt>Scan&nbsp;given&nbsp;hosts&nbsp;in&nbsp;a&nbsp;separate&nbsp;process&nbsp;and&nbsp;return&nbsp;host&nbsp;by&nbsp;host&nbsp;result&nbsp;using&nbsp;callback&nbsp;function<br>
+<dl><dt><a name="PortScannerYield-scan"><strong>scan</strong></a>(self, hosts='127.0.0.1', ports=None, arguments='-sV', sudo=False, timeout=0)</dt><dd><tt>Scan&nbsp;given&nbsp;hosts&nbsp;in&nbsp;a&nbsp;separate&nbsp;process&nbsp;and&nbsp;return&nbsp;host&nbsp;by&nbsp;host&nbsp;result&nbsp;using&nbsp;callback&nbsp;function<br>
 &nbsp;<br>
 <a href="#PortScannerError">PortScannerError</a>&nbsp;exception&nbsp;from&nbsp;standard&nbsp;nmap&nbsp;is&nbsp;catched&nbsp;and&nbsp;you&nbsp;won't&nbsp;know&nbsp;about&nbsp;it<br>
 &nbsp;<br>
@@ -460,7 +530,8 @@ Methods defined here:<br>
 :param&nbsp;ports:&nbsp;string&nbsp;for&nbsp;ports&nbsp;as&nbsp;nmap&nbsp;use&nbsp;it&nbsp;'22,53,110,143-4564'<br>
 :param&nbsp;arguments:&nbsp;string&nbsp;of&nbsp;arguments&nbsp;for&nbsp;nmap&nbsp;'-sU&nbsp;-sX&nbsp;-sC'<br>
 :param&nbsp;callback:&nbsp;callback&nbsp;function&nbsp;which&nbsp;takes&nbsp;(host,&nbsp;scan_data)&nbsp;as&nbsp;arguments<br>
-:param&nbsp;sudo:&nbsp;launch&nbsp;nmap&nbsp;with&nbsp;sudo&nbsp;if&nbsp;true</tt></dd></dl>
+:param&nbsp;sudo:&nbsp;launch&nbsp;nmap&nbsp;with&nbsp;sudo&nbsp;if&nbsp;true<br>
+:param&nbsp;timeout:&nbsp;int,&nbsp;if&nbsp;&gt;&nbsp;zero,&nbsp;will&nbsp;terminate&nbsp;scan&nbsp;after&nbsp;seconds,&nbsp;otherwise&nbsp;will&nbsp;wait&nbsp;indefintely</tt></dd></dl>
 
 <dl><dt><a name="PortScannerYield-still_scanning"><strong>still_scanning</strong></a>(self)</dt></dl>
 
@@ -487,7 +558,7 @@ Data descriptors inherited from <a href="nmap.html#PortScannerAsync">PortScanner
 <font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
     
 <tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><dl><dt><a name="-__scan_progressive__"><strong>__scan_progressive__</strong></a>(self, hosts, ports, arguments, callback, sudo)</dt><dd><tt>Used&nbsp;by&nbsp;<a href="#PortScannerAsync">PortScannerAsync</a>&nbsp;for&nbsp;callback</tt></dd></dl>
+<td width="100%"><dl><dt><a name="-__scan_progressive__"><strong>__scan_progressive__</strong></a>(self, hosts, ports, arguments, callback, sudo, timeout)</dt><dd><tt>Used&nbsp;by&nbsp;<a href="#PortScannerAsync">PortScannerAsync</a>&nbsp;for&nbsp;callback</tt></dd></dl>
  <dl><dt><a name="-convert_nmap_output_to_encoding"><strong>convert_nmap_output_to_encoding</strong></a>(value, code='ascii')</dt><dd><tt>Change&nbsp;encoding&nbsp;for&nbsp;scan_result&nbsp;<a href="builtins.html#object">object</a>&nbsp;from&nbsp;unicode&nbsp;to&nbsp;whatever<br>
 &nbsp;<br>
 :param&nbsp;value:&nbsp;scan_result&nbsp;as&nbsp;dictionnary<br>
@@ -501,7 +572,7 @@ Data descriptors inherited from <a href="nmap.html#PortScannerAsync">PortScanner
 <font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
     
 <tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><strong>__last_modification__</strong> = '2016.07.29'</td></tr></table><p>
+<td width="100%"><strong>__last_modification__</strong> = '2021.02.28'</td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#7799ee">
 <td colspan=3 valign=bottom>&nbsp;<br>
