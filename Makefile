@@ -74,13 +74,14 @@ web2:
 
 changelog:
 	vi CHANGELOG
+	@git add CHANGELOG
+	@git commit -m "update CHANGELOG"
 
-hgcommit:
-	@hg commit
-	@hg tag $(VERSION) -f
-	@hg push
+gitversioncommit:
+	@git tag $(VERSION) 
+	@git push
 
-release: tox manifest doc changelog hgcommit register web2
+release: tox manifest doc changelog gitversioncommit register web2
 
 
 .PHONY: web web2 test
