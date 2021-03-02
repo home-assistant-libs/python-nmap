@@ -1,11 +1,17 @@
 Changelog
 =========
 
+2020/03/02 (v0.7.0)
+-------------------
+
+   - Add black and flake8 for development
+   - Drop support for python2.7
+
 2020/02/28 (v0.6.4)
 -------------------
 
   - Add timeout parameter and PortScannerTimeout exception
-	
+
 2018/09/23 (v0.6.3)
 -------------------
 
