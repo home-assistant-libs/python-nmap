@@ -1,0 +1,22 @@
+repos:
+-   repo: local
+    hooks:
+    - id: docker-black
+      name: Black in Docker
+      description: format python files
+      entry: docker-compose
+      language: system
+      types: ["python"]
+      exclude: ".*/migrations/.*.py"
+      args: [-f, docker/docker-precommit.yml, run, --rm, python, black, --]
+      verbose: true
+      
+    - id: docker-flake8
+      name: Flake8 via FlakeHell in Docker
+      description: lint python files
+      entry: docker-compose
+      language: system
+      types: ["python"]
+      exclude: ".*/migrations/.*.py"
+      args: [-f, docker/docker-precommit.yml, run, --rm, python, flakehell, lint, --]
+      verbose: true

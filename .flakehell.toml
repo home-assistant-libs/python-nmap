@@ -1,0 +1,24 @@
+[tool.flakehell]
+format = "grouped"
+show_source = false
+max_line_length = 120
+max_complexity = 10
+
+[tool.flakehell.plugins]
+pylint = ["+*"]
+pycodestyle = ["+*", "-W503", "-E203"]
+pyflakes = ["+*", "-W293", "-W503", "-E203"]
+flake8-blind-except = ["+*"]
+flake8-bugbear = ["+*"]
+flake8-builtins = ["+*"]
+flake8-comprehensions = ["+*"]
+flake8-django = ["+*"]
+flake8-eradicate = ["+*"]
+flake8-functions = ["+*"]
+flake8-import-order = ["+*"]
+flake8-plugin-utils = ["+*"]
+flake8-pytest-style = ["+*", "-PT009"]
+flake8-use-fstring = ["+*"]
+mccabe = ["+*"]
+
+

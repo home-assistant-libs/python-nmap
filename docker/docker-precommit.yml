@@ -1,0 +1,17 @@
+# Docker-copose file for dev environement
+
+version: "3"
+
+services:
+  python:
+    image: xael/docker-precommit_python:latest
+    command: python
+    volumes:
+      - ../nmap:/app/nmap
+      - ../.flake8:/app/.flake8
+      - ../.flakehell.toml:/app/.flakehell.toml
+      - ../.black:/app/.black
+    user: "1000:1000"
+    stdin_open: true
+    tty: true
+
