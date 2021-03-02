@@ -26,7 +26,7 @@ tox:
 	@tox
 
 test:
-	@(export NMAP_XML_VERSION=7.01 ; nosetests --with-coverage nmap -v)
+	@(export NMAP_XML_VERSION=6.40 ; nosetests --with-coverage nmap -v)
 
 qa:
 	@flake8 nmap
@@ -37,6 +37,7 @@ coverage:
 testcase:
 	@./nmap-6.40/nmap -sV scanme.nmap.org -oX scanme_output-6.40.xml
 	@./nmap-7.01/nmap -sV scanme.nmap.org -oX scanme_output-7.01.xml
+	@./nmap-7.91/nmap -sV scanme.nmap.org -oX scanme_output-7.91.xml
 
 install:
 	@python3 setup.py install

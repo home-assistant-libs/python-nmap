@@ -2,6 +2,8 @@ syntax: glob
 dist/
 docs/_build
 nmap-7.01/
+nmap-7.70/
+nmap-7.91/
 nmap-6.40/
 nmap-6.49BETA4/
 nmap-5.51.6/

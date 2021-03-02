@@ -142,9 +142,9 @@ def test_command_line():
     try:
         global NMAP_XML_VERSION
         NMAP_XML_VERSION = os.environ['NMAP_XML_VERSION']
-    except:
+    except Exception:
         raise ValueError('Set env NMAP_XML_VERSION')
-    
+
     assert_equals(nm.command_line(), './nmap-{0}/nmap -sV -oX scanme_output-{0}.xml scanme.nmap.org'.format(NMAP_XML_VERSION))
 
 @with_setup(xmlfile_read_setup)
@@ -173,8 +173,10 @@ def test_host_no_hostname():
 
     
 @with_setup(xmlfile_read_setup)
-def test_port():
-    assert_equals([80, 9929, 22, 31337], list(nm['45.33.32.156']['tcp'].keys()))
+def test_ports():
+    ports = list(nm['45.33.32.156']['tcp'].keys())
+    ports.sort()
+    assert_equals([22, 25, 80, 139, 445, 9929, 31337], ports)
     assert(nm['45.33.32.156'].has_tcp(22))
     assert(nm['45.33.32.156'].has_tcp(23) == False)
     assert('conf' in list(nm['45.33.32.156']['tcp'][22]))
@@ -187,14 +189,14 @@ def test_port():
                   
     assert('10' in nm['45.33.32.156']['tcp'][22]['conf'])
     global NMAP_XML_VERSION
-    if NMAP_XML_VERSION=='6.40':
+    if NMAP_XML_VERSION == '6.40':
         assert_equals('', nm['45.33.32.156']['tcp'][22]['cpe'])
         assert_equals('', nm['45.33.32.156']['tcp'][22]['product'])
         assert_equals('', nm['45.33.32.156']['tcp'][22]['version'])
     else:
         assert('cpe:/o:linux:linux_kernel' in nm['45.33.32.156']['tcp'][22]['cpe'])
         assert('OpenSSH' in nm['45.33.32.156']['tcp'][22]['product'])
-        assert('6.6.1p1 Ubuntu 2ubuntu2.3' in nm['45.33.32.156']['tcp'][22]['version'])
+        assert('6.6.1p1 Ubuntu 2ubuntu2.13' in nm['45.33.32.156']['tcp'][22]['version'])
         
     assert('ssh' in nm['45.33.32.156']['tcp'][22]['name'])
     assert('syn-ack' in nm['45.33.32.156']['tcp'][22]['reason'])
@@ -218,13 +220,21 @@ def test_csv_output():
                   nm.csv().split('\n')[0].strip())
 
     global NMAP_XML_VERSION
+    result = None
     if NMAP_XML_VERSION == '6.40':
-        assert_equals('45.33.32.156;scanme.nmap.org;user;tcp;22;ssh;open;;protocol 2.0;syn-ack;;10;',
-                      nm.csv().split('\n')[1].strip())
-    else:
-        assert_equals('45.33.32.156;scanme.nmap.org;user;tcp;22;ssh;open;OpenSSH;"Ubuntu Linux; protocol 2.0";syn-ack;6.6.1p1 Ubuntu 2ubuntu2.3;10;cpe:/o:linux:linux_kernel',
-                      nm.csv().split('\n')[1].strip())
+        result = '45.33.32.156;scanme.nmap.org;user;tcp;22;ssh;open;;protocol 2.0;syn-ack;;10;'
 
+    elif NMAP_XML_VERSION == '7.01':
+        result = '45.33.32.156;scanme.nmap.org;user;tcp;22;ssh;open;OpenSSH;"Ubuntu Linux; protocol 2.0";syn-ack;6.6.1p1 Ubuntu 2ubuntu2.13;10;cpe:/o:linux:linux_kernel'
+        
+    elif NMAP_XML_VERSION == '7.70':
+        result = '45.33.32.156;scanme.nmap.org;user;tcp;22;ssh;open;OpenSSH;"Ubuntu Linux; protocol 2.0";syn-ack;6.6.1p1 Ubuntu 2ubuntu2.13;10;cpe:/o:linux:linux_kernel'
+        
+    elif NMAP_XML_VERSION == '7.91':
+        result = '45.33.32.156;scanme.nmap.org;user;tcp;22;ssh;open;OpenSSH;"Ubuntu Linux; protocol 2.0";syn-ack;6.6.1p1 Ubuntu 2ubuntu2.13;10;cpe:/o:linux:linux_kernel'
+
+    if result is not None:
+        assert_equals(result, nm.csv().split('\n')[1].strip())
     
 def test_listscan():
     assert(0 < len(nm.listscan('192.168.1.0/30')))
@@ -285,7 +295,7 @@ def scan_localhost_sudo_arg_O():
     if len(lastnm) > 0:
         try:
             nm.analyse_nmap_xml_scan(lastnm)
-        except:
+        except Exception:
             pass
         else:
             if nm.command_line() == 'nmap -oX - -O 127.0.0.1':
@@ -293,7 +303,7 @@ def scan_localhost_sudo_arg_O():
 
     if os.getuid() == 0:
         nm.scan('127.0.0.1', arguments='-O')
-    else :
+    else:
         nm.scan('127.0.0.1', arguments='-O', sudo=True)
 
 
@@ -308,7 +318,7 @@ def test_sudo():
 def test_parsing_osmap_osclass_and_others():
     # nosetests -v -s nmap/test_nmap.py:test_parsing_osmap_osclass_and_others
     assert('osmatch' in nm['127.0.0.1'])
-    assert_equals(nm['127.0.0.1']['osmatch'][0]['name'], 'Linux 3.7 - 3.15')
+    assert_equals(nm['127.0.0.1']['osmatch'][0]['name'], 'Linux 2.6.32')
 
     assert('accuracy' in nm['127.0.0.1']['osmatch'][0])
     assert('line' in nm['127.0.0.1']['osmatch'][0])
@@ -395,4 +405,4 @@ def test_sudo_encoding__T24():
     i got a UnicodeDecodeError: 'ascii' codec can't decode byte 0xc3 in position 9: ordinal not in range(128). 
     But if sudo is false all thing work nice. 
     """
-    r = nm.scan('192.168.0.1/24', arguments='-sP', sudo=True)
+    r = nm.scan('192.168.1.1/24', arguments='-sP', sudo=True)
