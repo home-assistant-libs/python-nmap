@@ -73,7 +73,7 @@ setup(
     keywords="nmap, portscanner, network, sysadmin",
     # Get more strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
     license='gpl-3.0.txt',
-    long_description=long_description,
+    long_description=description,
     name='netmap',
     packages=['nmap'],
     platforms=[

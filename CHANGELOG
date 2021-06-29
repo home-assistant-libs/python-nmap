@@ -5,6 +5,7 @@ Changelog
 -------------------
 
    - Fix building Python Wheels
+   - Removes long description from setup
 
 2020/03/02 (v0.7.0)
 -------------------
