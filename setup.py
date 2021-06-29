@@ -74,7 +74,7 @@ setup(
     # Get more strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
     license='gpl-3.0.txt',
     long_description=long_description,
-    name='python-nmap-homeassistant',
+    name='netmap',
     packages=['nmap'],
     platforms=[
         "Operating System :: OS Independent",
