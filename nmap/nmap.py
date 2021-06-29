@@ -61,8 +61,8 @@ from xml.etree import ElementTree as ET
 
 
 __author__ = "Alexandre Norman (norman@xael.org)"
-__version__ = "0.7.0"
-__last_modification__ = "2021.03.02"
+__version__ = "0.7.0.1"
+__last_modification__ = "2021.06.29"
 
 
 ############################################################################
